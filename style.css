@@ -1,0 +1,248 @@
+:root {
+  --clock-scale: 1;
+  --sw-scale: 1;
+  --timer-scale: 1;
+  --queue-scale: 1;
+  --world-scale: 1;
+  --clock-font: 'JetBrains Mono', monospace;
+  --marquee-speed: 22s;
+}
+
+.font-clock {
+  font-family: var(--clock-font);
+}
+
+.time-display-wrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums lining-nums;
+  font-feature-settings: "tnum" 1, "zero" 1;
+}
+
+.time-digit-group {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.time-digit-block {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 0.65em;
+  min-width: 0.65em;
+  max-width: 0.65em;
+  text-align: center;
+  user-select: none;
+}
+
+.time-colon-sep {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 0.32em;
+  min-width: 0.32em;
+  max-width: 0.32em;
+  text-align: center;
+  opacity: 0.85;
+  user-select: none;
+}
+
+.time-dot-sep {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 0.28em;
+  min-width: 0.28em;
+  max-width: 0.28em;
+  text-align: center;
+  opacity: 0.75;
+  user-select: none;
+}
+
+.time-ms-group {
+  font-size: 0.52em;
+  opacity: 0.9;
+  display: inline-flex;
+  align-items: center;
+  margin-left: 0.08em;
+}
+
+#clockDisplay {
+  font-family: var(--clock-font);
+  font-size: calc(clamp(3.5rem, 13vw, 12rem) * var(--clock-scale, 1));
+  line-height: 1.05;
+  transition: font-size 0.15s ease-out;
+}
+
+#swDisplay {
+  font-family: var(--clock-font);
+  font-size: calc(clamp(3rem, 10vw, 9.5rem) * var(--sw-scale, 1));
+  line-height: 1.05;
+  transition: font-size 0.15s ease-out;
+}
+
+#timerDisplay {
+  font-family: var(--clock-font);
+  font-size: calc(clamp(2.8rem, 8.5vw, 8rem) * var(--timer-scale, 1));
+  line-height: 1.05;
+  transition: font-size 0.15s ease-out;
+}
+
+#queueDisplay {
+  font-family: var(--clock-font);
+  font-size: calc(clamp(3rem, 10vw, 9.5rem) * var(--queue-scale, 1));
+  line-height: 1.05;
+  transition: font-size 0.15s ease-out;
+}
+
+.world-clock-time {
+  font-family: var(--clock-font);
+  font-size: calc(clamp(1.75rem, 3.5vw, 3rem) * var(--world-scale, 1));
+  line-height: 1.1;
+  transition: font-size 0.15s ease-out;
+}
+
+.projector-text {
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8), 0 0 30px rgba(0, 0, 0, 0.6);
+}
+
+.neon-text-cyan {
+  text-shadow: 0 0 20px rgba(6, 182, 212, 0.5), 0 0 40px rgba(6, 182, 212, 0.2);
+}
+
+.neon-text-red {
+  text-shadow: 0 0 25px rgba(239, 68, 68, 0.8), 0 0 50px rgba(239, 68, 68, 0.4);
+}
+
+@keyframes textDangerPulse {
+  0%, 100% {
+    color: #ffffff;
+    text-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
+  }
+  50% {
+    color: #ef4444;
+    text-shadow: 0 0 35px rgba(239, 68, 68, 1), 0 0 65px rgba(239, 68, 68, 0.95);
+  }
+}
+
+.animate-text-danger {
+  animation: textDangerPulse 0.85s ease-in-out infinite !important;
+}
+
+@keyframes flashOncePulse {
+  0% {
+    color: #ffffff;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+    transform: scale(1);
+  }
+  35% {
+    color: #ef4444;
+    text-shadow: 0 0 40px rgba(239, 68, 68, 1), 0 0 75px rgba(239, 68, 68, 0.95);
+    transform: scale(1.05);
+  }
+  70% {
+    color: #ef4444;
+    text-shadow: 0 0 25px rgba(239, 68, 68, 0.8);
+    transform: scale(1.02);
+  }
+  100% {
+    color: #ffffff;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+    transform: scale(1);
+  }
+}
+
+.animate-flash-once {
+  animation: flashOncePulse 1.2s cubic-bezier(0.16, 1, 0.3, 1) 1 forwards !important;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 9999px;
+}
+
+.cursor-hidden {
+  cursor: none !important;
+}
+
+.marquee-wrapper {
+  overflow: hidden;
+  width: 100%;
+  position: relative;
+}
+
+.animate-marquee {
+  display: inline-block;
+  white-space: nowrap;
+  padding-left: 100%;
+  animation: marquee-scroll var(--marquee-speed) linear infinite;
+  will-change: transform;
+}
+
+@keyframes marquee-scroll {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-100%, 0, 0);
+  }
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+body.is-fullscreen {
+  overflow: hidden;
+}
+
+body.is-fullscreen #topBar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  transform: translateY(-100%);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+  z-index: 50;
+}
+
+body.is-fullscreen #topBar.show-fullscreen-header {
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+body.is-fullscreen .hide-in-fullscreen,
+body.is-fullscreen .projector-ui-control {
+  display: none !important;
+}
+
+body.is-fullscreen #mainContainer {
+  min-height: 100vh;
+  justify-content: center;
+  padding: 1rem;
+}
+
+#dangerWarningBar {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+}
+
+#dangerWarningBar.show-bar {
+  transform: translateY(0) !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
