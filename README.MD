@@ -28,7 +28,7 @@ Dibuat dengan HTML5, Tailwind CSS, dan Vanilla JavaScript murni tanpa ketergantu
      - Tekan `-` atau `_` : Perkecil ukuran jam (-10%)
      - Tekan `0` : Reset ukuran jam ke 100%
 
-4. **Kontrol Transparansi & Mode Overlay OBS (Fix Bug)**
+4. **Kontrol Transparansi & Mode Overlay OBS**
    - Dropdown kontrol opasitas dengan tombol klik stabil tanpa bug hilang saat kursor digeser.
    - Slider opasitas 0% - 100% dengan tombol preset instan:
      - `0% (Bening)` : Khusus OBS Browser Source / overlay proyektor transparan.
@@ -36,19 +36,30 @@ Dibuat dengan HTML5, Tailwind CSS, dan Vanilla JavaScript murni tanpa ketergantu
      - `Solid (100%)` : Latar belakang solid gelap pekat.
    - Pilihan tema: **Deep Dark**, **Pure Black OLED**, dan **Proyektor Overlay**.
 
-5. **Mode Ujian & Peringatan Flash Merah**
+5. **Mode Ujian & Peringatan Flash Fleksibel (Flash 1x & Countdown)**
    - Banner teks berjalan (*marquee*) untuk tata tertib ujian yang dapat disunting.
-   - Visual alert berkedip merah otomatis saat sisa waktu pengerjaan kurang dari menit yang ditentukan (misal 10 menit).
+   - Pilihan peringatan visual: **Flash 1x** (berkedip sekejap saat menyentuh waktu tertentu) dan **Countdown Flashing** (berkedip terus sampai 00:00).
+   - Tombol cepat tambah aturan **+ Flash 1x** di toolbar dan modal, serta tombol uji coba efek flash langsung di layar.
    - Audio bel sintetis (*Web Audio API*) tanpa perlu file MP3 eksternal.
 
-6. **Tab Tambahan Multifungsi**
+6. **Presisi Milidetik 60 FPS & Mode Tampil/Sembunyi Halus (Semua Mode)**
+   - **Tampilan Angka Halus Tanpa Stutter / Loncat**: Milidetik diperbarui dengan tick rate 16ms (~60 FPS) saat aktif, menghasilkan penambahan/pengurangan angka yang mulus dan natural.
+   - **Mode Hemat Daya saat Sembunyi**: Saat milidetik disembunyikan, interval otomatis beralih ke mode hemat CPU (250ms - 500ms) tanpa frame drop.
+   - **Dukungan Penuh di Semua 5 Mode**: Jam Digital, Stopwatch, Timer, Queue (Antrean), dan Jam Dunia.
+   - **Sinkronisasi 100%**: Tombol toolbar `Ms: Tampil` / `Ms: Sembunyi` dan checkbox di menu Pengaturan terhubung secara real-time dan tersimpan di penyimpanan lokal.
+   - **Zero Layout Shift**: Tipografi monospace dengan metrik `tabular-nums lining-nums` sehingga angka yang berganti tidak menggeser posisi elemen lain.
+
+7. **Tab Tambahan Multifungsi**
    - **Stopwatch**: Penghitung waktu presisi milidetik dengan fitur Split & Lap recording.
    - **Countdown Timer**: Timer melingkar dengan preset cepat (5m, 10m, 15m, 30m, 60m, 90m).
-   - **Auto Queue Timer**: Antrean waktu bertahap otomatis (Ujian bertahap, Pomodoro, Sidang Skripsi).
-   - **Jam Dunia**: Pantau waktu Indonesia (WIB, WITA, WIT) serta kota internasional secara bersamaan.
+   - **Auto Queue Timer**: Antrean waktu bertahap otomatis (Ujian bertahap, Pomodoro, Sidang Skripsi). Dilengkapi:
+     - **Icon Edit**: Mengubah nama sesi dan durasi waktu secara langsung (jam, menit, detik, dan preset cepat).
+     - **Icon Geser / Drag Handle**: Mengatur ulang urutan sesi antrean dengan drag-and-drop atau tombol panah naik/turun.
+     - **Kustomisasi Flash Sesi**: Pengaturan flash per-sesi atau mewarisi aturan Flash Global.
+   - **Jam Dunia**: Pantau waktu Indonesia (WIB, WITA, WIT) serta kota internasional secara bersamaan dengan milidetik sinkron.
 
-7. **Penyimpanan Lokal Otomatis (Local Storage)**
-   - Preferensi ukuran jam, transparansi, tema, preset antrean, dan pengumuman ujian tersimpan otomatis di browser.
+8. **Penyimpanan Lokal Otomatis (Local Storage)**
+   - Preferensi ukuran jam, visibilitas milidetik, transparansi, tema, preset antrean, dan pengumuman ujian tersimpan otomatis di browser.
 
 ---
 
@@ -77,4 +88,3 @@ Dibuat dengan HTML5, Tailwind CSS, dan Vanilla JavaScript murni tanpa ketergantu
 3. Atur resolusi sesuai kanvas (misal: `1920x1080`).
 4. Klik tombol **Transparan** pada OmniClock dan pilih **0% (Bening)**.
 5. OmniClock kini akan tampil melayang rapi di atas slide presentasi atau kamera Anda tanpa latar belakang yang menghalangi!
-

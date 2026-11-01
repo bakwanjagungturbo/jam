@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8">
@@ -102,6 +102,10 @@
 
         <button onclick="toggleAudioMute()" id="muteBtn" title="Mute Suara (Hotkey M)" class="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition">
           <i data-lucide="volume-2" id="muteIcon" class="w-4 h-4 text-emerald-400"></i>
+        </button>
+
+        <button onclick="toggleToastMute()" id="muteToastBtn" title="Mute Notifikasi Pop-up (Perintah)" class="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition">
+          <i data-lucide="bell" id="muteToastIcon" class="w-4 h-4 text-indigo-400"></i>
         </button>
 
         <button onclick="toggleBlankScreen()" title="Gelapkan Layar (Hotkey B)" class="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition">
@@ -606,17 +610,47 @@
       </button>
       <div class="flex items-center gap-2.5 text-amber-400 mb-2">
         <i data-lucide="zap" class="w-6 h-6"></i>
-        <h3 class="text-lg font-bold text-white" id="flashModalHeading">Daftar Aturan Flash Peringatan</h3>
+        <h3 class="text-lg font-bold text-white" id="flashModalHeading">Pengaturan Flash Global (Peringatan Waktu)</h3>
       </div>
       <p class="text-xs text-slate-400 mb-4" id="flashModalDescription">
-        Atur waktu pemicu flash. Pilihan: <strong>Flash 1x</strong> (berkedip 5 detik saat menyentuh angka) atau <strong>Countdown Flashing</strong> (berkedip terus sampai 00:00).
+        Atur waktu pemicu flash untuk Timer & Antrean Queue. Pilihan: <strong>Flash 1x</strong> (berkedip saat menyentuh waktu tertentu) atau <strong>Countdown Flashing</strong> (berkedip terus sampai 00:00).
       </p>
 
-      <div class="p-3 bg-slate-800/40 rounded-2xl border border-slate-700/60 mb-4">
+      <div class="p-3 bg-slate-800/40 rounded-2xl border border-slate-700/60 mb-3 flex items-center justify-between gap-2">
         <label class="flex items-center gap-2 cursor-pointer text-xs font-semibold text-slate-200">
           <input type="checkbox" id="modalWarningMasterToggle" checked class="rounded bg-slate-800 border-slate-700 text-amber-500 focus:ring-0" onchange="state.warningEnabled = this.checked">
           <span>Aktifkan Sistem Peringatan Flash</span>
         </label>
+
+        <button type="button" onclick="testFlash1xEffect()" class="px-2.5 py-1 bg-amber-600/20 hover:bg-amber-600/40 text-amber-300 border border-amber-500/30 rounded-lg text-xs font-semibold flex items-center gap-1 transition" title="Uji Efek Flash 1x pada layar saat ini">
+          <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-400"></i>
+          <span>Uji Flash 1x</span>
+        </button>
+      </div>
+
+      <div class="mb-4 space-y-2">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <button type="button" onclick="addNewFlashRule('once')" class="py-2.5 px-3 bg-amber-600/20 hover:bg-amber-600/30 text-amber-300 border border-amber-500/40 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition shadow-sm">
+            <i data-lucide="zap" class="w-4 h-4 text-amber-400"></i>
+            <span>+ Tambah Flash 1x</span>
+          </button>
+          <button type="button" onclick="addNewFlashRule('countdown')" class="py-2.5 px-3 bg-rose-600/20 hover:bg-rose-600/30 text-rose-300 border border-rose-500/40 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition shadow-sm">
+            <i data-lucide="flame" class="w-4 h-4 text-rose-400"></i>
+            <span>+ Tambah Countdown Flash</span>
+          </button>
+        </div>
+        <div class="flex flex-wrap items-center gap-1.5 p-2 bg-slate-800/40 rounded-xl border border-slate-700/40 text-[11px]">
+          <span class="text-slate-400 font-medium mr-1 flex items-center gap-1">
+            <i data-lucide="zap" class="w-3 h-3 text-amber-400"></i>
+            Preset Flash 1x:
+          </span>
+          <button type="button" onclick="addQuickFlash1x(0, 15, 0)" class="px-2 py-0.5 rounded bg-slate-800 hover:bg-amber-600 text-slate-300 hover:text-white border border-slate-700 transition">15m</button>
+          <button type="button" onclick="addQuickFlash1x(0, 10, 0)" class="px-2 py-0.5 rounded bg-slate-800 hover:bg-amber-600 text-slate-300 hover:text-white border border-slate-700 transition">10m</button>
+          <button type="button" onclick="addQuickFlash1x(0, 5, 0)" class="px-2 py-0.5 rounded bg-slate-800 hover:bg-amber-600 text-slate-300 hover:text-white border border-slate-700 transition">5m</button>
+          <button type="button" onclick="addQuickFlash1x(0, 2, 0)" class="px-2 py-0.5 rounded bg-slate-800 hover:bg-amber-600 text-slate-300 hover:text-white border border-slate-700 transition">2m</button>
+          <button type="button" onclick="addQuickFlash1x(0, 1, 0)" class="px-2 py-0.5 rounded bg-slate-800 hover:bg-amber-600 text-slate-300 hover:text-white border border-slate-700 transition">1m</button>
+          <button type="button" onclick="addQuickFlash1x(0, 0, 30)" class="px-2 py-0.5 rounded bg-slate-800 hover:bg-amber-600 text-slate-300 hover:text-white border border-slate-700 transition">30d</button>
+        </div>
       </div>
 
       <div class="space-y-2.5 mb-4" id="flashRulesListContainer">
@@ -659,10 +693,12 @@
           <input type="radio" name="itemFlashModeRadio" value="inherit" checked onchange="toggleItemFlashModeUI(this.value)">
           <span>Ikuti Pengaturan Flash Default / Sesi Sebelumnya</span>
         </label>
+
         <label class="flex items-center gap-2 text-xs text-slate-200 cursor-pointer p-2.5 bg-slate-800/80 rounded-xl border border-slate-700">
           <input type="radio" name="itemFlashModeRadio" value="custom" onchange="toggleItemFlashModeUI(this.value)">
           <span>Kustomisasi Khusus Sesi Ini (Bisa Tambah Banyak Aturan)</span>
         </label>
+
       </div>
 
       <div id="itemCustomFlashSection" class="hidden space-y-2.5 mb-4">
@@ -676,6 +712,67 @@
       <div class="flex justify-end gap-2 pt-3 border-t border-slate-800">
         <button onclick="closeModal('queueItemFlashModal')" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold">Batal</button>
         <button onclick="saveItemFlashRules()" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-bold text-xs">Terapkan pada Sesi</button>
+      </div>
+    </div>
+  </div>
+
+    <div id="editQueueModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-md w-full p-6 shadow-2xl relative">
+      <button onclick="closeModal('editQueueModal')" class="absolute top-4 right-4 text-slate-400 hover:text-white">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+      <div class="flex items-center gap-2.5 text-amber-400 mb-4">
+        <i data-lucide="pencil" class="w-5 h-5"></i>
+        <h3 class="text-base font-bold text-white">Edit Waktu & Sesi Antrean</h3>
+      </div>
+      
+      <div class="space-y-4 text-xs">
+        <div>
+          <label class="block text-slate-300 font-semibold mb-1.5">Nama Sesi</label>
+          <input type="text" id="editQueueTitle" placeholder="Misal: Pengerjaan Soal Bagian A" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500">
+        </div>
+
+        <div>
+          <label class="block text-slate-300 font-semibold mb-1.5">Durasi Waktu Sesi</label>
+          <div class="grid grid-cols-3 gap-2 text-center">
+            <div>
+              <span class="text-[11px] text-slate-400 block mb-1">Jam</span>
+              <input type="number" id="editQueueHours" min="0" max="23" value="0" class="w-full bg-slate-800 border border-slate-700 rounded-xl py-2.5 text-center text-base font-mono text-white focus:outline-none focus:border-indigo-500">
+            </div>
+            <div>
+              <span class="text-[11px] text-slate-400 block mb-1">Menit</span>
+              <input type="number" id="editQueueMinutes" min="0" max="59" value="20" class="w-full bg-slate-800 border border-slate-700 rounded-xl py-2.5 text-center text-base font-mono text-white focus:outline-none focus:border-indigo-500">
+            </div>
+            <div>
+              <span class="text-[11px] text-slate-400 block mb-1">Detik</span>
+              <input type="number" id="editQueueSeconds" min="0" max="59" value="0" class="w-full bg-slate-800 border border-slate-700 rounded-xl py-2.5 text-center text-base font-mono text-white focus:outline-none focus:border-indigo-500">
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <span class="text-[11px] text-slate-400 block mb-1.5 font-medium">Preset Cepat:</span>
+          <div class="flex flex-wrap gap-1.5">
+            <button type="button" onclick="setEditDurationPreset(0, 5, 0)" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 transition">5m</button>
+            <button type="button" onclick="setEditDurationPreset(0, 10, 0)" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 transition">10m</button>
+            <button type="button" onclick="setEditDurationPreset(0, 15, 0)" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 transition">15m</button>
+            <button type="button" onclick="setEditDurationPreset(0, 20, 0)" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 transition">20m</button>
+            <button type="button" onclick="setEditDurationPreset(0, 25, 0)" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 transition">25m</button>
+            <button type="button" onclick="setEditDurationPreset(0, 30, 0)" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 transition">30m</button>
+            <button type="button" onclick="setEditDurationPreset(0, 45, 0)" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 transition">45m</button>
+            <button type="button" onclick="setEditDurationPreset(1, 0, 0)" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 transition">1 Jam</button>
+            <button type="button" onclick="setEditDurationPreset(1, 30, 0)" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 transition">1.5 Jam</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-6 flex justify-end gap-2 pt-3 border-t border-slate-800">
+        <button onclick="closeModal('editQueueModal')" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold transition">
+          Batal
+        </button>
+        <button onclick="saveQueueItemEdit()" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-bold text-xs shadow-lg shadow-indigo-600/30 transition">
+          Simpan Perubahan
+        </button>
       </div>
     </div>
   </div>
@@ -762,29 +859,40 @@
               <span class="font-semibold text-slate-200 block mb-2">1.3 Elemen & Tampilan Milidetik per Mode</span>
               <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
                 <label class="flex items-center gap-2 cursor-pointer p-2 bg-slate-800/50 rounded-lg border border-slate-700/40">
-                  <input type="checkbox" id="settingMsClock" class="rounded bg-slate-800 border-slate-700 text-indigo-600 focus:ring-0" onchange="state.showMs.clock = this.checked; updateModeMsDisplay('clock');">
+                  <input type="checkbox" id="settingMsClock" class="rounded bg-slate-800 border-slate-700 text-indigo-600 focus:ring-0" onchange="setModeMs('clock', this.checked)">
                   <span class="text-slate-300 text-[11px]">Ms di Jam</span>
                 </label>
+        
                 <label class="flex items-center gap-2 cursor-pointer p-2 bg-slate-800/50 rounded-lg border border-slate-700/40">
-                  <input type="checkbox" id="settingMsStopwatch" checked class="rounded bg-slate-800 border-slate-700 text-indigo-600 focus:ring-0" onchange="state.showMs.stopwatch = this.checked; updateModeMsDisplay('stopwatch');">
+                  <input type="checkbox" id="settingMsStopwatch" checked class="rounded bg-slate-800 border-slate-700 text-indigo-600 focus:ring-0" onchange="setModeMs('stopwatch', this.checked)">
                   <span class="text-slate-300 text-[11px]">Ms di Stopwatch</span>
                 </label>
+        
                 <label class="flex items-center gap-2 cursor-pointer p-2 bg-slate-800/50 rounded-lg border border-slate-700/40">
-                  <input type="checkbox" id="settingMsTimer" class="rounded bg-slate-800 border-slate-700 text-indigo-600 focus:ring-0" onchange="state.showMs.timer = this.checked; updateModeMsDisplay('timer');">
+                  <input type="checkbox" id="settingMsTimer" class="rounded bg-slate-800 border-slate-700 text-indigo-600 focus:ring-0" onchange="setModeMs('timer', this.checked)">
                   <span class="text-slate-300 text-[11px]">Ms di Timer</span>
                 </label>
+        
                 <label class="flex items-center gap-2 cursor-pointer p-2 bg-slate-800/50 rounded-lg border border-slate-700/40">
-                  <input type="checkbox" id="settingMsQueue" class="rounded bg-slate-800 border-slate-700 text-indigo-600 focus:ring-0" onchange="state.showMs.queue = this.checked; updateModeMsDisplay('queue');">
+                  <input type="checkbox" id="settingMsQueue" class="rounded bg-slate-800 border-slate-700 text-indigo-600 focus:ring-0" onchange="setModeMs('queue', this.checked)">
                   <span class="text-slate-300 text-[11px]">Ms di Queue</span>
                 </label>
+        
                 <label class="flex items-center gap-2 cursor-pointer p-2 bg-slate-800/50 rounded-lg border border-slate-700/40">
-                  <input type="checkbox" id="settingMsWorld" class="rounded bg-slate-800 border-slate-700 text-indigo-600 focus:ring-0" onchange="state.showMs.world = this.checked; updateModeMsDisplay('world');">
+                  <input type="checkbox" id="settingMsWorld" class="rounded bg-slate-800 border-slate-700 text-indigo-600 focus:ring-0" onchange="setModeMs('world', this.checked)">
                   <span class="text-slate-300 text-[11px]">Ms di Dunia</span>
                 </label>
+        
                 <label class="flex items-center gap-2 cursor-pointer p-2 bg-slate-800/50 rounded-lg border border-slate-700/40">
                   <input type="checkbox" id="settingTimerRing" checked class="rounded bg-slate-800 border-slate-700 text-indigo-600 focus:ring-0" onchange="state.timerShowRing = this.checked; applyTimerRingVisibility();">
                   <span class="text-slate-300 text-[11px]">Lingkaran Timer</span>
                 </label>
+        
+                <label class="flex items-center gap-2 cursor-pointer p-2 bg-slate-800/50 rounded-lg border border-slate-700/40">
+                  <input type="checkbox" id="settingMuteToasts" class="rounded bg-slate-800 border-slate-700 text-indigo-600 focus:ring-0" onchange="state.muteToasts = this.checked; updateToastMuteUI(); saveStateToLocal();">
+                  <span class="text-slate-300 text-[11px]">Mute Pop-up Perintah</span>
+                </label>
+        
               </div>
             </div>
           </div>
@@ -806,6 +914,7 @@
               <input type="checkbox" id="settingWarningEnabled" checked class="rounded bg-slate-800 border-slate-700 text-amber-500 focus:ring-0">
               <span class="font-semibold text-slate-200">Aktifkan Efek Peringatan Flash</span>
             </label>
+    
 
             <div class="p-3 bg-slate-800/70 rounded-xl border border-slate-700/50 flex items-center justify-between">
               <div>
@@ -823,6 +932,7 @@
                 <input type="checkbox" id="settingWarningTickAudio" checked class="rounded bg-slate-800 border-slate-700 text-indigo-600 focus:ring-0">
                 <span>Bunyikan audio tick penanda di 10 detik terakhir</span>
               </label>
+      
             </div>
           </div>
         </div>
@@ -838,6 +948,7 @@
               <input type="checkbox" id="settingShowBanner" checked class="rounded bg-slate-800 border-slate-700 text-indigo-600 focus:ring-0">
               <span class="font-semibold text-slate-200">Tampilkan Banner Pengumuman</span>
             </label>
+    
 
             <div>
               <span class="font-semibold text-slate-200 block mb-1">3.1 Teks Pengumuman Berjalan</span>
@@ -896,6 +1007,7 @@
               <input type="checkbox" id="settingShowDangerBar" checked class="rounded bg-slate-800 border-slate-700 text-indigo-600 focus:ring-0">
               <span class="font-semibold text-slate-200">Tampilkan Notifikasi Perhatian saat Waktu Kritis</span>
             </label>
+    
 
             <div>
               <span class="font-semibold text-slate-200 block mb-1">4.1 Teks Pesan Notifikasi Perhatian</span>
@@ -1033,6 +1145,7 @@
       },
       timerShowRing: true,
       isMuted: false,
+      muteToasts: false,
       isExamMode: false,
       warningEnabled: true,
       flashRules: [
@@ -1168,9 +1281,13 @@
     }
 
     let clockInterval = null;
+    let lastClockMinute = -1;
+
     function startClockInterval() {
       clearInterval(clockInterval);
-      clockInterval = setInterval(updateDigitalClock, state.showMs.clock ? 30 : 500);
+      const tickRate = state.showMs.clock ? 16 : 500;
+      updateDigitalClock();
+      clockInterval = setInterval(updateDigitalClock, tickRate);
     }
 
     function updateDigitalClock() {
@@ -1199,8 +1316,10 @@
       document.getElementById('clk-m2').textContent = minutes[1];
       document.getElementById('clk-s1').textContent = seconds[0];
       document.getElementById('clk-s2').textContent = seconds[1];
-      document.getElementById('clk-ms1').textContent = ms[0];
-      document.getElementById('clk-ms2').textContent = ms[1];
+      if (state.showMs.clock) {
+        document.getElementById('clk-ms1').textContent = ms[0];
+        document.getElementById('clk-ms2').textContent = ms[1];
+      }
 
       const secSep = document.getElementById('clk-s-sep');
       const secGrp = document.getElementById('clk-s-grp');
@@ -1219,13 +1338,17 @@
         msGrp.classList.add('hidden');
       }
 
-      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-      document.getElementById('dateDisplay').textContent = now.toLocaleDateString('id-ID', options);
+      const currentMin = now.getMinutes();
+      if (currentMin !== lastClockMinute) {
+        lastClockMinute = currentMin;
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        document.getElementById('dateDisplay').textContent = now.toLocaleDateString('id-ID', options);
 
-      const firstDayOfYear = new Date(now.getFullYear(), 0, 1);
-      const pastDaysOfYear = (now - firstDayOfYear) / 86400000;
-      const weekNum = Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7);
-      document.getElementById('weekNumberBadge').textContent = 'Minggu ke-' + weekNum;
+        const firstDayOfYear = new Date(now.getFullYear(), 0, 1);
+        const pastDaysOfYear = (now - firstDayOfYear) / 86400000;
+        const weekNum = Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7);
+        document.getElementById('weekNumberBadge').textContent = 'Minggu ke-' + weekNum;
+      }
     }
 
     function toggle12HourFormat() {
@@ -1243,27 +1366,45 @@
       saveStateToLocal();
     }
 
-    function toggleModeMs(modeKey) {
-      state.showMs[modeKey] = !state.showMs[modeKey];
+    function setModeMs(modeKey, isVisible) {
+      state.showMs[modeKey] = !!isVisible;
       updateModeMsDisplay(modeKey);
-      if (modeKey === 'clock') startClockInterval();
-      if (modeKey === 'stopwatch') {
+      if (modeKey === 'clock') {
+        startClockInterval();
+        updateDigitalClock();
+      } else if (modeKey === 'stopwatch') {
         if (state.stopwatch.isRunning) {
           startStopwatchInterval();
         } else {
           renderStopwatch();
         }
+      } else if (modeKey === 'timer') {
+        if (state.timer.isRunning) {
+          startTimerInterval();
+        } else {
+          renderTimer();
+        }
+      } else if (modeKey === 'queue') {
+        if (state.queue.isRunning) {
+          startQueueInterval();
+        } else {
+          updateQueueDisplay();
+        }
+      } else if (modeKey === 'world') {
+        startWorldClocksInterval();
+        updateWorldClockTimes();
       }
-      if (modeKey === 'timer') renderTimer();
-      if (modeKey === 'queue') renderQueueUI();
-      if (modeKey === 'world') updateWorldClocks();
       saveStateToLocal();
+    }
+
+    function toggleModeMs(modeKey) {
+      setModeMs(modeKey, !state.showMs[modeKey]);
       showToast('Milidetik ' + modeKey.toUpperCase() + (state.showMs[modeKey] ? ' Ditampilkan' : ' Disembunyikan'));
     }
 
     function updateModeMsDisplay(modeKey) {
+      const isVisible = !!state.showMs[modeKey];
       const btn = document.getElementById('btn-ms-' + modeKey);
-      const isVisible = state.showMs[modeKey];
       if (btn) {
         btn.textContent = isVisible ? 'Ms: Tampil' : 'Ms: Sembunyi';
         if (isVisible) {
@@ -1290,6 +1431,8 @@
       } else if (modeKey === 'queue') {
         const msGrp = document.getElementById('q-ms-grp');
         if (msGrp) msGrp.classList.toggle('hidden', !isVisible);
+      } else if (modeKey === 'world') {
+        document.querySelectorAll('.wc-ms-span').forEach(el => el.classList.toggle('hidden', !isVisible));
       }
     }
 
@@ -1602,6 +1745,36 @@
       checkExamModeThreshold(tm.remainingSeconds, document.getElementById('timerDisplay'), state.flashRules);
     }
 
+    function startTimerInterval() {
+      const tm = state.timer;
+      clearInterval(tm.timerId);
+      const tickRate = state.showMs.timer ? 16 : 250;
+      tm.timerId = setInterval(() => {
+        const now = Date.now();
+        const diff = Math.max(0, tm.endTimestamp - now);
+        
+        if (diff > 0) {
+          tm.remainingSeconds = Math.floor(diff / 1000);
+          tm.remainingMs = diff % 1000;
+          renderTimer();
+        } else {
+          clearInterval(tm.timerId);
+          tm.isRunning = false;
+          tm.remainingSeconds = 0;
+          tm.remainingMs = 0;
+          document.getElementById('tm-ms1').textContent = '0';
+          document.getElementById('tm-ms2').textContent = '0';
+          playChimeSound();
+          document.getElementById('timerStateLabel').textContent = "WAKTU HABIS!";
+          const btn = document.getElementById('timerToggleBtn');
+          btn.classList.replace('bg-amber-600', 'bg-indigo-600');
+          document.getElementById('timerPlayTxt').textContent = "Mulai";
+          renderTimer();
+          showToast("\uD83D\uDD14 Waktu Timer Selesai!");
+        }
+      }, tickRate);
+    }
+
     function toggleTimer() {
       const tm = state.timer;
       const btn = document.getElementById('timerToggleBtn');
@@ -1615,33 +1788,7 @@
         const totalRemainingMs = (tm.remainingSeconds * 1000) + (tm.remainingMs || 0);
         tm.endTimestamp = Date.now() + totalRemainingMs;
 
-        const tickRate = state.showMs.timer ? 30 : 250;
-        tm.timerId = setInterval(() => {
-          const now = Date.now();
-          const diff = Math.max(0, tm.endTimestamp - now);
-          
-          if (diff > 0) {
-            tm.remainingSeconds = Math.floor(diff / 1000);
-            tm.remainingMs = diff % 1000;
-            renderTimer();
-            if (tm.remainingSeconds <= 10 && tm.remainingSeconds > 0 && tm.remainingMs < 50) {
-              playWarningTick();
-            }
-          } else {
-            clearInterval(tm.timerId);
-            tm.isRunning = false;
-            tm.remainingSeconds = 0;
-            tm.remainingMs = 0;
-            document.getElementById('tm-ms1').textContent = '0';
-            document.getElementById('tm-ms2').textContent = '0';
-            playChimeSound();
-            stateLbl.textContent = "WAKTU HABIS!";
-            btn.classList.replace('bg-amber-600', 'bg-indigo-600');
-            playTxt.textContent = "Mulai";
-            renderTimer();
-            showToast("🔔 Waktu Timer Selesai!");
-          }
-        }, tickRate);
+        startTimerInterval();
 
         btn.classList.replace('bg-indigo-600', 'bg-amber-600');
         playTxt.textContent = "Jeda";
@@ -1655,7 +1802,6 @@
       }
       lucide.createIcons();
     }
-
     function resetTimer() {
       const tm = state.timer;
       clearInterval(tm.timerId);
@@ -1745,13 +1891,13 @@
     function getActiveQueueFlashRules() {
       const curItem = state.queue.items[state.queue.currentIndex];
       if (!curItem) return state.flashRules;
-      if (curItem.flashMode === 'custom' && Array.isArray(curItem.customFlashRules) && curItem.customFlashRules.length > 0) {
-        return curItem.customFlashRules;
+      if (curItem.flashMode === 'custom') {
+        return Array.isArray(curItem.customFlashRules) ? curItem.customFlashRules : [];
       }
       return state.flashRules;
     }
 
-    function renderQueueUI() {
+    function updateQueueDisplay() {
       const q = state.queue;
       const totalSec = Math.max(0, q.remainingSeconds);
       const h = Math.floor(totalSec / 3600);
@@ -1800,43 +1946,107 @@
         nextTitleElem.textContent = 'Akhir Antrean';
       }
 
+      const activeRules = getActiveQueueFlashRules();
+      checkExamModeThreshold(q.remainingSeconds, document.getElementById('queueDisplay'), activeRules);
+    }
+
+    function renderQueueList() {
+      const q = state.queue;
       const listElem = document.getElementById('queueListContainer');
+      if (!listElem) return;
       listElem.innerHTML = q.items.map((it, idx) => {
         const isActive = idx === q.currentIndex;
         const isDone = idx < q.currentIndex;
         const activeClass = isActive ? 'border-indigo-500 bg-indigo-950/30' : 'border-slate-800 bg-slate-800/40 opacity-70';
         const badgeClass = isActive ? 'bg-indigo-500 text-white' : (isDone ? 'bg-emerald-600 text-white' : 'bg-slate-700 text-slate-300');
-        const badgeContent = isDone ? '✓' : idx + 1;
+        const badgeContent = isDone ? "\u2713" : idx + 1;
         const durBadge = formatSessionDuration(it.hours || 0, it.minutes || 0, it.seconds || 0);
         const hasCustomFlash = it.flashMode === 'custom' && Array.isArray(it.customFlashRules) && it.customFlashRules.length > 0;
         const flashLabel = hasCustomFlash ? it.customFlashRules.length + ' Flash' : 'Default';
 
-        return '<div class="p-2.5 rounded-xl border flex flex-wrap items-center justify-between gap-2 text-xs transition ' + activeClass + '">' +
-          '<div class="flex items-center gap-2.5 min-w-[140px]">' +
+        return '<div draggable="true" ondragstart="handleQueueDragStart(event, ' + idx + ')" ondragover="handleQueueDragOver(event, ' + idx + ')" ondragleave="handleQueueDragLeave(event, ' + idx + ')" ondrop="handleQueueDrop(event, ' + idx + ')" ondragend="handleQueueDragEnd(event)" class="queue-drag-item p-2.5 rounded-xl border flex flex-wrap items-center justify-between gap-2 text-xs transition select-none ' + activeClass + '">' +
+          '<div class="flex items-center gap-2 min-w-[140px]">' +
+            '<div class="cursor-grab active:cursor-grabbing text-slate-500 hover:text-indigo-400 p-1 rounded hover:bg-slate-800/80 transition flex items-center justify-center select-none" title="Geser / Drag untuk mengurutkan sesi">' +
+              '<i data-lucide="grip-vertical" class="w-4 h-4"></i>' +
+            '</div>' +
             '<span class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold font-mono ' + badgeClass + '">' +
               badgeContent +
             '</span>' +
             '<span class="text-xs font-semibold ' + (isActive ? 'text-white' : 'text-slate-300') + '">' + it.title + '</span>' +
           '</div>' +
-          '<div class="flex items-center gap-1.5">' +
-            '<span class="font-mono text-xs text-indigo-400 bg-indigo-950/40 px-2 py-0.5 rounded border border-indigo-800/30">' + durBadge + '</span>' +
+          '<div class="flex items-center gap-1.5 flex-wrap">' +
+            '<button onclick="openEditQueueModal(' + idx + ')" class="font-mono text-xs text-indigo-400 bg-indigo-950/40 hover:bg-indigo-900/60 px-2 py-0.5 rounded border border-indigo-800/30 transition flex items-center gap-1" title="Klik untuk mengedit durasi waktu">' + durBadge + '</button>' +
             '<button onclick="openQueueItemFlashModal(' + idx + ')" class="px-2 py-0.5 rounded text-[11px] font-medium flex items-center gap-1 ' + (hasCustomFlash ? 'bg-amber-600/30 text-amber-300 border border-amber-500/40' : 'bg-slate-800 text-slate-400 hover:text-white') + '" title="Aturan Flash Sesi ini">' +
               '<i data-lucide="zap" class="w-3 h-3"></i>' +
               '<span>' + flashLabel + '</span>' +
             '</button>' +
-            '<button onclick="duplicateQueueItem(' + idx + ')" class="text-slate-400 hover:text-indigo-400 p-1 rounded hover:bg-slate-800 transition" title="Duplikat Sesi Ini">' +
+            '<div class="flex items-center bg-slate-900/70 border border-slate-700/60 rounded-lg p-0.5" title="Geser Urutan Sesi">' +
+              '<button onclick="moveQueueItem(' + idx + ', ' + (idx - 1) + ')" ' + (idx === 0 ? 'disabled' : '') + ' class="p-1 rounded text-slate-400 hover:text-white disabled:opacity-20 disabled:hover:text-slate-400 hover:bg-slate-800 transition" title="Geser Naik (Pindah ke Atas)">' +
+                '<i data-lucide="chevron-up" class="w-3.5 h-3.5"></i>' +
+              '</button>' +
+              '<button onclick="moveQueueItem(' + idx + ', ' + (idx + 1) + ')" ' + (idx === q.items.length - 1 ? 'disabled' : '') + ' class="p-1 rounded text-slate-400 hover:text-white disabled:opacity-20 disabled:hover:text-slate-400 hover:bg-slate-800 transition" title="Geser Turun (Pindah ke Bawah)">' +
+                '<i data-lucide="chevron-down" class="w-3.5 h-3.5"></i>' +
+              '</button>' +
+            '</div>' +
+            '<button onclick="openEditQueueModal(' + idx + ')" class="text-slate-400 hover:text-amber-400 p-1.5 rounded hover:bg-slate-800 transition" title="Edit Waktu & Nama Sesi">' +
+              '<i data-lucide="pencil" class="w-3.5 h-3.5"></i>' +
+            '</button>' +
+            '<button onclick="duplicateQueueItem(' + idx + ')" class="text-slate-400 hover:text-indigo-400 p-1.5 rounded hover:bg-slate-800 transition" title="Duplikat Sesi Ini">' +
               '<i data-lucide="copy" class="w-3.5 h-3.5"></i>' +
             '</button>' +
-            '<button onclick="removeQueueItem(' + idx + ')" class="text-slate-500 hover:text-rose-400 p-1 rounded hover:bg-slate-800 transition" title="Hapus Sesi">' +
+            '<button onclick="removeQueueItem(' + idx + ')" class="text-slate-500 hover:text-rose-400 p-1.5 rounded hover:bg-slate-800 transition" title="Hapus Sesi">' +
               '<i data-lucide="trash-2" class="w-3.5 h-3.5"></i>' +
             '</button>' +
           '</div>' +
         '</div>';
       }).join('');
       lucide.createIcons();
+    }
 
-      const activeRules = getActiveQueueFlashRules();
-      checkExamModeThreshold(q.remainingSeconds, document.getElementById('queueDisplay'), activeRules);
+    function renderQueueUI() {
+      updateQueueDisplay();
+      renderQueueList();
+    }
+
+    function startQueueInterval() {
+      const q = state.queue;
+      clearInterval(q.timerId);
+      const tickRate = state.showMs.queue ? 16 : 250;
+      q.timerId = setInterval(() => {
+        const now = Date.now();
+        const diff = Math.max(0, q.endTimestamp - now);
+        
+        if (diff > 0) {
+          q.remainingSeconds = Math.floor(diff / 1000);
+          q.remainingMs = diff % 1000;
+          updateQueueDisplay();
+        } else {
+          playChimeSound();
+          if (q.currentIndex < q.items.length - 1) {
+            q.currentIndex++;
+            q.remainingSeconds = getItemTotalSeconds(q.items[q.currentIndex]);
+            q.remainingMs = 0;
+            q.endTimestamp = Date.now() + (q.remainingSeconds * 1000);
+            const rules = getActiveQueueFlashRules();
+            resetRulesTriggeredState(rules);
+            showToast('Melanjutkan ke: ' + q.items[q.currentIndex].title);
+            renderQueueUI();
+          } else {
+            clearInterval(q.timerId);
+            q.isRunning = false;
+            q.remainingSeconds = 0;
+            q.remainingMs = 0;
+            document.getElementById('q-ms1').textContent = '0';
+            document.getElementById('q-ms2').textContent = '0';
+            const btn = document.getElementById('queueToggleBtn');
+            const playTxt = document.getElementById('queuePlayTxt');
+            btn.classList.replace('bg-amber-600', 'bg-indigo-600');
+            playTxt.textContent = "Mulai Antrean";
+            renderQueueUI();
+              showToast("\uD83C\uDF89 Seluruh antrean sesi telah selesai!");
+          }
+        }
+      }, tickRate);
     }
 
     function toggleQueueTimer() {
@@ -1849,43 +2059,7 @@
         const totalRemainingMs = (q.remainingSeconds * 1000) + (q.remainingMs || 0);
         q.endTimestamp = Date.now() + totalRemainingMs;
 
-        const tickRate = state.showMs.queue ? 30 : 250;
-        q.timerId = setInterval(() => {
-          const now = Date.now();
-          const diff = Math.max(0, q.endTimestamp - now);
-          
-          if (diff > 0) {
-            q.remainingSeconds = Math.floor(diff / 1000);
-            q.remainingMs = diff % 1000;
-            renderQueueUI();
-            if (q.remainingSeconds <= 10 && q.remainingSeconds > 0 && q.remainingMs < 50) {
-              playWarningTick();
-            }
-          } else {
-            playChimeSound();
-            if (q.currentIndex < q.items.length - 1) {
-              q.currentIndex++;
-              q.remainingSeconds = getItemTotalSeconds(q.items[q.currentIndex]);
-              q.remainingMs = 0;
-              q.endTimestamp = Date.now() + (q.remainingSeconds * 1000);
-              const rules = getActiveQueueFlashRules();
-              resetRulesTriggeredState(rules);
-              showToast('Melanjutkan ke: ' + q.items[q.currentIndex].title);
-              renderQueueUI();
-            } else {
-              clearInterval(q.timerId);
-              q.isRunning = false;
-              q.remainingSeconds = 0;
-              q.remainingMs = 0;
-              document.getElementById('q-ms1').textContent = '0';
-              document.getElementById('q-ms2').textContent = '0';
-              btn.classList.replace('bg-amber-600', 'bg-indigo-600');
-              playTxt.textContent = "Mulai Antrean";
-              renderQueueUI();
-              showToast("🎉 Seluruh antrean sesi telah selesai!");
-            }
-          }
-        }, tickRate);
+        startQueueInterval();
 
         btn.classList.replace('bg-indigo-600', 'bg-amber-600');
         playTxt.textContent = "Jeda";
@@ -1897,7 +2071,6 @@
       }
       lucide.createIcons();
     }
-
     function resetQueueTimer() {
       const q = state.queue;
       clearInterval(q.timerId);
@@ -2001,6 +2174,124 @@
       }
       renderQueueUI();
       saveStateToLocal();
+    }
+    // --- Drag & Drop Reordering and Queue Edit ---
+    let draggedQueueIndex = null;
+
+    function handleQueueDragStart(e, index) {
+      draggedQueueIndex = index;
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/plain', String(index));
+      const el = e.currentTarget;
+      el.classList.add('is-dragging');
+    }
+
+    function handleQueueDragOver(e, index) {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      const el = e.currentTarget;
+      if (index !== draggedQueueIndex) {
+        el.classList.add('drag-over-indicator');
+      }
+    }
+
+    function handleQueueDragLeave(e, index) {
+      const el = e.currentTarget;
+      el.classList.remove('drag-over-indicator');
+    }
+
+    function handleQueueDrop(e, targetIndex) {
+      e.preventDefault();
+      const el = e.currentTarget;
+      el.classList.remove('drag-over-indicator');
+
+      if (draggedQueueIndex === null || draggedQueueIndex === targetIndex) return;
+      moveQueueItem(draggedQueueIndex, targetIndex);
+      draggedQueueIndex = null;
+    }
+
+    function handleQueueDragEnd(e) {
+      const el = e.currentTarget;
+      el.classList.remove('is-dragging');
+      document.querySelectorAll('#queueListContainer > div').forEach(item => {
+        item.classList.remove('drag-over-indicator', 'is-dragging');
+      });
+      draggedQueueIndex = null;
+    }
+
+    function moveQueueItem(fromIndex, toIndex) {
+      if (fromIndex < 0 || toIndex < 0 || fromIndex >= state.queue.items.length || toIndex >= state.queue.items.length || fromIndex === toIndex) return;
+
+      const currentItem = state.queue.items[state.queue.currentIndex];
+      const [movedItem] = state.queue.items.splice(fromIndex, 1);
+      state.queue.items.splice(toIndex, 0, movedItem);
+
+      // Keep active tracking aligned with moved item
+      const newIndex = state.queue.items.indexOf(currentItem);
+      if (newIndex !== -1) {
+        state.queue.currentIndex = newIndex;
+      }
+
+      renderQueueUI();
+      saveStateToLocal();
+      showToast('Urutan sesi "' + movedItem.title + '" dipindahkan');
+    }
+
+    function openEditQueueModal(index) {
+      state.editingQueueIndex = index;
+      const item = state.queue.items[index];
+      if (!item) return;
+
+      document.getElementById('editQueueTitle').value = item.title || '';
+      document.getElementById('editQueueHours').value = item.hours || 0;
+      document.getElementById('editQueueMinutes').value = item.minutes !== undefined ? item.minutes : 20;
+      document.getElementById('editQueueSeconds').value = item.seconds || 0;
+
+      openModal('editQueueModal');
+      lucide.createIcons();
+    }
+
+    function setEditDurationPreset(h, m, s) {
+      document.getElementById('editQueueHours').value = h;
+      document.getElementById('editQueueMinutes').value = m;
+      document.getElementById('editQueueSeconds').value = s;
+    }
+
+    function saveQueueItemEdit() {
+      const idx = state.editingQueueIndex;
+      if (idx === null || !state.queue.items[idx]) return;
+
+      const title = document.getElementById('editQueueTitle').value.trim() || 'Sesi ' + (idx + 1);
+      const h = Math.max(0, parseInt(document.getElementById('editQueueHours').value) || 0);
+      const m = Math.max(0, parseInt(document.getElementById('editQueueMinutes').value) || 0);
+      const s = Math.max(0, parseInt(document.getElementById('editQueueSeconds').value) || 0);
+
+      if (h === 0 && m === 0 && s === 0) {
+        showToast("Durasi sesi minimal 1 detik");
+        return;
+      }
+
+      state.queue.items[idx].title = title;
+      state.queue.items[idx].hours = h;
+      state.queue.items[idx].minutes = m;
+      state.queue.items[idx].seconds = s;
+
+      if (idx === state.queue.currentIndex) {
+        const totalSec = getItemTotalSeconds(state.queue.items[idx]);
+        if (!state.queue.isRunning) {
+          state.queue.remainingSeconds = totalSec;
+          state.queue.remainingMs = 0;
+        } else {
+          state.queue.remainingSeconds = totalSec;
+          state.queue.remainingMs = 0;
+          state.queue.endTimestamp = Date.now() + (totalSec * 1000);
+        }
+      }
+
+      closeModal('editQueueModal');
+      renderQueueUI();
+      saveStateToLocal();
+      showToast('Sesi "' + title + '" berhasil diperbarui!');
     }
 
     function saveCurrentAsPreset() {
@@ -2171,7 +2462,7 @@
       state.queue.items[idx].customFlashRules.push({
         id: Date.now(),
         hours: 0,
-        minutes: 2,
+        minutes: 0,
         seconds: 0,
         mode: 'once',
         triggered: false
@@ -2224,40 +2515,13 @@
       showToast("Aturan flash sesi berhasil disimpan");
     }
 
-    function updateWorldClocks() {
+    let worldClocksInterval = null;
+    let lastWcSecond = -1;
+
+    function renderWorldClocks() {
       const grid = document.getElementById('worldClocksGrid');
-      const now = new Date();
-
+      if (!grid) return;
       grid.innerHTML = state.worldClocks.map((c, idx) => {
-        let timeStr = '';
-        let dateStr = '';
-        try {
-          const tzFormatter = new Intl.DateTimeFormat('id-ID', {
-            timeZone: c.tz,
-            hour: '2-digit',
-            minute: '2-digit',
-            second: state.showSeconds ? '2-digit' : undefined,
-            hour12: !state.is24Hour
-          });
-          timeStr = tzFormatter.format(now);
-
-          const dateFormatter = new Intl.DateTimeFormat('id-ID', {
-            timeZone: c.tz,
-            weekday: 'short',
-            day: 'numeric',
-            month: 'short'
-          });
-          dateStr = dateFormatter.format(now);
-        } catch (e) {
-          timeStr = now.toLocaleTimeString('id-ID');
-          dateStr = now.toLocaleDateString('id-ID');
-        }
-
-        if (state.showMs.world) {
-          const ms = String(Math.floor(now.getMilliseconds() / 10)).padStart(2, '0');
-          timeStr += '.' + ms;
-        }
-
         return '<div class="p-5 bg-slate-900/90 border border-slate-800 rounded-3xl relative group hover:border-slate-700 transition shadow-lg">' +
           '<button onclick="removeTimezoneCard(' + idx + ')" class="absolute top-4 right-4 text-slate-500 hover:text-rose-400 opacity-0 group-hover:opacity-100 transition hide-in-fullscreen">' +
             '<i data-lucide="trash-2" class="w-4 h-4"></i>' +
@@ -2266,16 +2530,81 @@
             '<i data-lucide="map-pin" class="w-3.5 h-3.5"></i>' +
             '<span>' + c.name + '</span>' +
           '</div>' +
-          '<div class="world-clock-time font-clock font-black text-white projector-text drop-shadow-md my-1">' +
-            timeStr +
+          '<div class="world-clock-time font-clock font-black text-white projector-text drop-shadow-md my-1 time-display-wrapper">' +
+            '<span id="wc-main-' + idx + '">--:--:--</span>' +
+            '<span id="wc-ms-' + idx + '" class="wc-ms-span ' + (state.showMs.world ? '' : 'hidden') + '">.00</span>' +
           '</div>' +
           '<div class="text-xs text-slate-400 font-sans flex items-center justify-between mt-2 pt-2 border-t border-slate-800/80">' +
-            '<span>' + dateStr + '</span>' +
+            '<span id="wc-date-' + idx + '">---</span>' +
             '<span class="font-mono text-indigo-400 bg-indigo-950/50 px-2 py-0.5 rounded border border-indigo-800/40 text-[10px]">' + c.code + '</span>' +
           '</div>' +
         '</div>';
       }).join('');
       lucide.createIcons();
+      lastWcSecond = -1;
+      updateWorldClockTimes();
+    }
+
+    function updateWorldClockTimes() {
+      const now = new Date();
+      const currentSecond = now.getSeconds();
+      const secondChanged = currentSecond !== lastWcSecond;
+      const msStr = '.' + String(Math.floor(now.getMilliseconds() / 10)).padStart(2, '0');
+
+      for (let idx = 0; idx < state.worldClocks.length; idx++) {
+        const c = state.worldClocks[idx];
+        const msElem = document.getElementById('wc-ms-' + idx);
+        if (msElem && state.showMs.world) {
+          msElem.textContent = msStr;
+        }
+
+        if (secondChanged) {
+          const mainElem = document.getElementById('wc-main-' + idx);
+          const dateElem = document.getElementById('wc-date-' + idx);
+          if (mainElem) {
+            let timeStr = '';
+            let dateStr = '';
+            try {
+              const tzFormatter = new Intl.DateTimeFormat('id-ID', {
+                timeZone: c.tz,
+                hour: '2-digit',
+                minute: '2-digit',
+                second: state.showSeconds ? '2-digit' : undefined,
+                hour12: !state.is24Hour
+              });
+              timeStr = tzFormatter.format(now);
+
+              const dateFormatter = new Intl.DateTimeFormat('id-ID', {
+                timeZone: c.tz,
+                weekday: 'short',
+                day: 'numeric',
+                month: 'short'
+              });
+              dateStr = dateFormatter.format(now);
+            } catch (e) {
+              timeStr = now.toLocaleTimeString('id-ID');
+              dateStr = now.toLocaleDateString('id-ID');
+            }
+            mainElem.textContent = timeStr;
+            if (dateElem) dateElem.textContent = dateStr;
+          }
+        }
+      }
+
+      if (secondChanged) {
+        lastWcSecond = currentSecond;
+      }
+    }
+
+    function startWorldClocksInterval() {
+      clearInterval(worldClocksInterval);
+      const tickRate = state.showMs.world ? 16 : 500;
+      updateWorldClockTimes();
+      worldClocksInterval = setInterval(updateWorldClockTimes, tickRate);
+    }
+
+    function updateWorldClocks() {
+      renderWorldClocks();
     }
 
     function addSelectedTimezone() {
@@ -2331,6 +2660,10 @@
       }
     }
 
+    let flashOnceTimeoutId = null;
+    let flashOnceAnimTimeoutId = null;
+    let lastCountdownAudioSec = -1;
+
     function checkExamModeThreshold(secondsRemaining, textElement, rulesList) {
       if (!state.warningEnabled || !textElement) {
         clearExamDangerState();
@@ -2342,7 +2675,7 @@
         return;
       }
 
-      const rules = Array.isArray(rulesList) && rulesList.length > 0 ? rulesList : state.flashRules;
+      const rules = Array.isArray(rulesList) ? rulesList : state.flashRules;
       let activeCountdown = false;
 
       rules.forEach(rule => {
@@ -2354,7 +2687,7 @@
             activeCountdown = true;
           }
         } else if (rule.mode === 'once') {
-          if (secondsRemaining <= targetSec && secondsRemaining >= targetSec - 1 && !rule.triggered) {
+          if (secondsRemaining === targetSec && !rule.triggered) {
             rule.triggered = true;
             playWarningTick();
 
@@ -2362,20 +2695,19 @@
             void textElement.offsetWidth;
             textElement.classList.add('animate-flash-once');
 
-            const warningBar = document.getElementById('dangerWarningBar');
-            if (warningBar && state.dangerBar.show) {
-              updateDangerWarningBarContent(secondsRemaining);
-              warningBar.classList.add('show-bar');
-              setTimeout(() => {
-                if (!activeCountdown && warningBar) {
-                  warningBar.classList.remove('show-bar');
-                }
-              }, 2200);
-            }
-
-            setTimeout(() => {
+            clearTimeout(flashOnceAnimTimeoutId);
+            flashOnceAnimTimeoutId = setTimeout(() => {
               textElement.classList.remove('animate-flash-once');
-            }, 1200);
+            }, 3000);
+
+            showDangerWarningBar(secondsRemaining);
+            clearTimeout(flashOnceTimeoutId);
+            flashOnceTimeoutId = setTimeout(() => {
+              flashOnceTimeoutId = null;
+              if (!activeCountdown) {
+                hideDangerWarningBar();
+              }
+            }, 5000); // Notifikasi muncul selama 5 detik untuk mode 1x flash
           }
 
           if (secondsRemaining > targetSec) {
@@ -2384,68 +2716,95 @@
         }
       });
 
-      const warningBar = document.getElementById('dangerWarningBar');
       if (activeCountdown) {
         textElement.classList.remove('animate-flash-once');
-        textElement.classList.add('animate-text-danger');
-        if (warningBar && state.dangerBar.show) {
-          updateDangerWarningBarContent(secondsRemaining);
-          warningBar.classList.add('show-bar');
+        if (!textElement.classList.contains('animate-text-danger')) {
+          textElement.classList.add('animate-text-danger');
+        }
+        showDangerWarningBar(secondsRemaining);
+
+        // Suara countdown presisi pada setiap detik perpindahan
+        if (secondsRemaining !== lastCountdownAudioSec) {
+          lastCountdownAudioSec = secondsRemaining;
+          playWarningTick();
         }
       } else {
         textElement.classList.remove('animate-text-danger');
-        if (!textElement.classList.contains('animate-flash-once')) {
-          if (warningBar && !ruleHasRecentOnceFlash(rules)) {
-            warningBar.classList.remove('show-bar');
-          }
+        if (!flashOnceTimeoutId) {
+          hideDangerWarningBar();
         }
       }
     }
 
-    function ruleHasRecentOnceFlash(rules) {
-      return rules.some(r => r.mode === 'once' && r.triggered && r.recentlyFlashed);
-    }
-
-    function updateDangerWarningBarContent(secondsRemaining) {
+    function showDangerWarningBar(secondsRemaining) {
+      if (!state.dangerBar || !state.dangerBar.show) return;
       const warningBar = document.getElementById('dangerWarningBar');
       const textElem = document.getElementById('dangerWarningText');
       if (!warningBar || !textElem) return;
 
       const minsLeft = Math.ceil(secondsRemaining / 60);
-      const template = state.dangerBar.text || '⚠️ PERHATIAN: SISA WAKTU KURANG DARI {mins} MENIT! ⚠️';
-      textElem.textContent = template.replace('{mins}', minsLeft);
+      const template = state.dangerBar.text || 'âš ï¸ PERHATIAN: SISA WAKTU KURANG DARI {mins} MENIT! âš ï¸';
+      const newText = template.replace('{mins}', minsLeft);
+      if (textElem.textContent !== newText) {
+        textElem.textContent = newText;
+      }
 
-      warningBar.className = 'fixed left-0 right-0 z-40 text-white text-center py-2 px-4 font-bold tracking-wider shadow-2xl transition-all duration-300 text-xs sm:text-sm ' +
-        (state.dangerBar.position === 'bottom' ? 'bottom-0 translate-y-full opacity-0 pointer-events-none' : 'top-14 -translate-y-full opacity-0 pointer-events-none') +
-        ' ' + state.dangerBar.colorClass;
+      const isBottom = state.dangerBar.position === 'bottom';
+      warningBar.classList.toggle('bottom-0', isBottom);
+      warningBar.classList.toggle('top-14', !isBottom);
+
+      if (state.dangerBar.colorClass && !warningBar.classList.contains(state.dangerBar.colorClass)) {
+        warningBar.className = warningBar.className.replace(/bg-\w+-\d+/g, '').trim();
+        warningBar.classList.add(state.dangerBar.colorClass);
+      }
+
+      if (!warningBar.classList.contains('show-bar')) {
+        warningBar.classList.add('show-bar');
+      }
+    }
+
+    function hideDangerWarningBar() {
+      const warningBar = document.getElementById('dangerWarningBar');
+      if (warningBar && warningBar.classList.contains('show-bar')) {
+        warningBar.classList.remove('show-bar');
+      }
     }
 
     function clearExamDangerState() {
-      const warningBar = document.getElementById('dangerWarningBar');
-      if (warningBar) warningBar.classList.remove('show-bar');
+      hideDangerWarningBar();
+      clearTimeout(flashOnceTimeoutId);
+      clearTimeout(flashOnceAnimTimeoutId);
+      flashOnceTimeoutId = null;
+      flashOnceAnimTimeoutId = null;
+      lastCountdownAudioSec = -1;
       const clock = document.getElementById('clockDisplay');
       const sw = document.getElementById('swDisplay');
       const timer = document.getElementById('timerDisplay');
       const queue = document.getElementById('queueDisplay');
-      if (clock) clock.classList.remove('animate-text-danger');
-      if (sw) sw.classList.remove('animate-text-danger');
-      if (timer) timer.classList.remove('animate-text-danger');
-      if (queue) queue.classList.remove('animate-text-danger');
+      if (clock) clock.classList.remove('animate-text-danger', 'animate-flash-once');
+      if (sw) sw.classList.remove('animate-text-danger', 'animate-flash-once');
+      if (timer) timer.classList.remove('animate-text-danger', 'animate-flash-once');
+      if (queue) queue.classList.remove('animate-text-danger', 'animate-flash-once');
     }
-
     function renderFlashRulesUI() {
       const container = document.getElementById('flashRulesListContainer');
       if (!container) return;
 
       if (state.flashRules.length === 0) {
-        container.innerHTML = '<div class="p-3 text-center text-xs text-slate-500 bg-slate-800/20 rounded-xl border border-dashed border-slate-700">Belum ada aturan peringatan flash. Klik tombol di bawah untuk menambah.</div>';
+        container.innerHTML = '<div class="p-3 text-center text-xs text-slate-500 bg-slate-800/20 rounded-xl border border-dashed border-slate-700">Belum ada aturan peringatan flash. Klik tombol di atas untuk menambah Flash 1x atau Countdown.</div>';
         return;
       }
 
       container.innerHTML = state.flashRules.map((r, idx) => {
+        const isOnce = r.mode === 'once';
+        const typeBadge = isOnce
+          ? '<span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-amber-500/20 text-amber-300 border border-amber-500/30 flex items-center gap-1"><i data-lucide="zap" class="w-3 h-3 text-amber-400"></i> Flash 1x</span>'
+          : '<span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-rose-500/20 text-rose-300 border border-rose-500/30 flex items-center gap-1"><i data-lucide="flame" class="w-3 h-3 text-rose-400"></i> Countdown</span>';
+
         return '<div class="p-3 bg-slate-800/70 border border-slate-700/60 rounded-xl flex flex-wrap items-center justify-between gap-2.5 text-xs">' +
-          '<div class="flex items-center gap-2">' +
-            '<span class="w-5 h-5 rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/30 font-mono font-bold flex items-center justify-center text-[10px]">' + (idx + 1) + '</span>' +
+          '<div class="flex items-center gap-2 flex-wrap">' +
+            '<span class="w-5 h-5 rounded-full bg-slate-700 text-slate-300 font-mono font-bold flex items-center justify-center text-[10px]">' + (idx + 1) + '</span>' +
+            typeBadge +
             '<div class="flex items-center gap-1 font-mono">' +
               '<input type="number" min="0" max="23" value="' + (r.hours || 0) + '" onchange="updateRuleVal(' + idx + ', \'hours\', this.value)" class="w-12 bg-slate-900 border border-slate-700 rounded px-1.5 py-1 text-center text-white focus:outline-none" title="Jam">' +
               '<span class="text-slate-400">j</span>' +
@@ -2456,9 +2815,9 @@
             '</div>' +
           '</div>' +
           '<div class="flex items-center gap-2">' +
-            '<select onchange="updateRuleVal(' + idx + ', \'mode\', this.value)" class="bg-slate-900 border border-slate-700 rounded px-2 py-1 text-xs text-amber-300 focus:outline-none">' +
-              '<option value="once"' + (r.mode === 'once' ? ' selected' : '') + '>Flash 1x (Warning 5s)</option>' +
-              '<option value="countdown"' + (r.mode === 'countdown' ? ' selected' : '') + '>Countdown (Sampai 0)</option>' +
+            '<select onchange="updateRuleVal(' + idx + ', \'mode\', this.value); renderFlashRulesUI();" class="bg-slate-900 border border-slate-700 rounded px-2 py-1 text-xs ' + (isOnce ? 'text-amber-300' : 'text-rose-300') + ' focus:outline-none">' +
+              '<option value="once"' + (isOnce ? ' selected' : '') + '>⚡ Flash 1x (Warning Singkat)</option>' +
+              '<option value="countdown"' + (!isOnce ? ' selected' : '') + '>🔥 Countdown (Sampai 00:00)</option>' +
             '</select>' +
             '<button onclick="deleteFlashRule(' + idx + ')" class="text-slate-500 hover:text-rose-400 p-1 rounded hover:bg-slate-700 transition" title="Hapus Aturan">' +
               '<i data-lucide="trash-2" class="w-4 h-4"></i>' +
@@ -2478,18 +2837,67 @@
       }
     }
 
-    function addNewFlashRule() {
+    function addNewFlashRule(mode = 'once') {
       state.flashRules.push({
         id: Date.now(),
         hours: 0,
-        minutes: 5,
+        minutes: 0,
         seconds: 0,
+        mode: mode,
+        triggered: false
+      });
+      renderFlashRulesUI();
+      showToast(mode === 'once' ? "Aturan Flash 1x baru ditambahkan" : "Aturan Countdown Flash baru ditambahkan");
+    }
+
+    function addQuickFlash1x(h, m, s) {
+      state.flashRules.push({
+        id: Date.now(),
+        hours: h,
+        minutes: m,
+        seconds: s,
         mode: 'once',
         triggered: false
       });
       renderFlashRulesUI();
+      showToast('Flash 1x di ' + formatSessionDuration(h, m, s) + ' ditambahkan ke aturan');
     }
 
+    function addQuickFlash1xFromToolbar() {
+      openModal('flashRulesModal');
+      addNewFlashRule('once');
+    }
+
+    function testFlash1xEffect() {
+      const displayMap = {
+        clock: 'clockDisplay',
+        stopwatch: 'swDisplay',
+        timer: 'timerDisplay',
+        queue: 'queueDisplay',
+        world: 'mainContainer'
+      };
+      const elemId = displayMap[state.activeTab] || 'clockDisplay';
+      const elem = document.getElementById(elemId);
+      if (elem) {
+        elem.classList.remove('animate-text-danger', 'animate-flash-once');
+        void elem.offsetWidth;
+        elem.classList.add('animate-flash-once');
+        playWarningTick();
+
+        showDangerWarningBar(300);
+        clearTimeout(flashOnceTimeoutId);
+        flashOnceTimeoutId = setTimeout(() => {
+          flashOnceTimeoutId = null;
+          hideDangerWarningBar();
+        }, 5000);
+
+        clearTimeout(flashOnceAnimTimeoutId);
+        flashOnceAnimTimeoutId = setTimeout(() => {
+          elem.classList.remove('animate-flash-once');
+        }, 3000);
+        showToast("\u26A1 Menjalankan simulasi Flash 1x (5 detik)");
+      }
+    }
     function deleteFlashRule(index) {
       state.flashRules.splice(index, 1);
       renderFlashRulesUI();
@@ -2816,6 +3224,7 @@
 
     let toastTimeout = null;
     function showToast(msg) {
+      if (state.muteToasts) return;
       const toast = document.getElementById('toastNotification');
       document.getElementById('toastMsg').textContent = msg;
       toast.classList.remove('hidden');
@@ -2823,6 +3232,38 @@
       toastTimeout = setTimeout(() => {
         toast.classList.add('hidden');
       }, 2600);
+    }
+
+    function toggleToastMute() {
+      state.muteToasts = !state.muteToasts;
+      updateToastMuteUI();
+      saveStateToLocal();
+      if (!state.muteToasts) {
+        showToast("Notifikasi Pop-up Diaktifkan");
+      }
+    }
+
+    function updateToastMuteUI() {
+      const btn = document.getElementById('muteToastBtn');
+      const icon = document.getElementById('muteToastIcon');
+      if (btn && icon) {
+        if (state.muteToasts) {
+          btn.title = "Notifikasi Pop-up Dimatikan (Muted)";
+          btn.classList.add('text-rose-400');
+          btn.classList.remove('text-slate-400');
+          icon.setAttribute('data-lucide', 'bell-off');
+          icon.className = 'w-4 h-4 text-rose-400';
+        } else {
+          btn.title = "Mute Notifikasi Pop-up (Perintah)";
+          btn.classList.remove('text-rose-400');
+          btn.classList.add('text-slate-400');
+          icon.setAttribute('data-lucide', 'bell');
+          icon.className = 'w-4 h-4 text-indigo-400';
+        }
+        lucide.createIcons();
+      }
+      const check = document.getElementById('settingMuteToasts');
+      if (check) check.checked = !!state.muteToasts;
     }
 
     function saveAppSettings() {
@@ -2878,6 +3319,7 @@
           scales: state.scales,
           timerShowRing: state.timerShowRing,
           isMuted: state.isMuted,
+          muteToasts: state.muteToasts,
           isExamMode: state.isExamMode,
           warningEnabled: state.warningEnabled,
           flashRules: state.flashRules,
@@ -2911,6 +3353,7 @@
         if (saved.scales !== undefined) state.scales = Object.assign(state.scales, saved.scales);
         if (saved.timerShowRing !== undefined) state.timerShowRing = saved.timerShowRing;
         if (saved.isMuted !== undefined) state.isMuted = saved.isMuted;
+        if (saved.muteToasts !== undefined) state.muteToasts = saved.muteToasts;
         if (saved.isExamMode !== undefined) state.isExamMode = saved.isExamMode;
         if (saved.warningEnabled !== undefined) state.warningEnabled = saved.warningEnabled;
         if (saved.flashRules && saved.flashRules.length > 0) state.flashRules = saved.flashRules;
@@ -2984,10 +3427,11 @@
       startClockInterval();
       renderTimer();
       renderQueueUI();
-      updateWorldClocks();
+      renderWorldClocks();
+      startWorldClocksInterval();
       updateFlashRulesBadges();
+      updateToastMuteUI();
       updatePresetDropdown();
-      setInterval(updateWorldClocks, 1000);
       lucide.createIcons();
     };
   </script>
