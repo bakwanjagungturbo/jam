@@ -192,27 +192,29 @@
         </span>
       </div>
 
-      <div class="mt-8 flex flex-wrap items-center justify-center gap-3 projector-ui-control hide-in-fullscreen">
-        <button onclick="toggle12HourFormat()" id="toggleFormatBtn" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition">
-          Format 24 Jam
+      <div class="mt-8 flex flex-wrap items-center justify-center gap-2 projector-ui-control hide-in-fullscreen bg-slate-900/60 border border-slate-800/80 p-1.5 rounded-2xl backdrop-blur-sm">
+        <button onclick="toggle12HourFormat()" id="toggleFormatBtn" data-tooltip="Format 24 Jam (Klik untuk 12 Jam)" title="Format 24 Jam" class="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition flex items-center justify-center">
+          <i data-lucide="clock-4" class="w-4 h-4"></i>
         </button>
-        <button onclick="toggleSecondsDisplay()" id="toggleSecondsBtn" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition">
-          Detik: Tampil
+        <button onclick="toggleSecondsDisplay()" id="toggleSecondsBtn" data-tooltip="Detik: Tampil" title="Detik: Tampil" class="p-2.5 rounded-xl bg-indigo-600 text-white border border-indigo-500 transition flex items-center justify-center">
+          <i data-lucide="clock" class="w-4 h-4"></i>
         </button>
-        <button onclick="toggleModeMs('clock')" id="btn-ms-clock" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition">
-          Ms: Sembunyi
+        <button onclick="toggleModeMs('clock')" id="btn-ms-clock" data-tooltip="Milidetik: Sembunyi" title="Milidetik: Sembunyi" class="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition flex items-center justify-center">
+          <i data-lucide="gauge" class="w-4 h-4"></i>
         </button>
 
-        <div class="flex items-center bg-slate-800 border border-slate-700 rounded-lg p-0.5">
-          <button onclick="adjustModeSize('clock', -0.05)" title="Perkecil Jam (-)" class="px-2.5 py-1 text-xs font-semibold rounded-md hover:bg-slate-700 text-slate-300 hover:text-white transition flex items-center gap-1">
-            <i data-lucide="zoom-out" class="w-3.5 h-3.5"></i> <span>A-</span>
+        <div class="h-6 w-[1px] bg-slate-700/60 mx-0.5"></div>
+
+        <div class="flex items-center bg-slate-800 border border-slate-700 rounded-xl p-0.5">
+          <button onclick="adjustModeSize('clock', -0.05)" data-tooltip="Perkecil Jam (-)" title="Perkecil Jam (-)" class="p-1.5 rounded-lg hover:bg-slate-700 text-slate-300 hover:text-white transition flex items-center justify-center">
+            <i data-lucide="minus" class="w-3.5 h-3.5"></i>
           </button>
           <span id="clock-size-badge" class="px-2 text-xs font-mono font-bold text-indigo-400 select-none">100%</span>
-          <button onclick="adjustModeSize('clock', 0.05)" title="Perbesar Jam (+)" class="px-2.5 py-1 text-xs font-semibold rounded-md hover:bg-slate-700 text-slate-300 hover:text-white transition flex items-center gap-1">
-            <i data-lucide="zoom-in" class="w-3.5 h-3.5"></i> <span>A+</span>
+          <button onclick="adjustModeSize('clock', 0.05)" data-tooltip="Perbesar Jam (+)" title="Perbesar Jam (+)" class="p-1.5 rounded-lg hover:bg-slate-700 text-slate-300 hover:text-white transition flex items-center justify-center">
+            <i data-lucide="plus" class="w-3.5 h-3.5"></i>
           </button>
-          <button onclick="resetModeSize('clock')" title="Reset Ukuran" class="px-2 py-1 text-[11px] font-medium text-slate-400 hover:text-white transition border-l border-slate-700 ml-0.5">
-            Reset
+          <button onclick="resetModeSize('clock')" data-tooltip="Reset Ukuran Jam ke 100% (0)" title="Reset Ukuran (0)" class="p-1.5 rounded-lg hover:bg-slate-700 text-slate-400 hover:text-white transition border-l border-slate-700 ml-0.5">
+            <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
           </button>
         </div>
       </div>
@@ -241,32 +243,32 @@
         </span>
       </div>
 
-      <div class="flex flex-wrap items-center justify-center gap-4 mt-6 projector-ui-control">
-        <button id="swStartBtn" onclick="toggleStopwatch()" class="px-8 py-3.5 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-lg shadow-lg shadow-indigo-600/30 flex items-center gap-2 transition active:scale-95">
-          <i data-lucide="play" class="w-5 h-5 fill-current"></i> <span>Mulai</span>
+      <div class="flex items-center justify-center gap-3 mt-6 projector-ui-control">
+        <button id="swStartBtn" onclick="toggleStopwatch()" data-tooltip="Mulai / Jeda (Space)" title="Mulai / Jeda" aria-label="Mulai / Jeda Stopwatch" class="w-14 h-14 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-600/30 flex items-center justify-center transition active:scale-95">
+          <i data-lucide="play" id="swPlayIcon" class="w-6 h-6 fill-current"></i>
         </button>
-        <button id="swLapBtn" onclick="addStopwatchLap()" disabled class="px-6 py-3.5 rounded-2xl bg-slate-800 hover:bg-slate-700 disabled:opacity-40 disabled:hover:bg-slate-800 text-slate-200 font-semibold text-lg border border-slate-700 flex items-center gap-2 transition">
-          <i data-lucide="flag" class="w-5 h-5"></i> <span>Lap</span>
+        <button id="swLapBtn" onclick="addStopwatchLap()" disabled data-tooltip="Catat Putaran (Lap / Split)" title="Catat Putaran (Lap)" aria-label="Catat Putaran" class="w-14 h-14 rounded-2xl bg-slate-800 hover:bg-slate-700 disabled:opacity-40 disabled:hover:bg-slate-800 text-slate-200 border border-slate-700 flex items-center justify-center transition active:scale-95">
+          <i data-lucide="flag" class="w-6 h-6"></i>
         </button>
-        <button onclick="resetStopwatch()" class="px-6 py-3.5 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-lg border border-slate-700 flex items-center gap-2 transition active:scale-95">
-          <i data-lucide="rotate-ccw" class="w-5 h-5"></i> <span>Reset</span>
+        <button onclick="resetStopwatch()" data-tooltip="Reset Stopwatch (R)" title="Reset Stopwatch" aria-label="Reset Stopwatch" class="w-14 h-14 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 flex items-center justify-center transition active:scale-95">
+          <i data-lucide="rotate-ccw" class="w-6 h-6"></i>
         </button>
       </div>
 
-      <div class="mt-6 flex flex-wrap items-center justify-center gap-3 projector-ui-control hide-in-fullscreen">
-        <button onclick="toggleModeMs('stopwatch')" id="btn-ms-stopwatch" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-indigo-600 text-white border border-indigo-500 transition">
-          Ms: Tampil
+      <div class="mt-6 flex flex-wrap items-center justify-center gap-2 projector-ui-control hide-in-fullscreen bg-slate-900/60 border border-slate-800/80 p-1.5 rounded-2xl backdrop-blur-sm">
+        <button onclick="toggleModeMs('stopwatch')" id="btn-ms-stopwatch" data-tooltip="Milidetik: Tampil" title="Tampilkan / Sembunyikan Milidetik" class="p-2 rounded-xl bg-indigo-600 text-white border border-indigo-500 transition flex items-center justify-center">
+          <i data-lucide="gauge" class="w-4 h-4"></i>
         </button>
-        <div class="flex items-center bg-slate-800 border border-slate-700 rounded-lg p-0.5">
-          <button onclick="adjustModeSize('stopwatch', -0.05)" title="Perkecil (-)" class="px-2.5 py-1 text-xs font-semibold rounded-md hover:bg-slate-700 text-slate-300 hover:text-white transition flex items-center gap-1">
-            <i data-lucide="zoom-out" class="w-3.5 h-3.5"></i> <span>A-</span>
+        <div class="flex items-center bg-slate-800 border border-slate-700 rounded-xl p-0.5">
+          <button onclick="adjustModeSize('stopwatch', -0.05)" data-tooltip="Perkecil Stopwatch (-)" title="Perkecil (-)" class="p-1.5 rounded-lg hover:bg-slate-700 text-slate-300 hover:text-white transition flex items-center justify-center">
+            <i data-lucide="minus" class="w-3.5 h-3.5"></i>
           </button>
           <span id="sw-size-badge" class="px-2 text-xs font-mono font-bold text-indigo-400 select-none">100%</span>
-          <button onclick="adjustModeSize('stopwatch', 0.05)" title="Perbesar (+)" class="px-2.5 py-1 text-xs font-semibold rounded-md hover:bg-slate-700 text-slate-300 hover:text-white transition flex items-center gap-1">
-            <i data-lucide="zoom-in" class="w-3.5 h-3.5"></i> <span>A+</span>
+          <button onclick="adjustModeSize('stopwatch', 0.05)" data-tooltip="Perbesar Stopwatch (+)" title="Perbesar (+)" class="p-1.5 rounded-lg hover:bg-slate-700 text-slate-300 hover:text-white transition flex items-center justify-center">
+            <i data-lucide="plus" class="w-3.5 h-3.5"></i>
           </button>
-          <button onclick="resetModeSize('stopwatch')" title="Reset 100%" class="px-2 py-1 text-[11px] font-medium text-slate-400 hover:text-white transition border-l border-slate-700 ml-0.5">
-            Reset
+          <button onclick="resetModeSize('stopwatch')" data-tooltip="Reset Ukuran Stopwatch (0)" title="Reset 100%" class="p-1.5 rounded-lg hover:bg-slate-700 text-slate-400 hover:text-white transition border-l border-slate-700 ml-0.5">
+            <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
           </button>
         </div>
       </div>
@@ -330,42 +332,44 @@
         <button onclick="adjustTimerTime(600)" class="px-2.5 py-1 text-xs rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 font-mono font-medium transition">+10m</button>
       </div>
 
-      <div class="mt-4 flex flex-wrap items-center justify-center gap-3 projector-ui-control hide-in-fullscreen">
-        <button onclick="toggleTimerRing()" id="btn-ring-timer" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-indigo-600 text-white border border-indigo-500 transition">
-          Lingkaran: Tampil
+      <div class="flex items-center justify-center gap-3 mt-6 projector-ui-control">
+        <button id="timerToggleBtn" onclick="toggleTimer()" data-tooltip="Mulai / Jeda Timer (Space)" title="Mulai / Jeda" aria-label="Mulai / Jeda Timer" class="w-14 h-14 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-600/30 flex items-center justify-center transition active:scale-95">
+          <i data-lucide="play" id="timerPlayIcon" class="w-6 h-6 fill-current"></i>
         </button>
-        <button onclick="toggleModeMs('timer')" id="btn-ms-timer" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition">
-          Ms: Sembunyi
+        <button onclick="openModal('timerSetModal')" data-tooltip="Atur Durasi Waktu Timer" title="Atur Waktu" aria-label="Atur Waktu" class="w-14 h-14 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 flex items-center justify-center transition active:scale-95">
+          <i data-lucide="sliders-horizontal" class="w-6 h-6"></i>
         </button>
-        <button onclick="openModal('flashRulesModal')" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-amber-600/80 hover:bg-amber-600 text-white border border-amber-500/80 transition flex items-center gap-1.5 shadow">
-          <i data-lucide="zap" class="w-3.5 h-3.5"></i>
-          <span>Flash Peringatan</span>
-          <span id="timerFlashRulesBadge" class="bg-amber-800 px-1.5 py-0.2 rounded-full font-mono text-[10px]">2</span>
+        <button onclick="resetTimer()" data-tooltip="Reset Timer ke Awal (R)" title="Reset Timer" aria-label="Reset Timer" class="w-14 h-14 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 flex items-center justify-center transition active:scale-95">
+          <i data-lucide="rotate-ccw" class="w-6 h-6"></i>
         </button>
-        <div class="flex items-center bg-slate-800 border border-slate-700 rounded-lg p-0.5">
-          <button onclick="adjustModeSize('timer', -0.05)" title="Perkecil (-)" class="px-2.5 py-1 text-xs font-semibold rounded-md hover:bg-slate-700 text-slate-300 hover:text-white transition flex items-center gap-1">
-            <i data-lucide="zoom-out" class="w-3.5 h-3.5"></i> <span>A-</span>
-          </button>
-          <span id="timer-size-badge" class="px-2 text-xs font-mono font-bold text-indigo-400 select-none">100%</span>
-          <button onclick="adjustModeSize('timer', 0.05)" title="Perbesar (+)" class="px-2.5 py-1 text-xs font-semibold rounded-md hover:bg-slate-700 text-slate-300 hover:text-white transition flex items-center gap-1">
-            <i data-lucide="zoom-in" class="w-3.5 h-3.5"></i> <span>A+</span>
-          </button>
-          <button onclick="resetModeSize('timer')" title="Reset 100%" class="px-2 py-1 text-[11px] font-medium text-slate-400 hover:text-white transition border-l border-slate-700 ml-0.5">
-            Reset
-          </button>
-        </div>
       </div>
 
-      <div class="flex flex-wrap items-center justify-center gap-4 mt-6 projector-ui-control">
-        <button id="timerToggleBtn" onclick="toggleTimer()" class="px-8 py-3.5 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-lg shadow-lg shadow-indigo-600/30 flex items-center gap-2 transition active:scale-95">
-          <i data-lucide="play" id="timerPlayIcon" class="w-5 h-5 fill-current"></i> <span id="timerPlayTxt">Mulai</span>
+      <div class="mt-6 flex flex-wrap items-center justify-center gap-2 projector-ui-control hide-in-fullscreen bg-slate-900/60 border border-slate-800/80 p-1.5 rounded-2xl backdrop-blur-sm">
+        <button onclick="toggleTimerRing()" id="btn-ring-timer" data-tooltip="Lingkaran Timer: Tampil" title="Tampilkan / Sembunyikan Lingkaran Progres" class="p-2 rounded-xl bg-indigo-600 text-white border border-indigo-500 transition flex items-center justify-center">
+          <i data-lucide="circle-dot" class="w-4 h-4"></i>
         </button>
-        <button onclick="resetTimer()" class="px-6 py-3.5 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-lg border border-slate-700 flex items-center gap-2 transition active:scale-95">
-          <i data-lucide="rotate-ccw" class="w-5 h-5"></i> <span>Reset</span>
+        <button onclick="toggleModeMs('timer')" id="btn-ms-timer" data-tooltip="Milidetik: Sembunyi" title="Tampilkan / Sembunyikan Milidetik" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition flex items-center justify-center">
+          <i data-lucide="gauge" class="w-4 h-4"></i>
         </button>
-        <button onclick="openModal('timerSetModal')" class="px-4 py-3.5 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-lg border border-slate-700 flex items-center gap-2 transition">
-          <i data-lucide="sliders" class="w-5 h-5"></i> <span class="hidden sm:inline">Set Waktu</span>
+        <button onclick="openModal('flashRulesModal')" data-tooltip="Aturan Peringatan Flash" title="Aturan Flash" class="p-2 rounded-xl bg-amber-600/80 hover:bg-amber-600 text-white border border-amber-500/80 transition flex items-center gap-1 shadow">
+          <i data-lucide="zap" class="w-4 h-4"></i>
+          <span id="timerFlashRulesBadge" class="bg-amber-800 px-1.5 py-0.2 rounded-full font-mono text-[10px]">2</span>
         </button>
+
+        <div class="h-6 w-[1px] bg-slate-700/60 mx-0.5"></div>
+
+        <div class="flex items-center bg-slate-800 border border-slate-700 rounded-xl p-0.5">
+          <button onclick="adjustModeSize('timer', -0.05)" data-tooltip="Perkecil Timer (-)" title="Perkecil (-)" class="p-1.5 rounded-lg hover:bg-slate-700 text-slate-300 hover:text-white transition flex items-center justify-center">
+            <i data-lucide="minus" class="w-3.5 h-3.5"></i>
+          </button>
+          <span id="timer-size-badge" class="px-2 text-xs font-mono font-bold text-indigo-400 select-none">100%</span>
+          <button onclick="adjustModeSize('timer', 0.05)" data-tooltip="Perbesar Timer (+)" title="Perbesar (+)" class="p-1.5 rounded-lg hover:bg-slate-700 text-slate-300 hover:text-white transition flex items-center justify-center">
+            <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+          </button>
+          <button onclick="resetModeSize('timer')" data-tooltip="Reset Ukuran Timer ke 100% (0)" title="Reset 100%" class="p-1.5 rounded-lg hover:bg-slate-700 text-slate-400 hover:text-white transition border-l border-slate-700 ml-0.5">
+            <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+          </button>
+        </div>
       </div>
 
       <div class="flex flex-wrap justify-center gap-2 mt-6 max-w-xl projector-ui-control">
@@ -411,38 +415,96 @@
         </span>
       </div>
 
-      <div class="text-sm text-slate-400 flex items-center gap-2 mb-4 font-medium">
+      <div class="text-sm text-slate-400 flex items-center gap-2 mb-2 font-medium">
         <span>Selanjutnya:</span>
         <span id="queueNextTitle" class="text-indigo-400 font-semibold">Istirahat (5m)</span>
         <i data-lucide="arrow-right" class="w-4 h-4"></i>
       </div>
 
-      <div class="flex flex-wrap items-center justify-center gap-3 projector-ui-control">
-        <button id="queueToggleBtn" onclick="toggleQueueTimer()" class="px-7 py-3 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-base shadow-lg shadow-indigo-600/30 flex items-center gap-2 transition active:scale-95">
-          <i data-lucide="play" id="queuePlayIcon" class="w-5 h-5 fill-current"></i> <span id="queuePlayTxt">Mulai Antrean</span>
+      <div id="queueActualClockContainer" class="flex flex-col items-center justify-center transition-all select-none queue-clock-center-wrapper">
+        <div class="flex items-stretch justify-center gap-3 sm:gap-4 flex-wrap">
+          <div id="queueActualClockBox" class="flex flex-col justify-between items-center text-center py-1">
+            <span class="text-xs font-semibold text-slate-400 tracking-wider uppercase leading-none mb-1.5 -mt-0.5">Saat Ini</span>
+            <div id="queueActualClockDisplay" class="font-mono font-extrabold text-white tracking-widest drop-shadow-md leading-none text-2xl sm:text-3xl">
+              --:--:--
+            </div>
+          </div>
+
+          <div id="queueActualDivider" class="w-[1px] bg-slate-700/60 hidden sm:block self-stretch my-1"></div>
+
+          <div id="weatherAqiWidget" class="flex items-center gap-3.5 bg-slate-800/60 border border-slate-700/60 px-3.5 py-1.5 rounded-2xl shadow-sm">
+            <div class="flex items-center gap-2.5">
+              <i id="weatherIcon" data-lucide="sun" class="w-6 h-6 text-amber-400 shrink-0"></i>
+              <div class="text-left flex flex-col justify-center -translate-y-[3px]">
+                <span id="weatherTempDisplay" class="font-bold text-white leading-none block text-base sm:text-lg">--°C</span>
+                <span id="weatherDescDisplay" class="text-[10px] text-slate-400 font-medium block leading-none -mt-0.5 whitespace-nowrap">Memuat...</span>
+              </div>
+            </div>
+
+            <div class="h-7 w-[1px] bg-slate-700/70 self-center"></div>
+
+            <div class="flex items-center gap-2.5 text-left">
+              <span id="weatherAqiBadge" class="min-w-[36px] px-1.5 h-8 rounded-lg flex items-center justify-center text-sm font-black font-mono shrink-0 border bg-emerald-500/20 text-emerald-400 border-emerald-500/40">--</span>
+              <div class="flex flex-col justify-center">
+                <span class="text-[9px] uppercase tracking-wider text-slate-400 font-bold leading-none block">AQI</span>
+                <span id="weatherAqiStatus" class="text-[11px] text-slate-200 font-semibold leading-none block mt-0.5 whitespace-nowrap">--</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-center gap-3 projector-ui-control">
+        <button id="queueToggleBtn" onclick="toggleQueueTimer()" data-tooltip="Mulai Antrean (Space)" title="Mulai Antrean (Space)" aria-label="Mulai / Jeda Antrean" class="w-14 h-14 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-600/30 flex items-center justify-center transition active:scale-95">
+          <i data-lucide="play" id="queuePlayIcon" class="w-6 h-6 fill-current"></i>
         </button>
-        <button onclick="nextQueueStep()" class="px-5 py-3 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-base border border-slate-700 flex items-center gap-2 transition">
-          <i data-lucide="skip-forward" class="w-4 h-4"></i> <span>Lewati</span>
+        <button onclick="nextQueueStep()" data-tooltip="Lewati ke Sesi Berikutnya" title="Lewati Sesi Ini" aria-label="Lewati Sesi" class="w-14 h-14 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 flex items-center justify-center transition active:scale-95">
+          <i data-lucide="skip-forward" class="w-6 h-6"></i>
         </button>
-        <button onclick="resetQueueTimer()" class="px-5 py-3 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-base border border-slate-700 flex items-center gap-2 transition">
-          <i data-lucide="rotate-ccw" class="w-4 h-4"></i> <span>Reset</span>
+        <button onclick="resetQueueTimer()" data-tooltip="Reset Antrean (R)" title="Reset Seluruh Antrean" aria-label="Reset Antrean" class="w-14 h-14 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 flex items-center justify-center transition active:scale-95">
+          <i data-lucide="rotate-ccw" class="w-6 h-6"></i>
         </button>
       </div>
 
-      <div class="mt-4 flex flex-wrap items-center justify-center gap-3 projector-ui-control hide-in-fullscreen">
-        <button onclick="toggleModeMs('queue')" id="btn-ms-queue" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition">
-          Ms: Sembunyi
+      <div class="mt-4 flex flex-wrap items-center justify-center gap-2 projector-ui-control hide-in-fullscreen bg-slate-900/60 border border-slate-800/80 p-1.5 rounded-2xl backdrop-blur-sm">
+        <button onclick="toggleModeMs('queue')" id="btn-ms-queue" data-tooltip="Milidetik: Sembunyi" title="Tampilkan / Sembunyikan Milidetik" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition flex items-center justify-center">
+          <i data-lucide="gauge" class="w-4 h-4"></i>
         </button>
-        <div class="flex items-center bg-slate-800 border border-slate-700 rounded-lg p-0.5">
-          <button onclick="adjustModeSize('queue', -0.05)" title="Perkecil (-)" class="px-2.5 py-1 text-xs font-semibold rounded-md hover:bg-slate-700 text-slate-300 hover:text-white transition flex items-center gap-1">
-            <i data-lucide="zoom-out" class="w-3.5 h-3.5"></i> <span>A-</span>
+
+        <div class="flex items-center bg-slate-800 border border-slate-700 rounded-xl p-0.5">
+          <button onclick="adjustModeSize('queue', -0.05)" data-tooltip="Perkecil Jam Antrean (-)" title="Perkecil Ukuran Jam Antrean" class="p-1.5 rounded-lg hover:bg-slate-700 text-slate-300 hover:text-white transition flex items-center justify-center">
+            <i data-lucide="minus" class="w-3.5 h-3.5"></i>
           </button>
           <span id="queue-size-badge" class="px-2 text-xs font-mono font-bold text-indigo-400 select-none">100%</span>
-          <button onclick="adjustModeSize('queue', 0.05)" title="Perbesar (+)" class="px-2.5 py-1 text-xs font-semibold rounded-md hover:bg-slate-700 text-slate-300 hover:text-white transition flex items-center gap-1">
-            <i data-lucide="zoom-in" class="w-3.5 h-3.5"></i> <span>A+</span>
+          <button onclick="adjustModeSize('queue', 0.05)" data-tooltip="Perbesar Jam Antrean (+)" title="Perbesar Ukuran Jam Antrean" class="p-1.5 rounded-lg hover:bg-slate-700 text-slate-300 hover:text-white transition flex items-center justify-center">
+            <i data-lucide="plus" class="w-3.5 h-3.5"></i>
           </button>
-          <button onclick="resetModeSize('queue')" title="Reset 100%" class="px-2 py-1 text-[11px] font-medium text-slate-400 hover:text-white transition border-l border-slate-700 ml-0.5">
-            Reset
+          <button onclick="resetModeSize('queue')" data-tooltip="Reset Ukuran Jam Antrean (0)" title="Reset Ukuran Jam ke 100%" class="p-1.5 rounded-lg hover:bg-slate-700 text-slate-400 hover:text-white transition border-l border-slate-700 ml-0.5">
+            <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+          </button>
+        </div>
+
+        <div class="h-6 w-[1px] bg-slate-700/60 mx-0.5"></div>
+
+        <button onclick="toggleQueueActualClock()" id="btn-toggle-actual-queue" data-tooltip="Jam Saat Ini: Tampil" title="Tampilkan / Sembunyikan Jam Saat Ini" class="p-2 rounded-xl bg-indigo-600 text-white border border-indigo-500 transition flex items-center justify-center">
+          <i data-lucide="clock" class="w-4 h-4"></i>
+        </button>
+
+        <button onclick="toggleQueueWeather()" id="btn-toggle-weather-queue" data-tooltip="Cuaca & AQI: Tampil" title="Tampilkan / Sembunyikan Cuaca & AQI" class="p-2 rounded-xl bg-indigo-600 text-white border border-indigo-500 transition flex items-center justify-center">
+          <i data-lucide="cloud-sun" class="w-4 h-4"></i>
+        </button>
+
+        <div class="flex items-center bg-slate-800 border border-slate-700 rounded-xl p-0.5" title="Ukuran Jam Saat Ini & Cuaca">
+          <span class="text-[10px] text-slate-400 pl-1.5 pr-1 font-mono font-bold select-none">WAKTU</span>
+          <button onclick="adjustQueueActualClockSize(-0.1)" data-tooltip="Perkecil Jam Saat Ini & Cuaca (-)" title="Perkecil Jam Saat Ini" class="p-1.5 rounded-lg hover:bg-slate-700 text-slate-300 hover:text-white transition flex items-center justify-center">
+            <i data-lucide="minus" class="w-3.5 h-3.5"></i>
+          </button>
+          <span id="queue-actual-size-badge" class="px-2 text-xs font-mono font-bold text-indigo-400 select-none">100%</span>
+          <button onclick="adjustQueueActualClockSize(0.1)" data-tooltip="Perbesar Jam Saat Ini & Cuaca (+)" title="Perbesar Jam Saat Ini" class="p-1.5 rounded-lg hover:bg-slate-700 text-slate-300 hover:text-white transition flex items-center justify-center">
+            <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+          </button>
+          <button onclick="resetQueueActualClockSize()" data-tooltip="Reset Ukuran Jam Saat Ini ke 100%" title="Reset Ukuran Jam Saat Ini" class="p-1.5 rounded-lg hover:bg-slate-700 text-slate-400 hover:text-white transition border-l border-slate-700 ml-0.5">
+            <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
           </button>
         </div>
       </div>
@@ -454,17 +516,16 @@
             <span>Daftar Antrean Waktu</span>
           </div>
           <div class="flex flex-wrap items-center gap-2">
-            <button onclick="openModal('flashRulesModal')" class="px-2.5 py-1 bg-amber-600/80 hover:bg-amber-600 text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 transition shadow" title="Pengaturan Flash Global / Standar">
-              <i data-lucide="zap" class="w-3.5 h-3.5"></i>
-              <span>Flash Global</span>
-              <span id="queueFlashRulesBadge" class="bg-amber-800 px-1.5 py-0.2 rounded-full font-mono text-[10px]">2</span>
+            <button onclick="openModal('flashRulesModal')" class="px-2.5 py-1.5 bg-amber-600/80 hover:bg-amber-600 text-white rounded-xl text-xs font-semibold flex items-center gap-1.5 transition shadow" data-tooltip="Flash Global" title="Pengaturan Flash Global">
+              <i data-lucide="zap" class="w-4 h-4"></i>
+              <span id="queueFlashRulesBadge" class="bg-amber-950/80 px-1.5 py-0.5 rounded-full font-mono text-[10px] border border-amber-500/30">2</span>
             </button>
-            <button onclick="saveCurrentAsPreset()" class="px-2.5 py-1 bg-indigo-600/80 hover:bg-indigo-600 text-white rounded-lg text-xs font-semibold flex items-center gap-1 transition shadow" title="Simpan Antrean ini sebagai Preset Baru">
-              <i data-lucide="bookmark-plus" class="w-3.5 h-3.5"></i>
-              <span>Simpan Preset</span>
+            <button onclick="saveCurrentAsPreset()" class="p-2 bg-indigo-600/80 hover:bg-indigo-600 text-white rounded-xl text-xs font-semibold flex items-center justify-center transition shadow" data-tooltip="Simpan Preset" title="Simpan Antrean sebagai Preset Baru">
+              <i data-lucide="bookmark-plus" class="w-4 h-4"></i>
             </button>
-            <select id="queuePresetSelect" onchange="applyQueuePreset(this.value)" class="bg-slate-800 border border-slate-700 text-xs rounded-lg px-2.5 py-1 text-slate-300 focus:outline-none focus:border-indigo-500">
+            <select id="queuePresetSelect" onchange="applyQueuePreset(this.value)" class="bg-slate-800 border border-slate-700 text-xs rounded-xl px-2.5 py-1.5 text-slate-300 focus:outline-none focus:border-indigo-500">
               <option value="custom">-- Template Preset --</option>
+              <option value="test">Test Debug (01:00 • 1m 15d + 1m)</option>
               <option value="ujian">Ujian (10m + 1j 15m + 15m)</option>
               <option value="pomodoro">Pomodoro (25m + 5m + 25m + 15m)</option>
               <option value="sidang">Sidang (15m + 25m + 10m)</option>
@@ -476,17 +537,24 @@
         </div>
 
         <div class="mt-3 pt-3 border-t border-slate-800 flex flex-wrap gap-2 items-center">
-          <input type="text" id="newQueueTitle" placeholder="Nama Sesi (misal: Sesi 2)" class="flex-1 min-w-[130px] bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none">
+          <input type="text" id="newQueueTitle" placeholder="Nama Sesi (misal: Sesi 2)" class="flex-1 min-w-[130px] bg-slate-800 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none">
           <div class="flex items-center gap-1">
-            <input type="number" id="newQueueHours" placeholder="Jam" min="0" max="23" value="0" title="Jam" class="w-14 bg-slate-800 border border-slate-700 rounded-lg px-2 py-1.5 text-xs text-white text-center focus:outline-none">
+            <input type="number" id="newQueueHours" placeholder="Jam" min="0" max="23" value="0" title="Jam" class="w-14 bg-slate-800 border border-slate-700 rounded-xl px-2 py-1.5 text-xs text-white text-center focus:outline-none">
             <span class="text-[11px] text-slate-400 font-mono">j</span>
-            <input type="number" id="newQueueMinutes" placeholder="Menit" min="0" max="59" value="20" title="Menit" class="w-14 bg-slate-800 border border-slate-700 rounded-lg px-2 py-1.5 text-xs text-white text-center focus:outline-none">
+            <input type="number" id="newQueueMinutes" placeholder="Menit" min="0" max="59" value="0" title="Menit" class="w-14 bg-slate-800 border border-slate-700 rounded-xl px-2 py-1.5 text-xs text-white text-center focus:outline-none">
             <span class="text-[11px] text-slate-400 font-mono">m</span>
-            <input type="number" id="newQueueSeconds" placeholder="Detik" min="0" max="59" value="0" title="Detik" class="w-14 bg-slate-800 border border-slate-700 rounded-lg px-2 py-1.5 text-xs text-white text-center focus:outline-none">
+            <input type="number" id="newQueueSeconds" placeholder="Detik" min="0" max="59" value="0" title="Detik" class="w-14 bg-slate-800 border border-slate-700 rounded-xl px-2 py-1.5 text-xs text-white text-center focus:outline-none">
             <span class="text-[11px] text-slate-400 font-mono">d</span>
           </div>
-          <button onclick="addNewQueueItem()" class="px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-xs font-semibold flex items-center gap-1 transition">
-            <i data-lucide="plus" class="w-3.5 h-3.5"></i> Tambah Sesi
+          <div class="flex items-center gap-1.5 bg-slate-800 border border-slate-700 rounded-xl px-2.5 py-1" title="Jam Mulai Otomatis (Format 24 Jam, misal 01:00)">
+            <i data-lucide="alarm-clock" class="w-4 h-4 text-amber-400 shrink-0"></i>
+            <input type="number" id="newQueueStartHour" placeholder="00" min="0" max="23" title="Jam Mulai (00-23)" class="w-10 bg-slate-900 border border-slate-700 rounded-lg px-1 py-1 text-xs text-white font-mono text-center focus:outline-none focus:border-amber-500 placeholder-slate-500">
+            <span class="text-xs text-slate-400 font-mono font-bold leading-none">:</span>
+            <input type="number" id="newQueueStartMinute" placeholder="00" min="0" max="59" title="Menit Mulai (00-59)" class="w-10 bg-slate-900 border border-slate-700 rounded-lg px-1 py-1 text-xs text-white font-mono text-center focus:outline-none focus:border-amber-500 placeholder-slate-500">
+            <button type="button" onclick="clearNewQueueStartTime()" class="text-slate-500 hover:text-rose-400 text-xs px-1 transition" title="Kosongkan Jam Mulai">✕</button>
+          </div>
+          <button onclick="addNewQueueItem()" data-tooltip="Tambah Sesi Baru" title="Tambah Sesi Baru" class="p-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-semibold flex items-center justify-center transition active:scale-95 shadow">
+            <i data-lucide="plus" class="w-4 h-4"></i>
           </button>
         </div>
       </div>
@@ -520,20 +588,20 @@
         </div>
       </div>
 
-      <div class="mb-5 flex flex-wrap items-center justify-start gap-3 projector-ui-control hide-in-fullscreen">
-        <button onclick="toggleModeMs('world')" id="btn-ms-world" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition">
-          Ms: Sembunyi
+      <div class="mb-5 flex flex-wrap items-center justify-start gap-2 projector-ui-control hide-in-fullscreen bg-slate-900/60 border border-slate-800/80 p-1.5 rounded-2xl backdrop-blur-sm inline-flex">
+        <button onclick="toggleModeMs('world')" id="btn-ms-world" data-tooltip="Milidetik: Sembunyi" title="Tampilkan / Sembunyikan Milidetik" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition flex items-center justify-center">
+          <i data-lucide="gauge" class="w-4 h-4"></i>
         </button>
-        <div class="flex items-center bg-slate-800 border border-slate-700 rounded-lg p-0.5">
-          <button onclick="adjustModeSize('world', -0.05)" title="Perkecil (-)" class="px-2.5 py-1 text-xs font-semibold rounded-md hover:bg-slate-700 text-slate-300 hover:text-white transition flex items-center gap-1">
-            <i data-lucide="zoom-out" class="w-3.5 h-3.5"></i> <span>A-</span>
+        <div class="flex items-center bg-slate-800 border border-slate-700 rounded-xl p-0.5">
+          <button onclick="adjustModeSize('world', -0.05)" data-tooltip="Perkecil Jam Dunia (-)" title="Perkecil (-)" class="p-1.5 rounded-lg hover:bg-slate-700 text-slate-300 hover:text-white transition flex items-center justify-center">
+            <i data-lucide="minus" class="w-3.5 h-3.5"></i>
           </button>
           <span id="world-size-badge" class="px-2 text-xs font-mono font-bold text-indigo-400 select-none">100%</span>
-          <button onclick="adjustModeSize('world', 0.05)" title="Perbesar (+)" class="px-2.5 py-1 text-xs font-semibold rounded-md hover:bg-slate-700 text-slate-300 hover:text-white transition flex items-center gap-1">
-            <i data-lucide="zoom-in" class="w-3.5 h-3.5"></i> <span>A+</span>
+          <button onclick="adjustModeSize('world', 0.05)" data-tooltip="Perbesar Jam Dunia (+)" title="Perbesar (+)" class="p-1.5 rounded-lg hover:bg-slate-700 text-slate-300 hover:text-white transition flex items-center justify-center">
+            <i data-lucide="plus" class="w-3.5 h-3.5"></i>
           </button>
-          <button onclick="resetModeSize('world')" title="Reset 100%" class="px-2 py-1 text-[11px] font-medium text-slate-400 hover:text-white transition border-l border-slate-700 ml-0.5">
-            Reset
+          <button onclick="resetModeSize('world')" data-tooltip="Reset Ukuran Jam Dunia (0)" title="Reset 100%" class="p-1.5 rounded-lg hover:bg-slate-700 text-slate-400 hover:text-white transition border-l border-slate-700 ml-0.5">
+            <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
           </button>
         </div>
       </div>
@@ -741,13 +809,37 @@
             </div>
             <div>
               <span class="text-[11px] text-slate-400 block mb-1">Menit</span>
-              <input type="number" id="editQueueMinutes" min="0" max="59" value="20" class="w-full bg-slate-800 border border-slate-700 rounded-xl py-2.5 text-center text-base font-mono text-white focus:outline-none focus:border-indigo-500">
+              <input type="number" id="editQueueMinutes" min="0" max="59" value="0" class="w-full bg-slate-800 border border-slate-700 rounded-xl py-2.5 text-center text-base font-mono text-white focus:outline-none focus:border-indigo-500">
             </div>
             <div>
               <span class="text-[11px] text-slate-400 block mb-1">Detik</span>
               <input type="number" id="editQueueSeconds" min="0" max="59" value="0" class="w-full bg-slate-800 border border-slate-700 rounded-xl py-2.5 text-center text-base font-mono text-white focus:outline-none focus:border-indigo-500">
             </div>
           </div>
+        </div>
+
+        <div>
+          <label class="block text-slate-300 font-semibold mb-1.5 flex items-center justify-between">
+            <span class="flex items-center gap-1.5">
+              <i data-lucide="alarm-clock" class="w-4 h-4 text-amber-400"></i> Jam Mulai Otomatis (Opsional)
+            </span>
+            <button type="button" onclick="clearEditQueueStartTime()" class="text-[11px] text-slate-400 hover:text-rose-400 transition">
+              Kosongkan
+            </button>
+          </label>
+          <div class="flex items-center gap-2 bg-slate-800 border border-slate-700 rounded-xl p-2">
+            <div class="flex items-center gap-1 bg-slate-900 border border-slate-700/80 rounded-lg px-2.5 py-1.5">
+              <input type="number" id="editQueueStartHour" placeholder="00" min="0" max="23" title="Jam Mulai (00-23)" class="w-10 bg-transparent text-center text-sm font-mono font-bold text-white focus:outline-none">
+              <span class="text-xs text-slate-400 font-mono">jam</span>
+            </div>
+            <span class="text-sm font-bold text-slate-400 font-mono">:</span>
+            <div class="flex items-center gap-1 bg-slate-900 border border-slate-700/80 rounded-lg px-2.5 py-1.5">
+              <input type="number" id="editQueueStartMinute" placeholder="00" min="0" max="59" title="Menit Mulai (00-59)" class="w-10 bg-transparent text-center text-sm font-mono font-bold text-white focus:outline-none">
+              <span class="text-xs text-slate-400 font-mono">menit</span>
+            </div>
+            <span class="text-[11px] text-slate-400 pl-1">(Format 24 jam)</span>
+          </div>
+          <span class="text-[10px] text-slate-400 mt-1 block">Contoh: 01:00 atau 17:10. Jika dikosongkan, sesi akan langsung dimulai setelah sesi sebelumnya selesai.</span>
         </div>
 
         <div>
@@ -1069,20 +1161,29 @@
           </div>
         </div>
 
+        <div class="p-3.5 rounded-2xl bg-rose-950/20 border border-rose-800/40">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <h4 class="text-xs font-bold text-rose-300 flex items-center gap-1.5">
+                <i data-lucide="alert-triangle" class="w-4 h-4 text-rose-400"></i> Reset Total Jam Multifungsi
+              </h4>
+              <p class="text-[11px] text-rose-400/80 mt-0.5">Kembalikan seluruh pengaturan, tema, ukuran jam, antrean sesi, dan preset ke setelan awal pabrik.</p>
+            </div>
+            <button type="button" onclick="resetTotalAppSettings()" class="px-3.5 py-1.5 bg-rose-600 hover:bg-rose-500 text-white rounded-xl text-xs font-bold shadow-lg shadow-rose-600/30 flex items-center gap-1.5 transition">
+              <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Reset Total ke Setelan Awal
+            </button>
+          </div>
+        </div>
+
       </div>
 
-      <div class="mt-6 flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-slate-800">
-        <button onclick="resetAppSettings()" class="px-3.5 py-2 text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 rounded-xl text-xs font-semibold transition border border-rose-500/30">
-          Reset Default
+      <div class="mt-4 flex flex-wrap items-center justify-end gap-2 pt-3 border-t border-slate-800">
+        <button onclick="closeModal('settingsModal')" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold transition">
+          Tutup
         </button>
-        <div class="flex items-center gap-2">
-          <button onclick="closeModal('settingsModal')" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold transition">
-            Tutup
-          </button>
-          <button onclick="saveAppSettings()" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-bold text-xs shadow-lg shadow-indigo-600/30 transition">
-            Simpan Semua Pengaturan
-          </button>
-        </div>
+        <button onclick="saveAppSettings()" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-bold text-xs shadow-lg shadow-indigo-600/30 transition">
+          Simpan Semua Pengaturan
+        </button>
       </div>
     </div>
   </div>
@@ -1103,7 +1204,7 @@
         </div>
         <div>
           <label class="text-[11px] uppercase tracking-wider text-slate-400 block mb-1">Menit</label>
-          <input type="number" id="inputTimerMinutes" min="0" max="59" value="10" class="w-full bg-slate-800 border border-slate-700 rounded-xl py-3 text-center text-xl font-mono text-white focus:outline-none focus:border-indigo-500">
+          <input type="number" id="inputTimerMinutes" min="0" max="59" value="0" class="w-full bg-slate-800 border border-slate-700 rounded-xl py-3 text-center text-xl font-mono text-white focus:outline-none focus:border-indigo-500">
         </div>
         <div>
           <label class="text-[11px] uppercase tracking-wider text-slate-400 block mb-1">Detik</label>
@@ -1185,17 +1286,22 @@
       },
       queue: {
         isRunning: false,
+        isWaitingScheduled: false,
+        targetStartTimestamp: null,
         currentIndex: 0,
         remainingSeconds: 1200,
         remainingMs: 0,
         endTimestamp: 0,
         timerId: null,
         items: [
-          { title: "Pengerjaan Soal Bagian A", hours: 0, minutes: 20, seconds: 0, flashMode: 'inherit', customFlashRules: [] },
-          { title: "Istirahat & Pengecekan", hours: 0, minutes: 5, seconds: 0, flashMode: 'inherit', customFlashRules: [] },
-          { title: "Pengerjaan Soal Bagian B", hours: 0, minutes: 25, seconds: 0, flashMode: 'inherit', customFlashRules: [] }
+          { title: "Pengerjaan Soal Bagian A", hours: 0, minutes: 20, seconds: 0, startTime: '', flashMode: 'inherit', customFlashRules: [] },
+          { title: "Istirahat & Pengecekan", hours: 0, minutes: 5, seconds: 0, startTime: '', flashMode: 'inherit', customFlashRules: [] },
+          { title: "Pengerjaan Soal Bagian B", hours: 0, minutes: 25, seconds: 0, startTime: '', flashMode: 'inherit', customFlashRules: [] }
         ]
       },
+      queueShowActualClock: true,
+      queueShowWeather: true,
+      queueActualClockScale: 1.0,
       customPresets: [],
       editingQueueIndex: null,
       worldClocks: [
@@ -1310,6 +1416,11 @@
 
       const formattedHours = String(hours).padStart(2, '0');
 
+      const qActual = document.getElementById('queueActualClockDisplay');
+      if (qActual) {
+        qActual.textContent = formattedHours + ':' + minutes + ':' + seconds;
+      }
+
       document.getElementById('clk-h1').textContent = formattedHours[0];
       document.getElementById('clk-h2').textContent = formattedHours[1];
       document.getElementById('clk-m1').textContent = minutes[0];
@@ -1353,7 +1464,11 @@
 
     function toggle12HourFormat() {
       state.is24Hour = !state.is24Hour;
-      document.getElementById('toggleFormatBtn').textContent = state.is24Hour ? 'Format 24 Jam' : 'Format 12 Jam';
+      const btn = document.getElementById('toggleFormatBtn');
+      if (btn) {
+        btn.setAttribute('data-tooltip', state.is24Hour ? 'Format 24 Jam (Klik untuk 12 Jam)' : 'Format 12 Jam (Klik untuk 24 Jam)');
+        btn.setAttribute('title', state.is24Hour ? 'Format 24 Jam' : 'Format 12 Jam');
+      }
       updateDigitalClock();
       saveStateToLocal();
       showToast(state.is24Hour ? 'Mode 24 Jam Aktif' : 'Mode 12 Jam (AM/PM) Aktif');
@@ -1361,7 +1476,18 @@
 
     function toggleSecondsDisplay() {
       state.showSeconds = !state.showSeconds;
-      document.getElementById('toggleSecondsBtn').textContent = state.showSeconds ? 'Detik: Tampil' : 'Detik: Sembunyi';
+      const btn = document.getElementById('toggleSecondsBtn');
+      if (btn) {
+        btn.setAttribute('data-tooltip', state.showSeconds ? 'Detik: Tampil' : 'Detik: Sembunyi');
+        btn.setAttribute('title', state.showSeconds ? 'Detik: Tampil' : 'Detik: Sembunyi');
+        if (state.showSeconds) {
+          btn.classList.add('bg-indigo-600', 'text-white', 'border-indigo-500');
+          btn.classList.remove('bg-slate-800', 'text-slate-300', 'border-slate-700');
+        } else {
+          btn.classList.remove('bg-indigo-600', 'text-white', 'border-indigo-500');
+          btn.classList.add('bg-slate-800', 'text-slate-300', 'border-slate-700');
+        }
+      }
       updateDigitalClock();
       saveStateToLocal();
     }
@@ -1406,7 +1532,8 @@
       const isVisible = !!state.showMs[modeKey];
       const btn = document.getElementById('btn-ms-' + modeKey);
       if (btn) {
-        btn.textContent = isVisible ? 'Ms: Tampil' : 'Ms: Sembunyi';
+        btn.setAttribute('data-tooltip', isVisible ? 'Milidetik: Tampil' : 'Milidetik: Sembunyi');
+        btn.setAttribute('title', isVisible ? 'Milidetik: Tampil' : 'Milidetik: Sembunyi');
         if (isVisible) {
           btn.classList.add('bg-indigo-600', 'text-white', 'border-indigo-500');
           btn.classList.remove('bg-slate-800', 'text-slate-300');
@@ -1523,7 +1650,8 @@
           contentWrapper.classList.remove('relative');
         }
         if (btn) {
-          btn.textContent = 'Lingkaran: Tampil';
+          btn.setAttribute('data-tooltip', 'Lingkaran Timer: Tampil');
+          btn.setAttribute('title', 'Lingkaran Timer: Tampil');
           btn.classList.add('bg-indigo-600', 'text-white', 'border-indigo-500');
           btn.classList.remove('bg-slate-800', 'text-slate-300');
         }
@@ -1534,7 +1662,8 @@
           contentWrapper.classList.add('relative');
         }
         if (btn) {
-          btn.textContent = 'Lingkaran: Sembunyi';
+          btn.setAttribute('data-tooltip', 'Lingkaran Timer: Sembunyi');
+          btn.setAttribute('title', 'Lingkaran Timer: Sembunyi');
           btn.classList.remove('bg-indigo-600', 'text-white', 'border-indigo-500');
           btn.classList.add('bg-slate-800', 'text-slate-300');
         }
@@ -1605,13 +1734,17 @@
         startStopwatchInterval();
 
         btn.classList.replace('bg-indigo-600', 'bg-amber-600');
-        btn.innerHTML = '<i data-lucide="pause" class="w-5 h-5 fill-current"></i> <span>Jeda</span>';
+        btn.setAttribute('data-tooltip', 'Jeda (Space)');
+        btn.setAttribute('title', 'Jeda (Space)');
+        btn.innerHTML = '<i data-lucide="pause" id="swPlayIcon" class="w-6 h-6 fill-current"></i>';
         lapBtn.removeAttribute('disabled');
       } else {
         sw.isRunning = false;
         clearInterval(sw.timerId);
         btn.classList.replace('bg-amber-600', 'bg-indigo-600');
-        btn.innerHTML = '<i data-lucide="play" class="w-5 h-5 fill-current"></i> <span>Lanjut</span>';
+        btn.setAttribute('data-tooltip', 'Lanjut (Space)');
+        btn.setAttribute('title', 'Lanjut (Space)');
+        btn.innerHTML = '<i data-lucide="play" id="swPlayIcon" class="w-6 h-6 fill-current"></i>';
       }
       lucide.createIcons();
     }
@@ -1625,7 +1758,9 @@
 
       const btn = document.getElementById('swStartBtn');
       btn.classList.replace('bg-amber-600', 'bg-indigo-600');
-      btn.innerHTML = '<i data-lucide="play" class="w-5 h-5 fill-current"></i> <span>Mulai</span>';
+      btn.setAttribute('data-tooltip', 'Mulai (Space)');
+      btn.setAttribute('title', 'Mulai (Space)');
+      btn.innerHTML = '<i data-lucide="play" id="swPlayIcon" class="w-6 h-6 fill-current"></i>';
 
       const lapBtn = document.getElementById('swLapBtn');
       lapBtn.setAttribute('disabled', 'true');
@@ -1791,13 +1926,19 @@
         startTimerInterval();
 
         btn.classList.replace('bg-indigo-600', 'bg-amber-600');
-        playTxt.textContent = "Jeda";
+        btn.setAttribute('data-tooltip', "Jeda Timer (Space)");
+        btn.setAttribute('title', "Jeda Timer (Space)");
+        const icon = document.getElementById('timerPlayIcon');
+        if (icon) icon.setAttribute('data-lucide', 'pause');
         stateLbl.textContent = "Sedang Berjalan...";
       } else {
         tm.isRunning = false;
         clearInterval(tm.timerId);
         btn.classList.replace('bg-amber-600', 'bg-indigo-600');
-        playTxt.textContent = "Lanjut";
+        btn.setAttribute('data-tooltip', "Lanjut Timer (Space)");
+        btn.setAttribute('title', "Lanjut Timer (Space)");
+        const icon = document.getElementById('timerPlayIcon');
+        if (icon) icon.setAttribute('data-lucide', 'play');
         stateLbl.textContent = "Dijeda";
       }
       lucide.createIcons();
@@ -1812,7 +1953,10 @@
 
       const btn = document.getElementById('timerToggleBtn');
       btn.classList.replace('bg-amber-600', 'bg-indigo-600');
-      document.getElementById('timerPlayTxt').textContent = "Mulai";
+      btn.setAttribute('data-tooltip', "Mulai Timer (Space)");
+      btn.setAttribute('title', "Mulai Timer (Space)");
+      const icon = document.getElementById('timerPlayIcon');
+      if (icon) icon.setAttribute('data-lucide', 'play');
       document.getElementById('timerStateLabel').textContent = "Siap Dimulai";
       document.getElementById('tm-ms1').textContent = '0';
       document.getElementById('tm-ms2').textContent = '0';
@@ -1934,8 +2078,13 @@
       }
 
       const currentItem = q.items[q.currentIndex] || { title: "Selesai", hours: 0, minutes: 0, seconds: 0 };
-      document.getElementById('queueCurrentTitle').textContent = currentItem.title;
-      document.getElementById('queueStepBadge').textContent = 'Sesi ' + (q.currentIndex + 1) + ' dari ' + q.items.length;
+      if (q.isWaitingScheduled) {
+        document.getElementById('queueCurrentTitle').textContent = '⏳ Menunggu Jadwal: ' + currentItem.title;
+        document.getElementById('queueStepBadge').textContent = 'Mulai Jam ' + (currentItem.startTime || '--:--') + ' • Sesi ' + (q.currentIndex + 1) + '/' + q.items.length;
+      } else {
+        document.getElementById('queueCurrentTitle').textContent = currentItem.title;
+        document.getElementById('queueStepBadge').textContent = 'Sesi ' + (q.currentIndex + 1) + ' dari ' + q.items.length;
+      }
 
       const nextItem = q.items[q.currentIndex + 1];
       const nextTitleElem = document.getElementById('queueNextTitle');
@@ -1961,6 +2110,7 @@
         const badgeClass = isActive ? 'bg-indigo-500 text-white' : (isDone ? 'bg-emerald-600 text-white' : 'bg-slate-700 text-slate-300');
         const badgeContent = isDone ? "\u2713" : idx + 1;
         const durBadge = formatSessionDuration(it.hours || 0, it.minutes || 0, it.seconds || 0);
+        const startTimeBadge = it.startTime ? '<span class="px-2 py-0.5 rounded text-[11px] font-mono font-bold bg-amber-950/60 text-amber-300 border border-amber-600/40 flex items-center gap-1" title="Sesi ini dijadwalkan mulai otomatis pada jam ' + it.startTime + '"><i data-lucide="alarm-clock" class="w-3 h-3"></i> ' + it.startTime + '</span>' : '';
         const hasCustomFlash = it.flashMode === 'custom' && Array.isArray(it.customFlashRules) && it.customFlashRules.length > 0;
         const flashLabel = hasCustomFlash ? it.customFlashRules.length + ' Flash' : 'Default';
 
@@ -1975,7 +2125,7 @@
             '<span class="text-xs font-semibold ' + (isActive ? 'text-white' : 'text-slate-300') + '">' + it.title + '</span>' +
           '</div>' +
           '<div class="flex items-center gap-1.5 flex-wrap">' +
-            '<button onclick="openEditQueueModal(' + idx + ')" class="font-mono text-xs text-indigo-400 bg-indigo-950/40 hover:bg-indigo-900/60 px-2 py-0.5 rounded border border-indigo-800/30 transition flex items-center gap-1" title="Klik untuk mengedit durasi waktu">' + durBadge + '</button>' +
+            startTimeBadge + '<button onclick="openEditQueueModal(' + idx + ')" class="font-mono text-xs text-indigo-400 bg-indigo-950/40 hover:bg-indigo-900/60 px-2 py-0.5 rounded border border-indigo-800/30 transition flex items-center gap-1" title="Klik untuk mengedit durasi waktu">' + durBadge + '</button>' +
             '<button onclick="openQueueItemFlashModal(' + idx + ')" class="px-2 py-0.5 rounded text-[11px] font-medium flex items-center gap-1 ' + (hasCustomFlash ? 'bg-amber-600/30 text-amber-300 border border-amber-500/40' : 'bg-slate-800 text-slate-400 hover:text-white') + '" title="Aturan Flash Sesi ini">' +
               '<i data-lucide="zap" class="w-3 h-3"></i>' +
               '<span>' + flashLabel + '</span>' +
@@ -2008,14 +2158,329 @@
       renderQueueList();
     }
 
+
+    function getSessionTargetStart(timeStr) {
+      if (!timeStr) return null;
+      const parts = String(timeStr).trim().split(':');
+      if (parts.length < 2) return null;
+      const targetH = parseInt(parts[0], 10);
+      const targetM = parseInt(parts[1], 10);
+      const targetS = parts.length > 2 ? parseInt(parts[2], 10) : 0;
+      if (isNaN(targetH) || isNaN(targetM)) return null;
+
+      const now = new Date();
+      const target = new Date(now.getFullYear(), now.getMonth(), now.getDate(), targetH, targetM, targetS, 0);
+      if (target.getTime() <= now.getTime() - 1000) {
+        target.setDate(target.getDate() + 1);
+      }
+      return target.getTime();
+    }
+
+    function applyQuickQueueStartTime() {
+      const input = document.getElementById('quickQueueStartTime');
+      const val = input ? input.value : '';
+      if (!val) {
+        showToast("Pilih jam mulai terlebih dahulu");
+        return;
+      }
+      if (state.queue.items.length === 0) {
+        showToast("Belum ada sesi di antrean");
+        return;
+      }
+      state.queue.items[0].startTime = val;
+      renderQueueUI();
+      saveStateToLocal();
+      showToast('Sesi 1 dijadwalkan mulai otomatis pada jam ' + val);
+    }
+
+    function clearQuickQueueStartTime() {
+      const input = document.getElementById('quickQueueStartTime');
+      if (input) input.value = '';
+      if (state.queue.items.length > 0 && state.queue.items[0].startTime) {
+        state.queue.items[0].startTime = '';
+        renderQueueUI();
+        saveStateToLocal();
+        showToast('Jadwal mulai sesi 1 dibatalkan');
+      }
+    }
+
+
+    function getWeatherInfo(code) {
+      if (code === 0) return { desc: 'Cerah', icon: 'sun', color: 'text-amber-400' };
+      if (code === 1 || code === 2) return { desc: 'Cerah Berawan', icon: 'cloud-sun', color: 'text-amber-300' };
+      if (code === 3) return { desc: 'Berawan', icon: 'cloud', color: 'text-slate-300' };
+      if (code === 45 || code === 48) return { desc: 'Berkabut', icon: 'cloud-fog', color: 'text-slate-400' };
+      if (code >= 51 && code <= 67) return { desc: 'Hujan Ringan', icon: 'cloud-drizzle', color: 'text-blue-400' };
+      if (code >= 71 && code <= 77) return { desc: 'Salju', icon: 'snowflake', color: 'text-sky-300' };
+      if (code >= 80 && code <= 82) return { desc: 'Hujan Deras', icon: 'cloud-rain', color: 'text-blue-500' };
+      if (code >= 85 && code <= 86) return { desc: 'Hujan Salju', icon: 'snowflake', color: 'text-sky-300' };
+      if (code >= 95 && code <= 99) return { desc: 'Hujan Petir', icon: 'cloud-lightning', color: 'text-purple-400' };
+      return { desc: 'Cerah', icon: 'sun', color: 'text-amber-400' };
+    }
+
+    function getAqiInfo(aqi) {
+      if (aqi <= 50) return { status: 'Baik', badgeClass: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40' };
+      if (aqi <= 100) return { status: 'Sedang', badgeClass: 'bg-amber-500/20 text-amber-400 border-amber-500/40' };
+      if (aqi <= 150) return { status: 'Sensitif', badgeClass: 'bg-orange-500/20 text-orange-400 border-orange-500/40' };
+      if (aqi <= 200) return { status: 'Tidak Sehat', badgeClass: 'bg-rose-500/20 text-rose-400 border-rose-500/40' };
+      return { status: 'Berbahaya', badgeClass: 'bg-purple-500/20 text-purple-400 border-purple-500/40' };
+    }
+
+    async function fetchWeatherAndAqi(lat, lon) {
+      try {
+        const weatherUrl = 'https://api.open-meteo.com/v1/forecast?latitude=' + lat + '&longitude=' + lon + '&current=temperature_2m,weather_code&timezone=auto';
+        const aqiUrl = 'https://air-quality-api.open-meteo.com/v1/air-quality?latitude=' + lat + '&longitude=' + lon + '&current=us_aqi&timezone=auto';
+
+        const [wRes, aRes] = await Promise.all([
+          fetch(weatherUrl),
+          fetch(aqiUrl)
+        ]);
+
+        if (wRes.ok && aRes.ok) {
+          const wJson = await wRes.json();
+          const aJson = await aRes.json();
+
+          if (wJson && wJson.current && aJson && aJson.current) {
+            updateWeatherAqiUI(wJson.current, aJson.current.us_aqi);
+          }
+        }
+      } catch (err) {}
+    }
+
+    function updateWeatherAqiUI(weather, aqiVal) {
+      const tempElem = document.getElementById('weatherTempDisplay');
+      const descElem = document.getElementById('weatherDescDisplay');
+      const iconElem = document.getElementById('weatherIcon');
+      const aqiBadge = document.getElementById('weatherAqiBadge');
+      const aqiStatus = document.getElementById('weatherAqiStatus');
+      const widget = document.getElementById('weatherAqiWidget');
+
+      if (tempElem) tempElem.textContent = Math.round(weather.temperature_2m) + '°C';
+      const info = getWeatherInfo(weather.weather_code);
+      if (descElem) descElem.textContent = info.desc;
+      if (iconElem) {
+        iconElem.setAttribute('data-lucide', info.icon);
+        iconElem.className = 'w-6 h-6 shrink-0 ' + info.color;
+      }
+
+      if (aqiBadge) {
+        const aqi = getAqiInfo(aqiVal);
+        aqiBadge.textContent = aqiVal;
+        aqiBadge.className = 'min-w-[36px] px-1.5 h-8 rounded-lg flex items-center justify-center text-sm font-black font-mono shrink-0 border ' + aqi.badgeClass;
+        if (aqiStatus) aqiStatus.textContent = aqi.status;
+      }
+      if (widget) {
+        widget.setAttribute('title', 'Cuaca: ' + info.desc + ' ' + Math.round(weather.temperature_2m) + '°C, AQI: ' + aqiVal);
+      }
+      lucide.createIcons();
+    }
+
+    function initLocationWeather() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          pos => {
+            fetchWeatherAndAqi(pos.coords.latitude, pos.coords.longitude);
+          },
+          () => {
+            fetchWeatherAndAqi(-6.2088, 106.8456);
+          },
+          { timeout: 8000, maximumAge: 600000 }
+        );
+      } else {
+        fetchWeatherAndAqi(-6.2088, 106.8456);
+      }
+    }
+
+    function toggleQueueActualClock() {
+      state.queueShowActualClock = !state.queueShowActualClock;
+      applyQueueActualClockVisibility();
+      saveStateToLocal();
+    }
+
+    function toggleQueueWeather() {
+      state.queueShowWeather = !state.queueShowWeather;
+      applyQueueActualClockVisibility();
+      saveStateToLocal();
+    }
+
+    function applyQueueActualClockVisibility() {
+      const container = document.getElementById('queueActualClockContainer');
+      const clockBox = document.getElementById('queueActualClockBox');
+      const weatherWidget = document.getElementById('weatherAqiWidget');
+      const divider = document.getElementById('queueActualDivider');
+      const btnClock = document.getElementById('btn-toggle-actual-queue');
+      const btnWeather = document.getElementById('btn-toggle-weather-queue');
+
+      const showClock = state.queueShowActualClock !== false;
+      const showWeather = state.queueShowWeather !== false;
+
+      if (!showClock && !showWeather) {
+        if (container) container.classList.add('hidden');
+      } else {
+        if (container) container.classList.remove('hidden');
+      }
+
+      if (clockBox) {
+        if (showClock) clockBox.classList.remove('hidden');
+        else clockBox.classList.add('hidden');
+      }
+
+      if (weatherWidget) {
+        if (showWeather) weatherWidget.classList.remove('hidden');
+        else weatherWidget.classList.add('hidden');
+      }
+
+      if (divider) {
+        if (showClock && showWeather) {
+          divider.classList.remove('hidden');
+          divider.classList.add('sm:block');
+        } else {
+          divider.classList.add('hidden');
+          divider.classList.remove('sm:block');
+        }
+      }
+
+      if (btnClock) {
+        if (showClock) {
+          btnClock.setAttribute('data-tooltip', 'Jam Saat Ini: Tampil');
+          btnClock.setAttribute('title', 'Jam Saat Ini: Tampil');
+          btnClock.classList.add('bg-indigo-600', 'text-white', 'border-indigo-500');
+          btnClock.classList.remove('bg-slate-800', 'text-slate-300', 'border-slate-700');
+        } else {
+          btnClock.setAttribute('data-tooltip', 'Jam Saat Ini: Sembunyi');
+          btnClock.setAttribute('title', 'Jam Saat Ini: Sembunyi');
+          btnClock.classList.remove('bg-indigo-600', 'text-white', 'border-indigo-500');
+          btnClock.classList.add('bg-slate-800', 'text-slate-300', 'border-slate-700');
+        }
+      }
+
+      if (btnWeather) {
+        if (showWeather) {
+          btnWeather.setAttribute('data-tooltip', 'Cuaca & AQI: Tampil');
+          btnWeather.setAttribute('title', 'Cuaca & AQI: Tampil');
+          btnWeather.classList.add('bg-indigo-600', 'text-white', 'border-indigo-500');
+          btnWeather.classList.remove('bg-slate-800', 'text-slate-300', 'border-slate-700');
+        } else {
+          btnWeather.setAttribute('data-tooltip', 'Cuaca & AQI: Sembunyi');
+          btnWeather.setAttribute('title', 'Cuaca & AQI: Sembunyi');
+          btnWeather.classList.remove('bg-indigo-600', 'text-white', 'border-indigo-500');
+          btnWeather.classList.add('bg-slate-800', 'text-slate-300', 'border-slate-700');
+        }
+      }
+
+      applyQueueActualClockScale();
+      lucide.createIcons();
+    }
+
+    function adjustQueueActualClockSize(delta) {
+      state.queueActualClockScale = Math.min(2.5, Math.max(0.5, (state.queueActualClockScale || 1.0) + delta));
+      state.queueActualClockScale = Math.round(state.queueActualClockScale * 100) / 100;
+      applyQueueActualClockScale();
+      saveStateToLocal();
+    }
+
+    function resetQueueActualClockSize() {
+      state.queueActualClockScale = 1.0;
+      applyQueueActualClockScale();
+      saveStateToLocal();
+      showToast("Ukuran Jam Saat Ini direset ke 100%");
+    }
+
+    function applyQueueActualClockScale() {
+      const scale = state.queueActualClockScale || 1.0;
+      const badge = document.getElementById('queue-actual-size-badge');
+      if (badge) {
+        badge.textContent = Math.round(scale * 100) + '%';
+      }
+      const clockDisplay = document.getElementById('queueActualClockDisplay');
+      if (clockDisplay) {
+        clockDisplay.style.fontSize = (1.75 * scale) + 'rem';
+      }
+      const widget = document.getElementById('weatherAqiWidget');
+      if (widget) {
+        widget.style.transform = '';
+        widget.style.fontSize = (0.85 * scale) + 'rem';
+      }
+      const clockBox = document.getElementById('queueActualClockBox');
+      if (clockBox) {
+        clockBox.style.fontSize = (0.75 * scale) + 'rem';
+      }
+    }
+
     function startQueueInterval() {
       const q = state.queue;
       clearInterval(q.timerId);
       const tickRate = state.showMs.queue ? 16 : 250;
       q.timerId = setInterval(() => {
         const now = Date.now();
+
+        if (q.isWaitingScheduled) {
+          const waitDiff = Math.max(0, q.targetStartTimestamp - now);
+          if (waitDiff > 0) {
+            q.remainingSeconds = Math.floor(waitDiff / 1000);
+            q.remainingMs = waitDiff % 1000;
+            updateQueueDisplay();
+            return;
+          } else {
+            q.isWaitingScheduled = false;
+            q.targetStartTimestamp = null;
+            const curItem = q.items[q.currentIndex];
+            const curDuration = getItemTotalSeconds(curItem || {});
+            playChimeSound();
+            if (curDuration > 0) {
+              showToast('Waktu tiba! Memulai sesi: ' + (curItem ? curItem.title : ''));
+              q.remainingSeconds = curDuration;
+              q.remainingMs = 0;
+              q.endTimestamp = Date.now() + (curDuration * 1000);
+              const rules = getActiveQueueFlashRules();
+              resetRulesTriggeredState(rules);
+              renderQueueUI();
+              return;
+            } else {
+              if (q.currentIndex < q.items.length - 1) {
+                q.currentIndex++;
+                const nextItem = q.items[q.currentIndex];
+                const target = getSessionTargetStart(nextItem ? nextItem.startTime : null);
+                if (target && target > Date.now()) {
+                  q.isWaitingScheduled = true;
+                  q.targetStartTimestamp = target;
+                  const nextWait = Math.max(0, target - Date.now());
+                  q.remainingSeconds = Math.floor(nextWait / 1000);
+                  q.remainingMs = nextWait % 1000;
+                  showToast('Waktu tiba! Menunggu jadwal ' + nextItem.title + ' pada jam ' + nextItem.startTime);
+                } else {
+                  q.isWaitingScheduled = false;
+                  q.remainingSeconds = getItemTotalSeconds(nextItem);
+                  q.remainingMs = 0;
+                  q.endTimestamp = Date.now() + (q.remainingSeconds * 1000);
+                  showToast('Waktu tiba! Memulai: ' + nextItem.title);
+                }
+                const rules = getActiveQueueFlashRules();
+                resetRulesTriggeredState(rules);
+                renderQueueUI();
+                return;
+              } else {
+                clearInterval(q.timerId);
+                q.isRunning = false;
+                q.isWaitingScheduled = false;
+                q.remainingSeconds = 0;
+                q.remainingMs = 0;
+                const btn = document.getElementById('queueToggleBtn');
+                if (btn) {
+                  btn.classList.replace('bg-amber-600', 'bg-indigo-600');
+                  btn.setAttribute('data-tooltip', "Mulai Antrean (Space)");
+                  btn.setAttribute('title', "Mulai Antrean (Space)");
+                }
+                const qIcon = document.getElementById('queuePlayIcon');
+                if (qIcon) qIcon.setAttribute('data-lucide', 'play');
+                renderQueueUI();
+                return;
+              }
+            }
+          }
+        }
+
         const diff = Math.max(0, q.endTimestamp - now);
-        
         if (diff > 0) {
           q.remainingSeconds = Math.floor(diff / 1000);
           q.remainingMs = diff % 1000;
@@ -2024,26 +2489,41 @@
           playChimeSound();
           if (q.currentIndex < q.items.length - 1) {
             q.currentIndex++;
-            q.remainingSeconds = getItemTotalSeconds(q.items[q.currentIndex]);
-            q.remainingMs = 0;
-            q.endTimestamp = Date.now() + (q.remainingSeconds * 1000);
+            const nextItem = q.items[q.currentIndex];
+            const target = getSessionTargetStart(nextItem.startTime);
+            if (target && target > Date.now()) {
+              q.isWaitingScheduled = true;
+              q.targetStartTimestamp = target;
+              const waitDiff = Math.max(0, target - Date.now());
+              q.remainingSeconds = Math.floor(waitDiff / 1000);
+              q.remainingMs = waitDiff % 1000;
+              showToast('Menunggu jadwal mulai ' + nextItem.title + ' pada jam ' + nextItem.startTime);
+            } else {
+              q.isWaitingScheduled = false;
+              q.remainingSeconds = getItemTotalSeconds(nextItem);
+              q.remainingMs = 0;
+              q.endTimestamp = Date.now() + (q.remainingSeconds * 1000);
+              showToast('Melanjutkan ke: ' + nextItem.title);
+            }
             const rules = getActiveQueueFlashRules();
             resetRulesTriggeredState(rules);
-            showToast('Melanjutkan ke: ' + q.items[q.currentIndex].title);
             renderQueueUI();
           } else {
             clearInterval(q.timerId);
             q.isRunning = false;
+            q.isWaitingScheduled = false;
             q.remainingSeconds = 0;
             q.remainingMs = 0;
             document.getElementById('q-ms1').textContent = '0';
             document.getElementById('q-ms2').textContent = '0';
             const btn = document.getElementById('queueToggleBtn');
-            const playTxt = document.getElementById('queuePlayTxt');
             btn.classList.replace('bg-amber-600', 'bg-indigo-600');
-            playTxt.textContent = "Mulai Antrean";
+            btn.setAttribute('data-tooltip', "Mulai Antrean (Space)");
+            btn.setAttribute('title', "Mulai Antrean (Space)");
+            const qIcon = document.getElementById('queuePlayIcon');
+            if (qIcon) qIcon.setAttribute('data-lucide', 'play');
             renderQueueUI();
-              showToast("\uD83C\uDF89 Seluruh antrean sesi telah selesai!");
+            showToast("\uD83C\uDF89 Seluruh antrean sesi telah selesai!");
           }
         }
       }, tickRate);
@@ -2056,18 +2536,36 @@
 
       if (!q.isRunning) {
         q.isRunning = true;
-        const totalRemainingMs = (q.remainingSeconds * 1000) + (q.remainingMs || 0);
-        q.endTimestamp = Date.now() + totalRemainingMs;
+        const curItem = q.items[q.currentIndex];
+        const target = getSessionTargetStart(curItem ? curItem.startTime : null);
+        if (target && target > Date.now()) {
+          q.isWaitingScheduled = true;
+          q.targetStartTimestamp = target;
+          const waitDiff = Math.max(0, target - Date.now());
+          q.remainingSeconds = Math.floor(waitDiff / 1000);
+          q.remainingMs = waitDiff % 1000;
+          showToast('Antrean dijadwalkan, menunggu jam ' + curItem.startTime);
+        } else {
+          q.isWaitingScheduled = false;
+          const totalRemainingMs = (q.remainingSeconds * 1000) + (q.remainingMs || 0);
+          q.endTimestamp = Date.now() + totalRemainingMs;
+        }
 
         startQueueInterval();
 
         btn.classList.replace('bg-indigo-600', 'bg-amber-600');
-        playTxt.textContent = "Jeda";
+        btn.setAttribute('data-tooltip', "Jeda Antrean (Space)");
+        btn.setAttribute('title', "Jeda Antrean (Space)");
+        const qIcon = document.getElementById('queuePlayIcon');
+        if (qIcon) qIcon.setAttribute('data-lucide', 'pause');
       } else {
         q.isRunning = false;
         clearInterval(q.timerId);
         btn.classList.replace('bg-amber-600', 'bg-indigo-600');
-        playTxt.textContent = "Lanjut";
+        btn.setAttribute('data-tooltip', "Lanjut Antrean (Space)");
+        btn.setAttribute('title', "Lanjut Antrean (Space)");
+        const qIcon = document.getElementById('queuePlayIcon');
+        if (qIcon) qIcon.setAttribute('data-lucide', 'play');
       }
       lucide.createIcons();
     }
@@ -2075,6 +2573,8 @@
       const q = state.queue;
       clearInterval(q.timerId);
       q.isRunning = false;
+      q.isWaitingScheduled = false;
+      q.targetStartTimestamp = null;
       q.currentIndex = 0;
       const initialItem = q.items[0] || { hours: 0, minutes: 10, seconds: 0 };
       q.remainingSeconds = getItemTotalSeconds(initialItem);
@@ -2084,7 +2584,10 @@
       
       const btn = document.getElementById('queueToggleBtn');
       btn.classList.replace('bg-amber-600', 'bg-indigo-600');
-      document.getElementById('queuePlayTxt').textContent = "Mulai Antrean";
+      btn.setAttribute('data-tooltip', "Mulai Antrean (Space)");
+      btn.setAttribute('title', "Mulai Antrean (Space)");
+      const qIcon = document.getElementById('queuePlayIcon');
+      if (qIcon) qIcon.setAttribute('data-lucide', 'play');
       document.getElementById('q-ms1').textContent = '0';
       document.getElementById('q-ms2').textContent = '0';
 
@@ -2096,19 +2599,40 @@
       const q = state.queue;
       if (q.currentIndex < q.items.length - 1) {
         q.currentIndex++;
-        q.remainingSeconds = getItemTotalSeconds(q.items[q.currentIndex]);
-        q.remainingMs = 0;
-        if (q.isRunning) {
-          q.endTimestamp = Date.now() + (q.remainingSeconds * 1000);
+        q.isWaitingScheduled = false;
+        q.targetStartTimestamp = null;
+        const curItem = q.items[q.currentIndex];
+        const target = getSessionTargetStart(curItem ? curItem.startTime : null);
+        if (target && target > Date.now()) {
+          q.isWaitingScheduled = true;
+          q.targetStartTimestamp = target;
+          const waitDiff = Math.max(0, target - Date.now());
+          q.remainingSeconds = Math.floor(waitDiff / 1000);
+          q.remainingMs = waitDiff % 1000;
+          showToast('Menunggu jadwal mulai ' + curItem.title + ' pada jam ' + curItem.startTime);
+        } else {
+          q.isWaitingScheduled = false;
+          q.remainingSeconds = getItemTotalSeconds(curItem || {});
+          q.remainingMs = 0;
+          if (q.isRunning) {
+            q.endTimestamp = Date.now() + (q.remainingSeconds * 1000);
+          }
+          showToast('Dilewati ke: ' + curItem.title);
         }
         const rules = getActiveQueueFlashRules();
         resetRulesTriggeredState(rules);
         playChimeSound();
         renderQueueUI();
-        showToast('Dilewati ke: ' + q.items[q.currentIndex].title);
       } else {
         showToast("Sudah di antrean paling akhir");
       }
+    }
+
+    function clearNewQueueStartTime() {
+      const stH = document.getElementById('newQueueStartHour');
+      const stM = document.getElementById('newQueueStartMinute');
+      if (stH) stH.value = '';
+      if (stM) stM.value = '';
     }
 
     function addNewQueueItem() {
@@ -2116,14 +2640,22 @@
       const hInput = document.getElementById('newQueueHours');
       const mInput = document.getElementById('newQueueMinutes');
       const sInput = document.getElementById('newQueueSeconds');
+      const stH = document.getElementById('newQueueStartHour');
+      const stM = document.getElementById('newQueueStartMinute');
 
       const title = titleInput.value.trim() || 'Sesi ' + (state.queue.items.length + 1);
       const hours = Math.max(0, parseInt(hInput.value) || 0);
       const minutes = Math.max(0, parseInt(mInput.value) || 0);
       const seconds = Math.max(0, parseInt(sInput.value) || 0);
+      let startTime = '';
+      if (stH && stM && (stH.value !== '' || stM.value !== '')) {
+        const hh = String(Math.min(23, Math.max(0, parseInt(stH.value) || 0))).padStart(2, '0');
+        const mm = String(Math.min(59, Math.max(0, parseInt(stM.value) || 0))).padStart(2, '0');
+        startTime = hh + ':' + mm;
+      }
 
-      if (hours === 0 && minutes === 0 && seconds === 0) {
-        showToast("Durasi sesi minimal 1 detik");
+      if (hours === 0 && minutes === 0 && seconds === 0 && !startTime) {
+        showToast("Isi durasi sesi atau jam mulai otomatis");
         return;
       }
 
@@ -2132,13 +2664,15 @@
         hours,
         minutes,
         seconds,
+        startTime: startTime || '',
         flashMode: 'inherit',
         customFlashRules: []
       });
       titleInput.value = '';
       hInput.value = '0';
-      mInput.value = '20';
+      mInput.value = '0';
       sInput.value = '0';
+      clearNewQueueStartTime();
       renderQueueUI();
       saveStateToLocal();
       showToast('Sesi baru (' + formatSessionDuration(hours, minutes, seconds) + ') ditambahkan');
@@ -2153,6 +2687,7 @@
         hours: item.hours || 0,
         minutes: item.minutes || 0,
         seconds: item.seconds || 0,
+        startTime: item.startTime || '',
         flashMode: item.flashMode || 'inherit',
         customFlashRules: Array.isArray(item.customFlashRules) ? JSON.parse(JSON.stringify(item.customFlashRules)) : []
       };
@@ -2175,7 +2710,7 @@
       renderQueueUI();
       saveStateToLocal();
     }
-    // --- Drag & Drop Reordering and Queue Edit ---
+    
     let draggedQueueIndex = null;
 
     function handleQueueDragStart(e, index) {
@@ -2226,7 +2761,7 @@
       const [movedItem] = state.queue.items.splice(fromIndex, 1);
       state.queue.items.splice(toIndex, 0, movedItem);
 
-      // Keep active tracking aligned with moved item
+      
       const newIndex = state.queue.items.indexOf(currentItem);
       if (newIndex !== -1) {
         state.queue.currentIndex = newIndex;
@@ -2237,6 +2772,13 @@
       showToast('Urutan sesi "' + movedItem.title + '" dipindahkan');
     }
 
+    function clearEditQueueStartTime() {
+      const editH = document.getElementById('editQueueStartHour');
+      const editM = document.getElementById('editQueueStartMinute');
+      if (editH) editH.value = '';
+      if (editM) editM.value = '';
+    }
+
     function openEditQueueModal(index) {
       state.editingQueueIndex = index;
       const item = state.queue.items[index];
@@ -2244,8 +2786,18 @@
 
       document.getElementById('editQueueTitle').value = item.title || '';
       document.getElementById('editQueueHours').value = item.hours || 0;
-      document.getElementById('editQueueMinutes').value = item.minutes !== undefined ? item.minutes : 20;
+      document.getElementById('editQueueMinutes').value = item.minutes !== undefined ? item.minutes : 0;
       document.getElementById('editQueueSeconds').value = item.seconds || 0;
+      const editH = document.getElementById('editQueueStartHour');
+      const editM = document.getElementById('editQueueStartMinute');
+      if (item.startTime && item.startTime.includes(':')) {
+        const parts = item.startTime.split(':');
+        if (editH) editH.value = parts[0];
+        if (editM) editM.value = parts[1];
+      } else {
+        if (editH) editH.value = '';
+        if (editM) editM.value = '';
+      }
 
       openModal('editQueueModal');
       lucide.createIcons();
@@ -2266,8 +2818,17 @@
       const m = Math.max(0, parseInt(document.getElementById('editQueueMinutes').value) || 0);
       const s = Math.max(0, parseInt(document.getElementById('editQueueSeconds').value) || 0);
 
-      if (h === 0 && m === 0 && s === 0) {
-        showToast("Durasi sesi minimal 1 detik");
+      const editH = document.getElementById('editQueueStartHour');
+      const editM = document.getElementById('editQueueStartMinute');
+      let startTime = '';
+      if (editH && editM && (editH.value !== '' || editM.value !== '')) {
+        const hh = String(Math.min(23, Math.max(0, parseInt(editH.value) || 0))).padStart(2, '0');
+        const mm = String(Math.min(59, Math.max(0, parseInt(editM.value) || 0))).padStart(2, '0');
+        startTime = hh + ':' + mm;
+      }
+
+      if (h === 0 && m === 0 && s === 0 && !startTime) {
+        showToast("Isi durasi sesi atau jam mulai otomatis");
         return;
       }
 
@@ -2275,6 +2836,7 @@
       state.queue.items[idx].hours = h;
       state.queue.items[idx].minutes = m;
       state.queue.items[idx].seconds = s;
+      state.queue.items[idx].startTime = startTime;
 
       if (idx === state.queue.currentIndex) {
         const totalSec = getItemTotalSeconds(state.queue.items[idx]);
@@ -2315,6 +2877,7 @@
       if (!sel) return;
 
       let html = '<option value="custom">-- Template Preset --</option>' +
+        '<option value="test">Test Debug (01:00 • 1m 15d + 1m)</option>' +
         '<option value="ujian">Ujian (10m + 1j 15m + 15m)</option>' +
         '<option value="pomodoro">Pomodoro (25m + 5m + 25m + 15m)</option>' +
         '<option value="sidang">Sidang (15m + 25m + 10m)</option>';
@@ -2337,7 +2900,24 @@
       q.isRunning = false;
       q.currentIndex = 0;
 
-      if (presetType === 'ujian') {
+      if (presetType === 'test') {
+        q.items = [
+          { title: "Mulai Jam Otomatis", hours: 0, minutes: 0, seconds: 0, startTime: "01:00", flashMode: 'inherit', customFlashRules: [] },
+          { title: "debug 1", hours: 0, minutes: 1, seconds: 15, startTime: "", flashMode: 'inherit', customFlashRules: [] },
+          {
+            title: "debug 2",
+            hours: 0,
+            minutes: 1,
+            seconds: 0,
+            startTime: "",
+            flashMode: 'custom',
+            customFlashRules: [
+              { id: 1, hours: 0, minutes: 0, seconds: 35, mode: 'once', triggered: false },
+              { id: 2, hours: 0, minutes: 0, seconds: 10, mode: 'countdown', triggered: false }
+            ]
+          }
+        ];
+      } else if (presetType === 'ujian') {
         q.items = [
           { title: "Instruksi & Pengisian Data", hours: 0, minutes: 10, seconds: 0, flashMode: 'inherit', customFlashRules: [] },
           { title: "Pengerjaan Soal Utama", hours: 1, minutes: 15, seconds: 0, flashMode: 'inherit', customFlashRules: [] },
@@ -2363,18 +2943,31 @@
         }
       }
 
-      q.remainingSeconds = getItemTotalSeconds(q.items[0]);
+      q.isWaitingScheduled = false;
+      q.targetStartTimestamp = null;
+      const initialItem = q.items[0] || { hours: 0, minutes: 10, seconds: 0 };
+      q.remainingSeconds = getItemTotalSeconds(initialItem);
       q.remainingMs = 0;
       const rules = getActiveQueueFlashRules();
       resetRulesTriggeredState(rules);
 
       const btn = document.getElementById('queueToggleBtn');
-      btn.classList.replace('bg-amber-600', 'bg-indigo-600');
-      document.getElementById('queuePlayTxt').textContent = "Mulai Antrean";
+      if (btn) {
+        btn.classList.replace('bg-amber-600', 'bg-indigo-600');
+        btn.setAttribute('data-tooltip', "Mulai Antrean (Space)");
+        btn.setAttribute('title', "Mulai Antrean (Space)");
+      }
+      const qIcon = document.getElementById('queuePlayIcon');
+      if (qIcon) qIcon.setAttribute('data-lucide', 'play');
+      const ms1 = document.getElementById('q-ms1');
+      if (ms1) ms1.textContent = '0';
+      const ms2 = document.getElementById('q-ms2');
+      if (ms2) ms2.textContent = '0';
 
       clearExamDangerState();
       renderQueueUI();
       saveStateToLocal();
+      lucide.createIcons();
       showToast('Template preset diterapkan');
     }
 
@@ -2707,7 +3300,7 @@
               if (!activeCountdown) {
                 hideDangerWarningBar();
               }
-            }, 5000); // Notifikasi muncul selama 5 detik untuk mode 1x flash
+            }, 5000);
           }
 
           if (secondsRemaining > targetSec) {
@@ -2723,7 +3316,7 @@
         }
         showDangerWarningBar(secondsRemaining);
 
-        // Suara countdown presisi pada setiap detik perpindahan
+        
         if (secondsRemaining !== lastCountdownAudioSec) {
           lastCountdownAudioSec = secondsRemaining;
           playWarningTick();
@@ -3300,14 +3893,14 @@
       showToast("Semua pengaturan berhasil disimpan!");
     }
 
-    function resetAppSettings() {
-      if (!confirm("Reset semua pengaturan aplikasi ke nilai default?")) return;
-      localStorage.removeItem('omniclock_settings_v5');
-      localStorage.removeItem('omniclock_settings_v4');
-      localStorage.removeItem('omniclock_settings_v3');
-      localStorage.removeItem('omniclock_settings_v2');
-      localStorage.removeItem('omniclock_settings_v1');
+    function resetTotalAppSettings() {
+      if (!confirm("PERINGATAN: Apakah Anda yakin ingin menyetel ulang SELURUH pengaturan jam multifungsi ke setelan awal pabrik?\n\nSemua tema, ukuran teks, antrean sesi, dan preset kustom tersimpan akan dihapus.")) return;
+      localStorage.clear();
       location.reload();
+    }
+
+    function resetAppSettings() {
+      resetTotalAppSettings();
     }
 
     function saveStateToLocal() {
@@ -3335,6 +3928,9 @@
           fontFamily: state.fontFamily,
           theme: state.theme,
           queueItems: state.queue.items,
+          queueShowActualClock: state.queueShowActualClock,
+          queueShowWeather: state.queueShowWeather,
+          queueActualClockScale: state.queueActualClockScale,
           customPresets: state.customPresets,
           worldClocks: state.worldClocks
         };
@@ -3372,6 +3968,15 @@
         }
         if (Array.isArray(saved.customPresets)) {
           state.customPresets = saved.customPresets;
+        }
+        if (saved.queueShowActualClock !== undefined) {
+          state.queueShowActualClock = saved.queueShowActualClock;
+        }
+        if (saved.queueShowWeather !== undefined) {
+          state.queueShowWeather = saved.queueShowWeather;
+        }
+        if (saved.queueActualClockScale !== undefined) {
+          state.queueActualClockScale = saved.queueActualClockScale;
         }
         if (saved.queueItems && saved.queueItems.length > 0) {
           state.queue.items = saved.queueItems.map(it => ({
@@ -3432,6 +4037,8 @@
       updateFlashRulesBadges();
       updateToastMuteUI();
       updatePresetDropdown();
+      applyQueueActualClockVisibility();
+      initLocationWeather();
       lucide.createIcons();
     };
   </script>
