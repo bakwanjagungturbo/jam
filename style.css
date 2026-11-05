@@ -117,30 +117,50 @@
 @keyframes textDangerPulse {
   0%,
   100% {
-    color: #ffffff;
-    text-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+    color: #ef4444;
+    text-shadow: 0 0 16px rgba(239, 68, 68, 0.95), 0 0 28px rgba(239, 68, 68, 0.5);
+  }
+  6% {
+    color: #ef4444;
+    text-shadow: 0 0 16px rgba(239, 68, 68, 0.95), 0 0 28px rgba(239, 68, 68, 0.5);
   }
   50% {
+    color: #ffffff;
+    text-shadow: 0 0 6px rgba(255, 255, 255, 0.25);
+  }
+  94% {
     color: #ef4444;
-    text-shadow: 0 0 12px rgba(239, 68, 68, 0.85), 0 0 20px rgba(239, 68, 68, 0.45);
+    text-shadow: 0 0 16px rgba(239, 68, 68, 0.95), 0 0 28px rgba(239, 68, 68, 0.5);
   }
 }
 .animate-text-danger {
-  animation: textDangerPulse 0.8s ease-in-out infinite !important;
+  animation: textDangerPulse 1s ease-in-out infinite !important;
 }
-@keyframes flashOncePulse {
-  0%,
+.danger-pre-fade {
+  transition: color 0.35s ease-out, text-shadow 0.35s ease-out !important;
+  color: #ef4444 !important;
+  text-shadow: 0 0 16px rgba(239, 68, 68, 0.95), 0 0 28px rgba(239, 68, 68, 0.5) !important;
+}
+@keyframes flashOnceHoldPulse {
+  0% {
+    color: #ffffff;
+    text-shadow: 0 0 6px rgba(255, 255, 255, 0.2);
+  }
+  6% {
+    color: #ef4444;
+    text-shadow: 0 0 16px rgba(239, 68, 68, 0.95), 0 0 28px rgba(239, 68, 68, 0.5);
+  }
+  40% {
+    color: #ef4444;
+    text-shadow: 0 0 16px rgba(239, 68, 68, 0.95), 0 0 28px rgba(239, 68, 68, 0.5);
+  }
   100% {
     color: #ffffff;
-    text-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
-  }
-  50% {
-    color: #ef4444;
-    text-shadow: 0 0 12px rgba(239, 68, 68, 0.85), 0 0 20px rgba(239, 68, 68, 0.45);
+    text-shadow: 0 0 6px rgba(255, 255, 255, 0.2);
   }
 }
 .animate-flash-once {
-  animation: flashOncePulse 0.9s ease-in-out 1 forwards !important;
+  animation: flashOnceHoldPulse 5s cubic-bezier(0.25, 1, 0.5, 1) 1 forwards !important;
 }
 ::-webkit-scrollbar {
   width: 6px;

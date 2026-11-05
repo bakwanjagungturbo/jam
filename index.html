@@ -1612,6 +1612,30 @@
       return totalSec;
     }
 
+    function calculateQueueFinishTimestamp() {
+      const q = state.queue;
+      if (!q.items || q.items.length === 0) return null;
+      if (q.currentIndex >= q.items.length) return null;
+
+      let upcomingSec = 0;
+      for (let i = q.currentIndex + 1; i < q.items.length; i++) {
+        upcomingSec += getItemTotalSeconds(q.items[i]);
+      }
+
+      if (q.isRunning) {
+        if (q.isWaitingScheduled && q.targetStartTimestamp) {
+          const curSec = getItemTotalSeconds(q.items[q.currentIndex]);
+          return q.targetStartTimestamp + ((curSec + upcomingSec) * 1000);
+        }
+        if (q.endTimestamp) {
+          return q.endTimestamp + (upcomingSec * 1000);
+        }
+      }
+
+      const totalSec = calculateQueueRemainingTotalSeconds();
+      return Date.now() + (totalSec * 1000);
+    }
+
     function updateQueueEstimatedEndTimeUI() {
       const badge = document.getElementById('queueEndTimeBadge');
       const text = document.getElementById('queueEstimatedEndTimeText');
@@ -1623,15 +1647,29 @@
       badge.classList.remove('hidden');
       const totalSec = calculateQueueRemainingTotalSeconds();
       if (totalSec <= 0) {
-        text.textContent = 'Selesai';
+        text.innerHTML = '<span class="font-mono text-white">00:00</span><span class="text-indigo-400/60 font-normal mx-1.5">|</span><span class="font-mono text-indigo-300 font-medium">Selesai</span>';
         return;
       }
-      const endTarget = new Date(Date.now() + totalSec * 1000);
-      const hh = String(endTarget.getHours()).padStart(2, '0');
-      const mm = String(endTarget.getMinutes()).padStart(2, '0');
-      const ss = String(endTarget.getSeconds()).padStart(2, '0');
-      const mLeft = Math.ceil(totalSec / 60);
-      text.textContent = hh + ':' + mm + ':' + ss + ' (' + mLeft + 'm)';
+      const h = Math.floor(totalSec / 3600);
+      const m = Math.floor((totalSec % 3600) / 60);
+      const s = totalSec % 60;
+      const countdownStr = h > 0
+        ? String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0')
+        : String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+
+      const finishTs = calculateQueueFinishTimestamp();
+      let wallClockStr = '--:--:--';
+      if (finishTs) {
+        const finishDate = new Date(finishTs);
+        const hh = String(finishDate.getHours()).padStart(2, '0');
+        const mm = String(finishDate.getMinutes()).padStart(2, '0');
+        const ss = String(finishDate.getSeconds()).padStart(2, '0');
+        wallClockStr = hh + ':' + mm + ':' + ss;
+      }
+
+      text.innerHTML = '<span class="font-mono text-white">' + countdownStr + '</span>' +
+        '<span class="text-indigo-400/60 font-normal mx-1.5">|</span>' +
+        '<span class="font-mono text-indigo-300 font-medium">' + wallClockStr + '</span>';
     }
 
     function toggleQueueEstimatedEndTime() {
@@ -1661,6 +1699,18 @@
       if (chk) chk.checked = !!state.queueShowEstimatedEndTime;
     }
 
+    function clearSessionTransitionClasses() {
+      const targets = [
+        document.getElementById('queueCurrentTitle'),
+        document.getElementById('queueDisplay'),
+        document.getElementById('queueStepBadge'),
+        document.getElementById('queueEndTimeBadge')
+      ];
+      targets.forEach(el => {
+        if (el) el.classList.remove('session-transition-active');
+      });
+    }
+
     function triggerSessionTransitionAnim() {
       if (!state.sessionTransitionAnim) return;
       const targets = [
@@ -1674,6 +1724,9 @@
         el.classList.remove('session-transition-active');
         void el.offsetWidth;
         el.classList.add('session-transition-active');
+        setTimeout(() => {
+          el.classList.remove('session-transition-active');
+        }, 450);
       });
     }
 
@@ -1712,6 +1765,9 @@
 
     function toggleSessionTransition() {
       state.sessionTransitionAnim = !state.sessionTransitionAnim;
+      if (!state.sessionTransitionAnim) {
+        clearSessionTransitionClasses();
+      }
       updateSessionTransitionUI();
       saveStateToLocal();
       showToast(state.sessionTransitionAnim ? "Animasi Transisi Sesi Diaktifkan" : "Animasi Transisi Sesi Dinonaktifkan");
@@ -2375,19 +2431,20 @@
         ring.style.opacity = '1';
       }
 
-      checkExamModeThreshold(tm.remainingSeconds, document.getElementById('timerDisplay'), state.flashRules);
+      const exactMs = tm.isRunning && tm.endTimestamp ? Math.max(0, tm.endTimestamp - Date.now()) : (tm.remainingSeconds * 1000 + (tm.remainingMs || 0));
+      checkExamModeThreshold(tm.remainingSeconds, document.getElementById('timerDisplay'), state.flashRules, exactMs);
     }
 
     function startTimerInterval() {
       const tm = state.timer;
       clearInterval(tm.timerId);
-      const tickRate = state.showMs.timer ? 16 : 250;
+      const tickRate = state.showMs.timer ? 16 : 50;
       tm.timerId = setInterval(() => {
         const now = Date.now();
         const diff = Math.max(0, tm.endTimestamp - now);
         
         if (diff > 0) {
-          tm.remainingSeconds = Math.floor(diff / 1000);
+          tm.remainingSeconds = state.showMs.timer ? Math.floor(diff / 1000) : Math.ceil(diff / 1000);
           tm.remainingMs = diff % 1000;
           renderTimer();
         } else {
@@ -2602,7 +2659,8 @@
       }
 
       const activeRules = getActiveQueueFlashRules();
-      checkExamModeThreshold(q.remainingSeconds, document.getElementById('queueDisplay'), activeRules);
+      const exactMs = q.isRunning && q.endTimestamp ? Math.max(0, q.endTimestamp - Date.now()) : (q.remainingSeconds * 1000 + (q.remainingMs || 0));
+      checkExamModeThreshold(q.remainingSeconds, document.getElementById('queueDisplay'), activeRules, exactMs);
       updateQueueEstimatedEndTimeUI();
     }
 
@@ -2962,14 +3020,14 @@
     function startQueueInterval() {
       const q = state.queue;
       clearInterval(q.timerId);
-      const tickRate = state.showMs.queue ? 16 : 250;
+      const tickRate = state.showMs.queue ? 16 : 50;
       q.timerId = setInterval(() => {
         const now = Date.now();
 
         if (q.isWaitingScheduled) {
           const waitDiff = Math.max(0, q.targetStartTimestamp - now);
           if (waitDiff > 0) {
-            q.remainingSeconds = Math.floor(waitDiff / 1000);
+            q.remainingSeconds = state.showMs.queue ? Math.floor(waitDiff / 1000) : Math.ceil(waitDiff / 1000);
             q.remainingMs = waitDiff % 1000;
             updateQueueDisplay();
             return;
@@ -3034,7 +3092,7 @@
 
         const diff = Math.max(0, q.endTimestamp - now);
         if (diff > 0) {
-          q.remainingSeconds = Math.floor(diff / 1000);
+          q.remainingSeconds = state.showMs.queue ? Math.floor(diff / 1000) : Math.ceil(diff / 1000);
           q.remainingMs = diff % 1000;
           updateQueueDisplay();
         } else {
@@ -3057,6 +3115,7 @@
               q.endTimestamp = Date.now() + (q.remainingSeconds * 1000);
               showToast('Melanjutkan ke: ' + nextItem.title);
             }
+            triggerSessionTransitionAnim();
             const rules = getActiveQueueFlashRules();
             resetRulesTriggeredState(rules);
             renderQueueUI();
@@ -3819,7 +3878,7 @@
     let lastCountdownAudioSec = -1;
     let lastExamCheckedSec = -1;
 
-    function checkExamModeThreshold(secondsRemaining, textElement, rulesList) {
+    function checkExamModeThreshold(secondsRemaining, textElement, rulesList, exactRemainingMs) {
       if (!state.warningEnabled || !textElement) {
         clearExamDangerState();
         return;
@@ -3832,14 +3891,19 @@
 
       const rules = Array.isArray(rulesList) ? rulesList : state.flashRules;
       let activeCountdown = false;
+      let preFadeCountdown = false;
+      const ms = exactRemainingMs !== undefined ? exactRemainingMs : (secondsRemaining * 1000);
 
       rules.forEach(rule => {
         const targetSec = (rule.hours * 3600) + (rule.minutes * 60) + rule.seconds;
         if (targetSec <= 0) return;
+        const targetMs = targetSec * 1000;
 
         if (rule.mode === 'countdown') {
-          if (secondsRemaining <= targetSec) {
+          if (ms <= targetMs) {
             activeCountdown = true;
+          } else if (ms <= targetMs + 350) {
+            preFadeCountdown = true;
           }
         } else if (rule.mode === 'once') {
           const shouldTrigger = !rule.triggered && (
@@ -3849,14 +3913,18 @@
           if (shouldTrigger) {
             rule.triggered = true;
             playWarningTick();
+            lastCountdownAudioSec = secondsRemaining;
 
-            textElement.classList.remove('animate-text-danger');
+            clearSessionTransitionClasses();
+            textElement.classList.remove('animate-text-danger', 'danger-pre-fade', 'animate-flash-once', 'session-transition-active');
+            void textElement.offsetWidth;
             textElement.classList.add('animate-flash-once');
 
             clearTimeout(flashOnceAnimTimeoutId);
             flashOnceAnimTimeoutId = setTimeout(() => {
-              textElement.classList.remove('animate-flash-once');
-            }, 950);
+              textElement.classList.remove('animate-flash-once', 'session-transition-active');
+              flashOnceAnimTimeoutId = null;
+            }, 5100);
 
             showDangerWarningBar(secondsRemaining);
             clearTimeout(flashOnceTimeoutId);
@@ -3865,7 +3933,7 @@
               if (!activeCountdown) {
                 hideDangerWarningBar();
               }
-            }, 3000);
+            }, 5500);
           }
 
           if (secondsRemaining > targetSec) {
@@ -3877,17 +3945,25 @@
       lastExamCheckedSec = secondsRemaining;
 
       if (activeCountdown) {
-        textElement.classList.remove('animate-flash-once');
-        if (!textElement.classList.contains('animate-text-danger')) {
-          textElement.classList.add('animate-text-danger');
-        }
+        textElement.classList.remove('animate-flash-once', 'danger-pre-fade');
         showDangerWarningBar(secondsRemaining);
 
         if (secondsRemaining !== lastCountdownAudioSec) {
           lastCountdownAudioSec = secondsRemaining;
           playWarningTick();
+          textElement.classList.remove('animate-text-danger');
+          void textElement.offsetWidth;
+          textElement.classList.add('animate-text-danger');
+        } else if (!textElement.classList.contains('animate-text-danger')) {
+          textElement.classList.add('animate-text-danger');
+        }
+      } else if (preFadeCountdown) {
+        textElement.classList.remove('animate-flash-once', 'animate-text-danger');
+        if (!textElement.classList.contains('danger-pre-fade')) {
+          textElement.classList.add('danger-pre-fade');
         }
       } else {
+        textElement.classList.remove('danger-pre-fade');
         textElement.classList.remove('animate-text-danger');
         if (!flashOnceTimeoutId) {
           hideDangerWarningBar();
@@ -3902,7 +3978,7 @@
       if (!warningBar || !textElem) return;
 
       const minsLeft = Math.ceil(secondsRemaining / 60);
-      const template = state.dangerBar.text || 'âš ï¸ PERHATIAN: SISA WAKTU KURANG DARI {mins} MENIT! âš ï¸';
+      const template = state.dangerBar.text || '⚠️ PERHATIAN: SISA WAKTU KURANG DARI {mins} MENIT! ⚠️';
       const newText = template.replace('{mins}', minsLeft);
       if (textElem.textContent !== newText) {
         textElem.textContent = newText;
@@ -3940,11 +4016,11 @@
       const sw = document.getElementById('swDisplay');
       const timer = document.getElementById('timerDisplay');
       const queue = document.getElementById('queueDisplay');
-      if (clock) clock.classList.remove('animate-text-danger', 'animate-flash-once');
-      if (sw) sw.classList.remove('animate-text-danger', 'animate-flash-once');
-      if (timer) timer.classList.remove('animate-text-danger', 'animate-flash-once');
-      if (queue) queue.classList.remove('animate-text-danger', 'animate-flash-once');
+      [clock, sw, timer, queue].forEach(el => {
+        if (el) el.classList.remove('animate-text-danger', 'animate-flash-once', 'danger-pre-fade', 'session-transition-active');
+      });
     }
+
     function renderFlashRulesUI() {
       const container = document.getElementById('flashRulesListContainer');
       if (!container) return;
@@ -4038,7 +4114,8 @@
       const elemId = displayMap[state.activeTab] || 'clockDisplay';
       const elem = document.getElementById(elemId);
       if (elem) {
-        elem.classList.remove('animate-text-danger', 'animate-flash-once');
+        clearSessionTransitionClasses();
+        elem.classList.remove('animate-text-danger', 'danger-pre-fade', 'animate-flash-once', 'session-transition-active');
         void elem.offsetWidth;
         elem.classList.add('animate-flash-once');
         playWarningTick();
@@ -4048,13 +4125,14 @@
         flashOnceTimeoutId = setTimeout(() => {
           flashOnceTimeoutId = null;
           hideDangerWarningBar();
-        }, 5000);
+        }, 5500);
 
         clearTimeout(flashOnceAnimTimeoutId);
         flashOnceAnimTimeoutId = setTimeout(() => {
-          elem.classList.remove('animate-flash-once');
-        }, 3000);
-        showToast("\u26A1 Menjalankan simulasi Flash 1x (5 detik)");
+          elem.classList.remove('animate-flash-once', 'session-transition-active');
+          flashOnceAnimTimeoutId = null;
+        }, 5100);
+        showToast("⚡ Menjalankan simulasi Flash 1x (fade out 3 detik)");
       }
     }
     function deleteFlashRule(index) {
