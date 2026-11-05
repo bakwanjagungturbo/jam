@@ -218,6 +218,7 @@
           </button>
         </div>
       </div>
+      <div id="actualClockMount-clock" class="w-full flex justify-center mt-6"></div>
     </section>
 
     <section id="view-stopwatch" class="w-full flex flex-col items-center justify-center text-center hidden py-4">
@@ -284,6 +285,7 @@
           </div>
         </div>
       </div>
+      <div id="actualClockMount-stopwatch" class="w-full flex justify-center mt-6"></div>
     </section>
 
     <section id="view-timer" class="w-full flex flex-col items-center justify-center text-center hidden py-4">
@@ -381,13 +383,20 @@
         <button onclick="setTimerDirect(60)" class="px-3 py-1 rounded-full text-xs font-medium bg-slate-800/80 hover:bg-indigo-600 text-slate-300 hover:text-white border border-slate-700 transition">60 Menit</button>
         <button onclick="setTimerDirect(90)" class="px-3 py-1 rounded-full text-xs font-medium bg-slate-800/80 hover:bg-indigo-600 text-slate-300 hover:text-white border border-slate-700 transition">90 Menit</button>
       </div>
+      <div id="actualClockMount-timer" class="w-full flex justify-center mt-6"></div>
     </section>
 
     <section id="view-queue" class="w-full flex flex-col items-center justify-center text-center hidden py-2">
       <div class="mb-2">
-        <span id="queueStepBadge" class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">
-          Sesi 1 dari 3
-        </span>
+        <div class="flex items-center justify-center gap-2 flex-wrap">
+          <span id="queueStepBadge" class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">
+            Sesi 1 dari 3
+          </span>
+          <span id="queueEndTimeBadge" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-slate-900/80 border border-slate-800 text-slate-300 shadow">
+            <i data-lucide="flag" class="w-3.5 h-3.5 text-indigo-400"></i>
+            <span>Selesai: <strong id="queueEstimatedEndTimeText" class="text-white font-mono">--:--:--</strong></span>
+          </span>
+        </div>
         <h2 id="queueCurrentTitle" class="text-2xl sm:text-4xl font-extrabold text-white mt-2 tracking-tight">
           Pengerjaan Soal Ujian
         </h2>
@@ -421,31 +430,32 @@
         <i data-lucide="arrow-right" class="w-4 h-4"></i>
       </div>
 
+      <div id="actualClockMount-queue" class="w-full flex justify-center my-2">
       <div id="queueActualClockContainer" class="flex flex-col items-center justify-center transition-all select-none queue-clock-center-wrapper">
-        <div id="queueActualClockGroup" class="flex items-stretch justify-center gap-3 sm:gap-4 flex-wrap transition-transform duration-150 origin-center">
-          <div id="queueActualClockBox" class="flex flex-col justify-center items-center text-center py-1.5">
-            <span class="text-xs font-semibold text-slate-400 tracking-wider uppercase leading-none mb-1.5 -mt-0.5">Saat Ini</span>
+        <div id="queueActualClockGroup" class="flex items-stretch justify-center gap-4 sm:gap-6 flex-wrap bg-slate-900/80 border border-slate-800/90 px-5 sm:px-6 py-2.5 sm:py-3 rounded-2xl sm:rounded-3xl shadow-xl backdrop-blur-sm transition-transform duration-150 origin-center">
+          <div id="queueActualClockBox" class="flex flex-col items-center text-center px-1">
+            <span class="text-xs font-semibold text-slate-400 tracking-wider uppercase leading-none mb-1.5">Saat Ini</span>
             <div id="queueActualClockDisplay" class="font-mono font-extrabold text-white tracking-widest drop-shadow-md leading-none text-2xl sm:text-3xl">
               --:--:--
             </div>
           </div>
 
-          <div id="queueActualDivider" class="w-[1px] bg-slate-700/60 hidden sm:block self-stretch my-1"></div>
+          <div id="queueActualDivider" class="w-[1px] bg-slate-700/60 hidden sm:block self-stretch my-0.5"></div>
 
-          <div id="queueWeatherBox" class="flex flex-col justify-center items-center text-center py-1.5">
-            <span id="weatherCityDisplay" class="text-xs font-semibold text-slate-400 tracking-wider uppercase leading-none mb-1.5 -mt-0.5 text-center">Memuat...</span>
-            <div id="weatherAqiWidget" class="flex items-center gap-3.5 bg-slate-800/60 border border-slate-700/60 px-3.5 py-1.5 rounded-2xl shadow-sm">
-              <div class="flex items-center gap-2.5">
-                <i id="weatherIcon" data-lucide="sun" class="w-6 h-6 text-amber-400 shrink-0"></i>
-                <div class="text-left flex flex-col justify-center -translate-y-[3px]">
-                  <span id="weatherTempDisplay" class="font-bold text-white leading-none block text-base sm:text-lg">--°C</span>
-                  <span id="weatherDescDisplay" class="text-[10px] text-slate-400 font-medium block leading-none -mt-0.5 whitespace-nowrap">Memuat...</span>
+          <div id="queueWeatherBox" class="flex flex-col items-center text-center px-1">
+            <span id="weatherCityDisplay" class="text-xs font-semibold text-slate-400 tracking-wider uppercase leading-none mb-1.5 text-center">Memuat...</span>
+            <div id="weatherAqiWidget" class="flex items-center gap-3 sm:gap-3.5">
+              <div class="flex items-center gap-2 sm:gap-2.5">
+                <i id="weatherIcon" data-lucide="sun" class="w-6 h-6 sm:w-7 sm:h-7 text-amber-400 shrink-0"></i>
+                <div class="text-left flex flex-col justify-center -translate-y-[2px]">
+                  <span id="weatherTempDisplay" class="font-bold text-white tracking-tight leading-none block text-xl sm:text-2xl drop-shadow-md">--°C</span>
+                  <span id="weatherDescDisplay" class="text-[10px] sm:text-[11px] text-slate-400 font-medium block leading-none -mt-0.5 whitespace-nowrap">Memuat...</span>
                 </div>
               </div>
 
-              <div class="h-7 w-[1px] bg-slate-700/70 self-center"></div>
+              <div class="h-7 w-[1px] bg-slate-700/60 self-center mx-1 sm:mx-1.5"></div>
 
-              <div class="flex items-center gap-2.5 text-left">
+              <div class="flex items-center gap-2 text-left">
                 <span id="weatherAqiBadge" class="min-w-[36px] px-1.5 h-8 rounded-lg flex items-center justify-center text-sm font-black font-mono shrink-0 border bg-emerald-500/20 text-emerald-400 border-emerald-500/40">--</span>
                 <div class="flex flex-col justify-center">
                   <span class="text-[9px] uppercase tracking-wider text-slate-400 font-bold leading-none block">AQI</span>
@@ -455,6 +465,7 @@
             </div>
           </div>
         </div>
+      </div>
       </div>
 
       <div class="flex items-center justify-center gap-3 projector-ui-control">
@@ -509,6 +520,20 @@
             <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
           </button>
         </div>
+
+        <div class="h-6 w-[1px] bg-slate-700/60 mx-0.5"></div>
+
+        <button onclick="toggleQueueEstimatedEndTime()" id="btn-toggle-endtime-queue" data-tooltip="Estimasi Selesai: Tampil" title="Tampilkan / Sembunyikan Estimasi Selesai" class="p-2 rounded-xl bg-indigo-600 text-white border border-indigo-500 transition flex items-center justify-center">
+          <i data-lucide="flag" class="w-4 h-4"></i>
+        </button>
+
+        <button onclick="toggleTTS()" id="btn-toggle-tts-queue" data-tooltip="Pengumuman Suara (TTS): Nonaktif" title="Pengumuman Suara (TTS)" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition flex items-center justify-center">
+          <i data-lucide="volume-2" class="w-4 h-4"></i>
+        </button>
+
+        <button onclick="toggleSessionTransition()" id="btn-toggle-transition-queue" data-tooltip="Animasi Transisi: Aktif" title="Animasi Transisi Sesi" class="p-2 rounded-xl bg-indigo-600 text-white border border-indigo-500 transition flex items-center justify-center">
+          <i data-lucide="sparkles" class="w-4 h-4"></i>
+        </button>
       </div>
 
       <div class="w-full max-w-3xl mt-6 bg-slate-900/80 border border-slate-800 rounded-2xl p-4 text-left shadow-xl projector-ui-control">
@@ -525,6 +550,13 @@
             <button onclick="saveCurrentAsPreset()" class="p-2 bg-indigo-600/80 hover:bg-indigo-600 text-white rounded-xl text-xs font-semibold flex items-center justify-center transition shadow" data-tooltip="Simpan Preset" title="Simpan Antrean sebagai Preset Baru">
               <i data-lucide="bookmark-plus" class="w-4 h-4"></i>
             </button>
+            <button onclick="exportQueuePresetsJSON()" class="p-2 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded-xl text-xs font-semibold flex items-center justify-center transition border border-slate-700" data-tooltip="Ekspor Antrean (.json)" title="Ekspor Antrean ke File JSON">
+              <i data-lucide="download" class="w-4 h-4"></i>
+            </button>
+            <button onclick="document.getElementById('queueImportFileInput').click()" class="p-2 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded-xl text-xs font-semibold flex items-center justify-center transition border border-slate-700" data-tooltip="Impor Antrean (.json)" title="Impor Antrean dari File JSON">
+              <i data-lucide="upload" class="w-4 h-4"></i>
+            </button>
+            <input type="file" id="queueImportFileInput" accept=".json" class="hidden" onchange="handleImportQueueJSON(event)">
             <select id="queuePresetSelect" onchange="applyQueuePreset(this.value)" class="bg-slate-800 border border-slate-700 text-xs rounded-xl px-2.5 py-1.5 text-slate-300 focus:outline-none focus:border-indigo-500">
               <option value="custom">-- Template Preset --</option>
               <option value="test">Test Debug (01:00 • 1m 15d + 1m)</option>
@@ -610,6 +642,7 @@
 
       <div id="worldClocksGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
       </div>
+      <div id="actualClockMount-world" class="w-full flex justify-center mt-6"></div>
     </section>
 
   </main>
@@ -1163,6 +1196,97 @@
           </div>
         </div>
 
+        <div class="p-4 bg-slate-800/40 rounded-2xl border border-slate-700/60">
+          <div class="flex items-center gap-2 font-bold text-white text-sm mb-3 text-indigo-300">
+            <i data-lucide="sparkles" class="w-4 h-4 text-indigo-400"></i>
+            <span>GRUP 6: SUARA, AKSEN WARNA & WIDGET FLEKSIBEL</span>
+          </div>
+
+          <div class="space-y-4 text-xs">
+            <div>
+              <span class="font-semibold text-slate-200 block mb-2">6.1 Aksen Warna Aplikasi</span>
+              <div class="flex flex-wrap gap-2.5">
+                <button type="button" onclick="setAccentColor('indigo')" data-color="indigo" class="accent-swatch-btn px-3 py-1.5 rounded-xl border border-slate-700 bg-slate-900 text-indigo-400 font-semibold flex items-center gap-2 transition hover:border-indigo-400">
+                  <span class="w-3.5 h-3.5 rounded-full bg-indigo-500"></span> Indigo
+                </button>
+                <button type="button" onclick="setAccentColor('cyan')" data-color="cyan" class="accent-swatch-btn px-3 py-1.5 rounded-xl border border-slate-700 bg-slate-900 text-cyan-400 font-semibold flex items-center gap-2 transition hover:border-cyan-400">
+                  <span class="w-3.5 h-3.5 rounded-full bg-cyan-500"></span> Cyan
+                </button>
+                <button type="button" onclick="setAccentColor('emerald')" data-color="emerald" class="accent-swatch-btn px-3 py-1.5 rounded-xl border border-slate-700 bg-slate-900 text-emerald-400 font-semibold flex items-center gap-2 transition hover:border-emerald-400">
+                  <span class="w-3.5 h-3.5 rounded-full bg-emerald-500"></span> Emerald
+                </button>
+                <button type="button" onclick="setAccentColor('amber')" data-color="amber" class="accent-swatch-btn px-3 py-1.5 rounded-xl border border-slate-700 bg-slate-900 text-amber-400 font-semibold flex items-center gap-2 transition hover:border-amber-400">
+                  <span class="w-3.5 h-3.5 rounded-full bg-amber-500"></span> Amber
+                </button>
+                <button type="button" onclick="setAccentColor('rose')" data-color="rose" class="accent-swatch-btn px-3 py-1.5 rounded-xl border border-slate-700 bg-slate-900 text-rose-400 font-semibold flex items-center gap-2 transition hover:border-rose-400">
+                  <span class="w-3.5 h-3.5 rounded-full bg-rose-500"></span> Rose
+                </button>
+                <button type="button" onclick="setAccentColor('purple')" data-color="purple" class="accent-swatch-btn px-3 py-1.5 rounded-xl border border-slate-700 bg-slate-900 text-purple-400 font-semibold flex items-center gap-2 transition hover:border-purple-400">
+                  <span class="w-3.5 h-3.5 rounded-full bg-purple-500"></span> Purple
+                </button>
+              </div>
+            </div>
+
+            <div class="border-t border-slate-800 pt-3">
+              <span class="font-semibold text-slate-200 block mb-2">6.2 Pilihan Jenis Suara Bel</span>
+              <div class="flex items-center gap-2">
+                <select id="settingChimeSoundType" class="flex-1 bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-white text-xs focus:outline-none focus:border-indigo-500">
+                  <option value="westminster">Melodi Westminster (Lembut & Anggun)</option>
+                  <option value="gong">Gong Meditatif (Gema Rendah & Megah)</option>
+                  <option value="beep">Beep Digital Modern (Ganda Cepat)</option>
+                  <option value="buzzer">Buzzer Elektronik (Tegas & Jelas)</option>
+                </select>
+                <button type="button" onclick="previewChimeSound(document.getElementById('settingChimeSoundType').value)" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-indigo-400 hover:text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 transition border border-slate-700 shrink-0">
+                  <i data-lucide="play" class="w-3.5 h-3.5"></i> Tes Suara
+                </button>
+              </div>
+            </div>
+
+            <div class="border-t border-slate-800 pt-3 space-y-2">
+              <label class="flex items-center gap-2 cursor-pointer select-none">
+                <input type="checkbox" id="settingTTSEnabled" class="rounded bg-slate-800 border-slate-700 text-indigo-600 focus:ring-0">
+                <span class="font-medium text-slate-200">Pengumuman Suara Otomatis (TTS Bahasa Indonesia)</span>
+              </label>
+
+              <label class="flex items-center gap-2 cursor-pointer select-none">
+                <input type="checkbox" id="settingQueueShowEstimatedEndTime" checked class="rounded bg-slate-800 border-slate-700 text-indigo-600 focus:ring-0">
+                <span class="font-medium text-slate-200">Tampilkan Estimasi Jam Selesai Rangkaian Antrean</span>
+              </label>
+
+              <label class="flex items-center gap-2 cursor-pointer select-none">
+                <input type="checkbox" id="settingSessionTransitionAnim" checked class="rounded bg-slate-800 border-slate-700 text-indigo-600 focus:ring-0">
+                <span class="font-medium text-slate-200">Animasi Transisi Sesi Antrean (Fade-Slide)</span>
+              </label>
+            </div>
+
+            <div class="border-t border-slate-800 pt-3">
+              <span class="font-semibold text-slate-200 block mb-1.5">6.3 Tampilkan Widget Jam Aktual & Cuaca di Mode:</span>
+              <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                <label class="flex items-center gap-2 cursor-pointer select-none bg-slate-900/60 border border-slate-700/60 p-2 rounded-xl">
+                  <input type="checkbox" id="settingActualInClock" class="rounded bg-slate-800 border-slate-700 text-indigo-600 focus:ring-0">
+                  <span class="text-slate-300">Jam Digital</span>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer select-none bg-slate-900/60 border border-slate-700/60 p-2 rounded-xl">
+                  <input type="checkbox" id="settingActualInStopwatch" class="rounded bg-slate-800 border-slate-700 text-indigo-600 focus:ring-0">
+                  <span class="text-slate-300">Stopwatch</span>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer select-none bg-slate-900/60 border border-slate-700/60 p-2 rounded-xl">
+                  <input type="checkbox" id="settingActualInTimer" class="rounded bg-slate-800 border-slate-700 text-indigo-600 focus:ring-0">
+                  <span class="text-slate-300">Timer</span>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer select-none bg-slate-900/60 border border-slate-700/60 p-2 rounded-xl">
+                  <input type="checkbox" id="settingActualInQueue" checked class="rounded bg-slate-800 border-slate-700 text-indigo-600 focus:ring-0">
+                  <span class="text-slate-300">Antrean Waktu</span>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer select-none bg-slate-900/60 border border-slate-700/60 p-2 rounded-xl">
+                  <input type="checkbox" id="settingActualInWorld" class="rounded bg-slate-800 border-slate-700 text-indigo-600 focus:ring-0">
+                  <span class="text-slate-300">Jam Dunia</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div class="p-3.5 rounded-2xl bg-rose-950/20 border border-rose-800/40">
           <div class="flex flex-wrap items-center justify-between gap-3">
             <div>
@@ -1305,6 +1429,18 @@
       queueShowWeather: true,
       weatherCity: '',
       queueActualClockScale: 1.0,
+      chimeSoundType: 'westminster',
+      ttsEnabled: false,
+      queueShowEstimatedEndTime: true,
+      sessionTransitionAnim: true,
+      accentColor: 'indigo',
+      actualClockInModes: {
+        clock: false,
+        stopwatch: false,
+        timer: false,
+        queue: true,
+        world: false
+      },
       customPresets: [],
       editingQueueIndex: null,
       worldClocks: [
@@ -1332,25 +1468,334 @@
 
     function playChimeSound(force = false) {
       if (state.isMuted && !force) return;
+      playChimeByType(state.chimeSoundType || 'westminster');
+    }
+
+    function previewChimeSound(type) {
+      playChimeByType(type || state.chimeSoundType || 'westminster');
+    }
+
+    function playChimeByType(type) {
       try {
         const ctx = getAudioContext();
         const now = ctx.currentTime;
-        const notes = [523.25, 659.25, 783.99, 1046.50];
-
-        notes.forEach((freq, idx) => {
+        if (type === 'gong') {
+          const freqs = [220, 330, 440, 554.37];
+          freqs.forEach((freq, idx) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, now);
+            const peakGain = 0.35 / (idx + 1);
+            gain.gain.setValueAtTime(0, now);
+            gain.gain.linearRampToValueAtTime(peakGain, now + 0.03);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + 2.8);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now);
+            osc.stop(now + 2.9);
+          });
+        } else if (type === 'beep') {
+          [0, 0.12].forEach(offset => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(1046.50, now + offset);
+            gain.gain.setValueAtTime(0, now + offset);
+            gain.gain.linearRampToValueAtTime(0.3, now + offset + 0.01);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + offset + 0.09);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now + offset);
+            osc.stop(now + offset + 0.1);
+          });
+        } else if (type === 'buzzer') {
           const osc = ctx.createOscillator();
           const gain = ctx.createGain();
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(freq, now + idx * 0.14);
-          gain.gain.setValueAtTime(0, now + idx * 0.14);
-          gain.gain.linearRampToValueAtTime(0.28, now + idx * 0.14 + 0.04);
-          gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * 0.14 + 1.2);
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(180, now);
+          gain.gain.setValueAtTime(0, now);
+          gain.gain.linearRampToValueAtTime(0.28, now + 0.02);
+          gain.gain.linearRampToValueAtTime(0.25, now + 0.35);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.45);
           osc.connect(gain);
           gain.connect(ctx.destination);
-          osc.start(now + idx * 0.14);
-          osc.stop(now + idx * 0.14 + 1.3);
-        });
+          osc.start(now);
+          osc.stop(now + 0.46);
+        } else {
+          const notes = [523.25, 659.25, 783.99, 1046.50];
+          notes.forEach((freq, idx) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, now + idx * 0.14);
+            gain.gain.setValueAtTime(0, now + idx * 0.14);
+            gain.gain.linearRampToValueAtTime(0.28, now + idx * 0.14 + 0.04);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * 0.14 + 1.2);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now + idx * 0.14);
+            osc.stop(now + idx * 0.14 + 1.3);
+          });
+        }
       } catch (err) {}
+    }
+
+    function announceVoice(text) {
+      if (!state.ttsEnabled || !('speechSynthesis' in window)) return;
+      try {
+        window.speechSynthesis.cancel();
+        const utter = new SpeechSynthesisUtterance(text);
+        utter.rate = 1.0;
+        utter.pitch = 1.0;
+        const voices = window.speechSynthesis.getVoices();
+        const idVoice = voices.find(v => v.lang && (v.lang.toLowerCase().includes('id') || v.lang.toLowerCase().includes('in')));
+        if (idVoice) utter.voice = idVoice;
+        else utter.lang = 'id-ID';
+        window.speechSynthesis.speak(utter);
+      } catch (err) {}
+    }
+
+    function toggleTTS() {
+      state.ttsEnabled = !state.ttsEnabled;
+      updateTTSUI();
+      saveStateToLocal();
+      showToast(state.ttsEnabled ? "Pengumuman Suara (TTS) Diaktifkan" : "Pengumuman Suara (TTS) Dinonaktifkan");
+      if (state.ttsEnabled) announceVoice("Pengumuman suara aktif");
+    }
+
+    function updateTTSUI() {
+      const btn = document.getElementById('btn-toggle-tts-queue');
+      if (btn) {
+        if (state.ttsEnabled) {
+          btn.setAttribute('data-tooltip', 'Pengumuman Suara (TTS): Aktif');
+          btn.setAttribute('title', 'Pengumuman Suara (TTS): Aktif');
+          btn.classList.add('bg-indigo-600', 'text-white', 'border-indigo-500');
+          btn.classList.remove('bg-slate-800', 'text-slate-300', 'border-slate-700');
+        } else {
+          btn.setAttribute('data-tooltip', 'Pengumuman Suara (TTS): Nonaktif');
+          btn.setAttribute('title', 'Pengumuman Suara (TTS): Nonaktif');
+          btn.classList.remove('bg-indigo-600', 'text-white', 'border-indigo-500');
+          btn.classList.add('bg-slate-800', 'text-slate-300', 'border-slate-700');
+        }
+      }
+      const chk = document.getElementById('settingTTSEnabled');
+      if (chk) chk.checked = !!state.ttsEnabled;
+      lucide.createIcons();
+    }
+
+    function calculateQueueRemainingTotalSeconds() {
+      const q = state.queue;
+      if (!q.items || q.items.length === 0) return 0;
+      let totalSec = 0;
+      if (q.currentIndex < q.items.length) {
+        totalSec += Math.max(0, q.remainingSeconds || 0);
+        for (let i = q.currentIndex + 1; i < q.items.length; i++) {
+          totalSec += getItemTotalSeconds(q.items[i]);
+        }
+      }
+      return totalSec;
+    }
+
+    function updateQueueEstimatedEndTimeUI() {
+      const badge = document.getElementById('queueEndTimeBadge');
+      const text = document.getElementById('queueEstimatedEndTimeText');
+      if (!badge || !text) return;
+      if (!state.queueShowEstimatedEndTime) {
+        badge.classList.add('hidden');
+        return;
+      }
+      badge.classList.remove('hidden');
+      const totalSec = calculateQueueRemainingTotalSeconds();
+      if (totalSec <= 0) {
+        text.textContent = 'Selesai';
+        return;
+      }
+      const endTarget = new Date(Date.now() + totalSec * 1000);
+      const hh = String(endTarget.getHours()).padStart(2, '0');
+      const mm = String(endTarget.getMinutes()).padStart(2, '0');
+      const ss = String(endTarget.getSeconds()).padStart(2, '0');
+      const mLeft = Math.ceil(totalSec / 60);
+      text.textContent = hh + ':' + mm + ':' + ss + ' (' + mLeft + 'm)';
+    }
+
+    function toggleQueueEstimatedEndTime() {
+      state.queueShowEstimatedEndTime = !state.queueShowEstimatedEndTime;
+      updateQueueEstimatedEndTimeUI();
+      updateQueueEndTimeBtnUI();
+      saveStateToLocal();
+      showToast(state.queueShowEstimatedEndTime ? "Estimasi Selesai Ditampilkan" : "Estimasi Selesai Disembunyikan");
+    }
+
+    function updateQueueEndTimeBtnUI() {
+      const btn = document.getElementById('btn-toggle-endtime-queue');
+      if (btn) {
+        if (state.queueShowEstimatedEndTime) {
+          btn.setAttribute('data-tooltip', 'Estimasi Selesai: Tampil');
+          btn.setAttribute('title', 'Estimasi Selesai: Tampil');
+          btn.classList.add('bg-indigo-600', 'text-white', 'border-indigo-500');
+          btn.classList.remove('bg-slate-800', 'text-slate-300', 'border-slate-700');
+        } else {
+          btn.setAttribute('data-tooltip', 'Estimasi Selesai: Sembunyi');
+          btn.setAttribute('title', 'Estimasi Selesai: Sembunyi');
+          btn.classList.remove('bg-indigo-600', 'text-white', 'border-indigo-500');
+          btn.classList.add('bg-slate-800', 'text-slate-300', 'border-slate-700');
+        }
+      }
+      const chk = document.getElementById('settingQueueShowEstimatedEndTime');
+      if (chk) chk.checked = !!state.queueShowEstimatedEndTime;
+    }
+
+    function triggerSessionTransitionAnim() {
+      if (!state.sessionTransitionAnim) return;
+      const targets = [
+        document.getElementById('queueCurrentTitle'),
+        document.getElementById('queueDisplay'),
+        document.getElementById('queueStepBadge')
+      ];
+      targets.forEach(el => {
+        if (!el) return;
+        el.classList.remove('session-transition-active');
+        void el.offsetWidth;
+        el.classList.add('session-transition-active');
+      });
+    }
+
+    function toggleSessionTransition() {
+      state.sessionTransitionAnim = !state.sessionTransitionAnim;
+      updateSessionTransitionUI();
+      saveStateToLocal();
+      showToast(state.sessionTransitionAnim ? "Animasi Transisi Sesi Diaktifkan" : "Animasi Transisi Sesi Dinonaktifkan");
+    }
+
+    function updateSessionTransitionUI() {
+      const btn = document.getElementById('btn-toggle-transition-queue');
+      if (btn) {
+        if (state.sessionTransitionAnim) {
+          btn.setAttribute('data-tooltip', 'Animasi Transisi: Aktif');
+          btn.setAttribute('title', 'Animasi Transisi: Aktif');
+          btn.classList.add('bg-indigo-600', 'text-white', 'border-indigo-500');
+          btn.classList.remove('bg-slate-800', 'text-slate-300', 'border-slate-700');
+        } else {
+          btn.setAttribute('data-tooltip', 'Animasi Transisi: Nonaktif');
+          btn.setAttribute('title', 'Animasi Transisi: Nonaktif');
+          btn.classList.remove('bg-indigo-600', 'text-white', 'border-indigo-500');
+          btn.classList.add('bg-slate-800', 'text-slate-300', 'border-slate-700');
+        }
+      }
+      const chk = document.getElementById('settingSessionTransitionAnim');
+      if (chk) chk.checked = !!state.sessionTransitionAnim;
+      lucide.createIcons();
+    }
+
+    function setAccentColor(color) {
+      const allowed = ['indigo', 'cyan', 'emerald', 'amber', 'rose', 'purple'];
+      if (!allowed.includes(color)) color = 'indigo';
+      state.accentColor = color;
+      document.documentElement.setAttribute('data-accent', color);
+      updateAccentColorSwatches();
+      saveStateToLocal();
+    }
+
+    function updateAccentColorSwatches() {
+      const current = state.accentColor || 'indigo';
+      document.querySelectorAll('.accent-swatch-btn').forEach(btn => {
+        const c = btn.getAttribute('data-color');
+        if (c === current) {
+          btn.classList.add('ring-2', 'ring-white', 'scale-105');
+        } else {
+          btn.classList.remove('ring-2', 'ring-white', 'scale-105');
+        }
+      });
+    }
+
+    function updateActualClockPlacement() {
+      const tab = state.activeTab;
+      const container = document.getElementById('queueActualClockContainer');
+      if (!container) return;
+      const shouldShow = (tab === 'queue') ? (state.queueShowActualClock || state.queueShowWeather) : !!(state.actualClockInModes && state.actualClockInModes[tab]);
+      if (!shouldShow) {
+        container.classList.add('hidden');
+        return;
+      }
+      container.classList.remove('hidden');
+      const mount = document.getElementById('actualClockMount-' + tab);
+      if (mount && container.parentElement !== mount) {
+        mount.appendChild(container);
+      }
+    }
+
+    function exportQueuePresetsJSON() {
+      try {
+        const exportData = {
+          version: '1.0',
+          exportedAt: new Date().toISOString(),
+          items: state.queue.items,
+          customPresets: state.customPresets
+        };
+        const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'antrean-omniclock-' + new Date().toISOString().slice(0, 10) + '.json';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        showToast("Antrean berhasil diekspor ke file JSON!");
+      } catch (err) {
+        showToast("Gagal mengekspor antrean: " + err.message);
+      }
+    }
+
+    function handleImportQueueJSON(e) {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        try {
+          const data = JSON.parse(evt.target.result);
+          let importedItems = null;
+          if (Array.isArray(data)) {
+            importedItems = data;
+          } else if (data && Array.isArray(data.items)) {
+            importedItems = data.items;
+            if (Array.isArray(data.customPresets) && data.customPresets.length > 0) {
+              data.customPresets.forEach(cp => {
+                if (!state.customPresets.some(existing => existing.id === cp.id)) {
+                  state.customPresets.push(cp);
+                }
+              });
+              updatePresetDropdown();
+            }
+          }
+          if (!importedItems || importedItems.length === 0) {
+            showToast("Format file JSON tidak berisi daftar sesi antrean yang valid.");
+            return;
+          }
+          state.queue.items = importedItems.map((it, idx) => ({
+            title: it.title || ('Sesi ' + (idx + 1)),
+            hours: Math.max(0, parseInt(it.hours) || 0),
+            minutes: Math.max(0, parseInt(it.minutes) || 0),
+            seconds: Math.max(0, parseInt(it.seconds) || 0),
+            startTime: it.startTime || '',
+            flashMode: it.flashMode || 'inherit',
+            customFlashRules: Array.isArray(it.customFlashRules) ? it.customFlashRules : []
+          }));
+          state.queue.currentIndex = 0;
+          state.queue.isRunning = false;
+          state.queue.isWaitingScheduled = false;
+          state.queue.remainingSeconds = getItemTotalSeconds(state.queue.items[0]);
+          state.queue.remainingMs = 0;
+          renderQueueUI();
+          saveStateToLocal();
+          showToast("Berhasil mengimpor " + state.queue.items.length + " sesi antrean!");
+        } catch (err) {
+          showToast("Gagal membaca file JSON: format tidak valid.");
+        }
+        e.target.value = '';
+      };
+      reader.readAsText(file);
     }
 
     function playWarningTick() {
@@ -1386,6 +1831,7 @@
           btn.classList.add('text-slate-400', 'hover:bg-slate-800');
         }
       });
+      updateActualClockPlacement();
       lucide.createIcons();
     }
 
@@ -1903,6 +2349,7 @@
           document.getElementById('tm-ms1').textContent = '0';
           document.getElementById('tm-ms2').textContent = '0';
           playChimeSound();
+          announceVoice('Waktu timer telah selesai.');
           document.getElementById('timerStateLabel').textContent = "WAKTU HABIS!";
           const btn = document.getElementById('timerToggleBtn');
           btn.classList.replace('bg-amber-600', 'bg-indigo-600');
@@ -2100,6 +2547,7 @@
 
       const activeRules = getActiveQueueFlashRules();
       checkExamModeThreshold(q.remainingSeconds, document.getElementById('queueDisplay'), activeRules);
+      updateQueueEstimatedEndTimeUI();
     }
 
     function renderQueueList() {
@@ -2302,7 +2750,7 @@
       if (descElem) descElem.textContent = info.desc;
       if (iconElem) {
         iconElem.setAttribute('data-lucide', info.icon);
-        iconElem.className = 'w-6 h-6 shrink-0 ' + info.color;
+        iconElem.className = 'w-6 h-6 sm:w-7 sm:h-7 shrink-0 ' + info.color;
       }
 
       if (aqiBadge) {
@@ -2415,6 +2863,7 @@
       }
 
       applyQueueActualClockScale();
+      updateActualClockPlacement();
       lucide.createIcons();
     }
 
@@ -2666,9 +3115,11 @@
           }
           showToast('Dilewati ke: ' + curItem.title);
         }
+        triggerSessionTransitionAnim();
         const rules = getActiveQueueFlashRules();
         resetRulesTriggeredState(rules);
         playChimeSound();
+        announceVoice('Sesi ' + (q.currentIndex + 1) + ': ' + (curItem ? curItem.title : ''));
         renderQueueUI();
       } else {
         showToast("Sudah di antrean paling akhir");
@@ -3932,8 +4383,30 @@
         updateModeMsDisplay(k);
       });
 
+      const chimeSel = document.getElementById('settingChimeSoundType');
+      if (chimeSel) state.chimeSoundType = chimeSel.value;
+      const ttsChk = document.getElementById('settingTTSEnabled');
+      if (ttsChk) state.ttsEnabled = ttsChk.checked;
+      const endChk = document.getElementById('settingQueueShowEstimatedEndTime');
+      if (endChk) state.queueShowEstimatedEndTime = endChk.checked;
+      const transChk = document.getElementById('settingSessionTransitionAnim');
+      if (transChk) state.sessionTransitionAnim = transChk.checked;
+
+      state.actualClockInModes = {
+        clock: !!document.getElementById('settingActualInClock')?.checked,
+        stopwatch: !!document.getElementById('settingActualInStopwatch')?.checked,
+        timer: !!document.getElementById('settingActualInTimer')?.checked,
+        queue: !!document.getElementById('settingActualInQueue')?.checked,
+        world: !!document.getElementById('settingActualInWorld')?.checked
+      };
+
       updateFlashRulesBadges();
       updateDigitalClock();
+      updateActualClockPlacement();
+      updateTTSUI();
+      updateQueueEstimatedEndTimeUI();
+      updateQueueEndTimeBtnUI();
+      updateSessionTransitionUI();
       startClockInterval();
       saveStateToLocal();
       closeModal('settingsModal');
@@ -3980,7 +4453,13 @@
           weatherCity: state.weatherCity,
           queueActualClockScale: state.queueActualClockScale,
           customPresets: state.customPresets,
-          worldClocks: state.worldClocks
+          worldClocks: state.worldClocks,
+          chimeSoundType: state.chimeSoundType,
+          ttsEnabled: state.ttsEnabled,
+          queueShowEstimatedEndTime: state.queueShowEstimatedEndTime,
+          sessionTransitionAnim: state.sessionTransitionAnim,
+          accentColor: state.accentColor,
+          actualClockInModes: state.actualClockInModes
         };
         localStorage.setItem('omniclock_settings_v5', JSON.stringify(payload));
       } catch (err) {}
@@ -4068,10 +4547,48 @@
           examBtn.classList.remove('text-red-400', 'hover:bg-red-500/20');
         }
 
+        if (saved.chimeSoundType !== undefined) state.chimeSoundType = saved.chimeSoundType;
+        if (saved.ttsEnabled !== undefined) state.ttsEnabled = saved.ttsEnabled;
+        if (saved.queueShowEstimatedEndTime !== undefined) state.queueShowEstimatedEndTime = saved.queueShowEstimatedEndTime;
+        if (saved.sessionTransitionAnim !== undefined) state.sessionTransitionAnim = saved.sessionTransitionAnim;
+        if (saved.accentColor !== undefined) state.accentColor = saved.accentColor;
+        if (saved.actualClockInModes !== undefined) state.actualClockInModes = Object.assign(state.actualClockInModes, saved.actualClockInModes);
+
+        const chimeSel = document.getElementById('settingChimeSoundType');
+        if (chimeSel && state.chimeSoundType) chimeSel.value = state.chimeSoundType;
+        const ttsChk = document.getElementById('settingTTSEnabled');
+        if (ttsChk) ttsChk.checked = !!state.ttsEnabled;
+        const endChk = document.getElementById('settingQueueShowEstimatedEndTime');
+        if (endChk) endChk.checked = !!state.queueShowEstimatedEndTime;
+        const transChk = document.getElementById('settingSessionTransitionAnim');
+        if (transChk) transChk.checked = !!state.sessionTransitionAnim;
+
+        if (state.actualClockInModes) {
+          const mClock = document.getElementById('settingActualInClock');
+          if (mClock) mClock.checked = !!state.actualClockInModes.clock;
+          const mSw = document.getElementById('settingActualInStopwatch');
+          if (mSw) mSw.checked = !!state.actualClockInModes.stopwatch;
+          const mTimer = document.getElementById('settingActualInTimer');
+          if (mTimer) mTimer.checked = !!state.actualClockInModes.timer;
+          const mQueue = document.getElementById('settingActualInQueue');
+          if (mQueue) mQueue.checked = !!state.actualClockInModes.queue;
+          const mWorld = document.getElementById('settingActualInWorld');
+          if (mWorld) mWorld.checked = !!state.actualClockInModes.world;
+        }
+
+        if (state.accentColor) {
+          setAccentColor(state.accentColor);
+        }
+
         applyBannerSettings();
         applyTimerRingVisibility();
         updateFlashRulesBadges();
         updatePresetDropdown();
+        updateTTSUI();
+        updateQueueEstimatedEndTimeUI();
+        updateQueueEndTimeBtnUI();
+        updateSessionTransitionUI();
+        updateActualClockPlacement();
         ['clock', 'stopwatch', 'timer', 'queue', 'world'].forEach(k => {
           applyModeScale(k);
           updateModeMsDisplay(k);
