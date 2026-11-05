@@ -387,17 +387,11 @@
     </section>
 
     <section id="view-queue" class="w-full flex flex-col items-center justify-center text-center hidden py-2">
-      <div class="mb-2">
-        <div class="flex items-center justify-center gap-2 flex-wrap">
-          <span id="queueStepBadge" class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">
-            Sesi 1 dari 3
-          </span>
-          <span id="queueEndTimeBadge" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 shadow" title="Estimasi Waktu Selesai Antrean">
-            <i data-lucide="flag" class="w-3.5 h-3.5 text-indigo-400"></i>
-            <strong id="queueEstimatedEndTimeText" class="font-mono text-white">--:--:--</strong>
-          </span>
-        </div>
-        <h2 id="queueCurrentTitle" class="text-2xl sm:text-4xl font-extrabold text-white mt-2 tracking-tight">
+      <div id="queueHeaderGroup" class="flex flex-col items-center justify-center mb-2">
+        <span id="queueStepBadge" class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 mb-2">
+          Sesi 1 dari 3
+        </span>
+        <h2 id="queueCurrentTitle" class="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
           Pengerjaan Soal Ujian
         </h2>
       </div>
@@ -428,6 +422,13 @@
         <span>Selanjutnya:</span>
         <span id="queueNextTitle" class="text-indigo-400 font-semibold">Istirahat (5m)</span>
         <i data-lucide="arrow-right" class="w-4 h-4"></i>
+      </div>
+
+      <div id="queueEndTimeWrapper" class="mb-2 flex items-center justify-center">
+        <span id="queueEndTimeBadge" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 shadow" title="Estimasi Waktu Selesai Antrean">
+          <i data-lucide="flag" class="w-3.5 h-3.5 text-indigo-400"></i>
+          <strong id="queueEstimatedEndTimeText" class="font-mono text-white">--:--:--</strong>
+        </span>
       </div>
 
       <div id="actualClockMount-queue" class="w-full flex justify-center my-2">
@@ -1698,8 +1699,14 @@
       }
       const title = document.getElementById('queueCurrentTitle');
       if (title) {
-        title.style.transform = scale === 1 ? '' : 'scale(' + scale + ')';
-        title.style.transformOrigin = 'center center';
+        title.style.transform = '';
+        if (scale === 1.0) {
+          title.style.fontSize = '';
+          title.style.lineHeight = '';
+        } else {
+          title.style.fontSize = (scale * 2.25) + 'rem';
+          title.style.lineHeight = '1.25';
+        }
       }
     }
 

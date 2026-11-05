@@ -118,29 +118,30 @@
   0%,
   100% {
     color: #ffffff;
-    text-shadow: 0 0 12px rgba(239, 68, 68, 0.4);
+    text-shadow: 0 0 14px rgba(255, 0, 30, 0.5);
   }
   50% {
-    color: #f87171;
-    text-shadow: 0 0 22px rgba(239, 68, 68, 0.9);
+    color: #ff0022;
+    text-shadow: 0 0 15px #ff0000, 0 0 35px #ff0033, 0 0 65px rgba(255, 0, 50, 0.9), 0 0 95px rgba(220, 20, 60, 0.65);
   }
 }
 .animate-text-danger {
-  animation: textDangerPulse 1s ease-in-out infinite !important;
-  color: #f87171 !important;
+  animation: textDangerPulse 0.9s cubic-bezier(0.4, 0, 0.2, 1) infinite !important;
+  color: #ff0022 !important;
 }
 @keyframes flashOncePulse {
   0% {
     color: #ffffff;
     text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
   }
-  25% {
-    color: #ff4d4d;
-    text-shadow: 0 0 25px rgba(239, 68, 68, 0.95);
+  18%,
+  38% {
+    color: #ff0022;
+    text-shadow: 0 0 18px #ff0000, 0 0 40px #ff0033, 0 0 75px rgba(255, 0, 50, 0.95), 0 0 110px rgba(220, 20, 60, 0.7);
   }
-  60% {
-    color: #ef4444;
-    text-shadow: 0 0 18px rgba(239, 68, 68, 0.8);
+  65% {
+    color: #e60026;
+    text-shadow: 0 0 22px #ff0000, 0 0 45px rgba(255, 0, 50, 0.8);
   }
   100% {
     color: #ffffff;
@@ -148,7 +149,7 @@
   }
 }
 .animate-flash-once {
-  animation: flashOncePulse 2.5s ease-out 1 forwards !important;
+  animation: flashOncePulse 2.8s cubic-bezier(0.16, 1, 0.3, 1) 1 forwards !important;
 }
 ::-webkit-scrollbar {
   width: 6px;
