@@ -392,9 +392,9 @@
           <span id="queueStepBadge" class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">
             Sesi 1 dari 3
           </span>
-          <span id="queueEndTimeBadge" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-slate-900/80 border border-slate-800 text-slate-300 shadow">
+          <span id="queueEndTimeBadge" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 shadow" title="Estimasi Waktu Selesai Antrean">
             <i data-lucide="flag" class="w-3.5 h-3.5 text-indigo-400"></i>
-            <span>Selesai: <strong id="queueEstimatedEndTimeText" class="text-white font-mono">--:--:--</strong></span>
+            <strong id="queueEstimatedEndTimeText" class="font-mono text-white">--:--:--</strong>
           </span>
         </div>
         <h2 id="queueCurrentTitle" class="text-2xl sm:text-4xl font-extrabold text-white mt-2 tracking-tight">
@@ -494,6 +494,19 @@
             <i data-lucide="plus" class="w-3.5 h-3.5"></i>
           </button>
           <button onclick="resetModeSize('queue')" data-tooltip="Reset Ukuran Jam Antrean (0)" title="Reset Ukuran Jam ke 100%" class="p-1.5 rounded-lg hover:bg-slate-700 text-slate-400 hover:text-white transition border-l border-slate-700 ml-0.5">
+            <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+          </button>
+        </div>
+
+        <div class="flex items-center bg-slate-800 border border-slate-700 rounded-xl p-0.5" title="Ukuran Judul Sesi">
+          <button onclick="adjustQueueTitleSize(-0.1)" data-tooltip="Perkecil Judul Sesi (-)" title="Perkecil Judul Sesi" class="p-1.5 rounded-lg hover:bg-slate-700 text-slate-300 hover:text-white transition flex items-center justify-center">
+            <i data-lucide="minus" class="w-3.5 h-3.5"></i>
+          </button>
+          <span id="queue-title-size-badge" class="px-2 text-xs font-mono font-bold text-indigo-400 select-none">100%</span>
+          <button onclick="adjustQueueTitleSize(0.1)" data-tooltip="Perbesar Judul Sesi (+)" title="Perbesar Judul Sesi" class="p-1.5 rounded-lg hover:bg-slate-700 text-slate-300 hover:text-white transition flex items-center justify-center">
+            <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+          </button>
+          <button onclick="resetQueueTitleSize()" data-tooltip="Reset Ukuran Judul ke 100%" title="Reset Ukuran Judul" class="p-1.5 rounded-lg hover:bg-slate-700 text-slate-400 hover:text-white transition border-l border-slate-700 ml-0.5">
             <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
           </button>
         </div>
@@ -1429,6 +1442,7 @@
       queueShowWeather: true,
       weatherCity: '',
       queueActualClockScale: 1.0,
+      queueTitleScale: 1.0,
       chimeSoundType: 'westminster',
       ttsEnabled: false,
       queueShowEstimatedEndTime: true,
@@ -1651,7 +1665,8 @@
       const targets = [
         document.getElementById('queueCurrentTitle'),
         document.getElementById('queueDisplay'),
-        document.getElementById('queueStepBadge')
+        document.getElementById('queueStepBadge'),
+        document.getElementById('queueEndTimeBadge')
       ];
       targets.forEach(el => {
         if (!el) return;
@@ -1659,6 +1674,33 @@
         void el.offsetWidth;
         el.classList.add('session-transition-active');
       });
+    }
+
+    function adjustQueueTitleSize(delta) {
+      state.queueTitleScale = Math.min(2.5, Math.max(0.5, (state.queueTitleScale || 1.0) + delta));
+      state.queueTitleScale = Math.round(state.queueTitleScale * 100) / 100;
+      applyQueueTitleScale();
+      saveStateToLocal();
+    }
+
+    function resetQueueTitleSize() {
+      state.queueTitleScale = 1.0;
+      applyQueueTitleScale();
+      saveStateToLocal();
+      showToast("Ukuran Judul Sesi direset ke 100%");
+    }
+
+    function applyQueueTitleScale() {
+      const scale = state.queueTitleScale || 1.0;
+      const badge = document.getElementById('queue-title-size-badge');
+      if (badge) {
+        badge.textContent = Math.round(scale * 100) + '%';
+      }
+      const title = document.getElementById('queueCurrentTitle');
+      if (title) {
+        title.style.transform = scale === 1 ? '' : 'scale(' + scale + ')';
+        title.style.transformOrigin = 'center center';
+      }
     }
 
     function toggleSessionTransition() {
@@ -3754,6 +3796,7 @@
     let flashOnceTimeoutId = null;
     let flashOnceAnimTimeoutId = null;
     let lastCountdownAudioSec = -1;
+    let lastExamCheckedSec = -1;
 
     function checkExamModeThreshold(secondsRemaining, textElement, rulesList) {
       if (!state.warningEnabled || !textElement) {
@@ -3778,18 +3821,21 @@
             activeCountdown = true;
           }
         } else if (rule.mode === 'once') {
-          if (secondsRemaining === targetSec && !rule.triggered) {
+          const shouldTrigger = !rule.triggered && (
+            secondsRemaining === targetSec ||
+            (lastExamCheckedSec > targetSec && secondsRemaining < targetSec)
+          );
+          if (shouldTrigger) {
             rule.triggered = true;
             playWarningTick();
 
-            textElement.classList.remove('animate-text-danger', 'animate-flash-once');
-            void textElement.offsetWidth;
+            textElement.classList.remove('animate-text-danger');
             textElement.classList.add('animate-flash-once');
 
             clearTimeout(flashOnceAnimTimeoutId);
             flashOnceAnimTimeoutId = setTimeout(() => {
               textElement.classList.remove('animate-flash-once');
-            }, 3000);
+            }, 2600);
 
             showDangerWarningBar(secondsRemaining);
             clearTimeout(flashOnceTimeoutId);
@@ -3807,6 +3853,8 @@
         }
       });
 
+      lastExamCheckedSec = secondsRemaining;
+
       if (activeCountdown) {
         textElement.classList.remove('animate-flash-once');
         if (!textElement.classList.contains('animate-text-danger')) {
@@ -3814,7 +3862,6 @@
         }
         showDangerWarningBar(secondsRemaining);
 
-        
         if (secondsRemaining !== lastCountdownAudioSec) {
           lastCountdownAudioSec = secondsRemaining;
           playWarningTick();
@@ -4452,6 +4499,7 @@
           queueShowWeather: state.queueShowWeather,
           weatherCity: state.weatherCity,
           queueActualClockScale: state.queueActualClockScale,
+          queueTitleScale: state.queueTitleScale,
           customPresets: state.customPresets,
           worldClocks: state.worldClocks,
           chimeSoundType: state.chimeSoundType,
@@ -4509,6 +4557,9 @@
         }
         if (saved.queueActualClockScale !== undefined) {
           state.queueActualClockScale = saved.queueActualClockScale;
+        }
+        if (saved.queueTitleScale !== undefined) {
+          state.queueTitleScale = saved.queueTitleScale;
         }
         if (saved.queueItems && saved.queueItems.length > 0) {
           state.queue.items = saved.queueItems.map(it => ({
