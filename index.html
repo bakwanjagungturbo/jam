@@ -2404,6 +2404,11 @@
           btn.classList.replace('bg-amber-600', 'bg-indigo-600');
           document.getElementById('timerPlayTxt').textContent = "Mulai";
           renderTimer();
+          const tmDisplay = document.getElementById('timerDisplay');
+          if (tmDisplay) {
+            tmDisplay.classList.remove('animate-flash-once');
+            tmDisplay.classList.add('animate-text-danger');
+          }
           showToast("\uD83D\uDD14 Waktu Timer Selesai!");
         }
       }, tickRate);
@@ -2417,6 +2422,7 @@
 
       if (!tm.isRunning) {
         if (tm.remainingSeconds <= 0 && tm.remainingMs <= 0) return;
+        clearExamDangerState();
         tm.isRunning = true;
         
         const totalRemainingMs = (tm.remainingSeconds * 1000) + (tm.remainingMs || 0);
@@ -2443,6 +2449,7 @@
       lucide.createIcons();
     }
     function resetTimer() {
+      clearExamDangerState();
       const tm = state.timer;
       clearInterval(tm.timerId);
       tm.isRunning = false;
@@ -3068,6 +3075,11 @@
             const qIcon = document.getElementById('queuePlayIcon');
             if (qIcon) qIcon.setAttribute('data-lucide', 'play');
             renderQueueUI();
+            const qDisplay = document.getElementById('queueDisplay');
+            if (qDisplay) {
+              qDisplay.classList.remove('animate-flash-once');
+              qDisplay.classList.add('animate-text-danger');
+            }
             showToast("\uD83C\uDF89 Seluruh antrean sesi telah selesai!");
           }
         }
@@ -3115,6 +3127,7 @@
       lucide.createIcons();
     }
     function resetQueueTimer() {
+      clearExamDangerState();
       const q = state.queue;
       clearInterval(q.timerId);
       q.isRunning = false;
@@ -3141,6 +3154,7 @@
     }
 
     function nextQueueStep() {
+      clearExamDangerState();
       const q = state.queue;
       if (q.currentIndex < q.items.length - 1) {
         q.currentIndex++;
@@ -3842,7 +3856,7 @@
             clearTimeout(flashOnceAnimTimeoutId);
             flashOnceAnimTimeoutId = setTimeout(() => {
               textElement.classList.remove('animate-flash-once');
-            }, 2600);
+            }, 950);
 
             showDangerWarningBar(secondsRemaining);
             clearTimeout(flashOnceTimeoutId);
@@ -3851,7 +3865,7 @@
               if (!activeCountdown) {
                 hideDangerWarningBar();
               }
-            }, 5000);
+            }, 3000);
           }
 
           if (secondsRemaining > targetSec) {
