@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8">
@@ -422,8 +422,8 @@
       </div>
 
       <div id="queueActualClockContainer" class="flex flex-col items-center justify-center transition-all select-none queue-clock-center-wrapper">
-        <div class="flex items-stretch justify-center gap-3 sm:gap-4 flex-wrap">
-          <div id="queueActualClockBox" class="flex flex-col justify-between items-center text-center py-1">
+        <div id="queueActualClockGroup" class="flex items-stretch justify-center gap-3 sm:gap-4 flex-wrap transition-transform duration-150 origin-center">
+          <div id="queueActualClockBox" class="flex flex-col justify-center items-center text-center py-1.5">
             <span class="text-xs font-semibold text-slate-400 tracking-wider uppercase leading-none mb-1.5 -mt-0.5">Saat Ini</span>
             <div id="queueActualClockDisplay" class="font-mono font-extrabold text-white tracking-widest drop-shadow-md leading-none text-2xl sm:text-3xl">
               --:--:--
@@ -432,22 +432,25 @@
 
           <div id="queueActualDivider" class="w-[1px] bg-slate-700/60 hidden sm:block self-stretch my-1"></div>
 
-          <div id="weatherAqiWidget" class="flex items-center gap-3.5 bg-slate-800/60 border border-slate-700/60 px-3.5 py-1.5 rounded-2xl shadow-sm">
-            <div class="flex items-center gap-2.5">
-              <i id="weatherIcon" data-lucide="sun" class="w-6 h-6 text-amber-400 shrink-0"></i>
-              <div class="text-left flex flex-col justify-center -translate-y-[3px]">
-                <span id="weatherTempDisplay" class="font-bold text-white leading-none block text-base sm:text-lg">--°C</span>
-                <span id="weatherDescDisplay" class="text-[10px] text-slate-400 font-medium block leading-none -mt-0.5 whitespace-nowrap">Memuat...</span>
+          <div id="queueWeatherBox" class="flex flex-col justify-center items-center text-center py-1.5">
+            <span id="weatherCityDisplay" class="text-xs font-semibold text-slate-400 tracking-wider uppercase leading-none mb-1.5 -mt-0.5 text-center">Memuat...</span>
+            <div id="weatherAqiWidget" class="flex items-center gap-3.5 bg-slate-800/60 border border-slate-700/60 px-3.5 py-1.5 rounded-2xl shadow-sm">
+              <div class="flex items-center gap-2.5">
+                <i id="weatherIcon" data-lucide="sun" class="w-6 h-6 text-amber-400 shrink-0"></i>
+                <div class="text-left flex flex-col justify-center -translate-y-[3px]">
+                  <span id="weatherTempDisplay" class="font-bold text-white leading-none block text-base sm:text-lg">--°C</span>
+                  <span id="weatherDescDisplay" class="text-[10px] text-slate-400 font-medium block leading-none -mt-0.5 whitespace-nowrap">Memuat...</span>
+                </div>
               </div>
-            </div>
 
-            <div class="h-7 w-[1px] bg-slate-700/70 self-center"></div>
+              <div class="h-7 w-[1px] bg-slate-700/70 self-center"></div>
 
-            <div class="flex items-center gap-2.5 text-left">
-              <span id="weatherAqiBadge" class="min-w-[36px] px-1.5 h-8 rounded-lg flex items-center justify-center text-sm font-black font-mono shrink-0 border bg-emerald-500/20 text-emerald-400 border-emerald-500/40">--</span>
-              <div class="flex flex-col justify-center">
-                <span class="text-[9px] uppercase tracking-wider text-slate-400 font-bold leading-none block">AQI</span>
-                <span id="weatherAqiStatus" class="text-[11px] text-slate-200 font-semibold leading-none block mt-0.5 whitespace-nowrap">--</span>
+              <div class="flex items-center gap-2.5 text-left">
+                <span id="weatherAqiBadge" class="min-w-[36px] px-1.5 h-8 rounded-lg flex items-center justify-center text-sm font-black font-mono shrink-0 border bg-emerald-500/20 text-emerald-400 border-emerald-500/40">--</span>
+                <div class="flex flex-col justify-center">
+                  <span class="text-[9px] uppercase tracking-wider text-slate-400 font-bold leading-none block">AQI</span>
+                  <span id="weatherAqiStatus" class="text-[11px] text-slate-200 font-semibold leading-none block mt-0.5 whitespace-nowrap">--</span>
+                </div>
               </div>
             </div>
           </div>
@@ -495,7 +498,6 @@
         </button>
 
         <div class="flex items-center bg-slate-800 border border-slate-700 rounded-xl p-0.5" title="Ukuran Jam Saat Ini & Cuaca">
-          <span class="text-[10px] text-slate-400 pl-1.5 pr-1 font-mono font-bold select-none">WAKTU</span>
           <button onclick="adjustQueueActualClockSize(-0.1)" data-tooltip="Perkecil Jam Saat Ini & Cuaca (-)" title="Perkecil Jam Saat Ini" class="p-1.5 rounded-lg hover:bg-slate-700 text-slate-300 hover:text-white transition flex items-center justify-center">
             <i data-lucide="minus" class="w-3.5 h-3.5"></i>
           </button>
@@ -1301,6 +1303,7 @@
       },
       queueShowActualClock: true,
       queueShowWeather: true,
+      weatherCity: '',
       queueActualClockScale: 1.0,
       customPresets: [],
       editingQueueIndex: null,
@@ -2230,30 +2233,69 @@
       try {
         const weatherUrl = 'https://api.open-meteo.com/v1/forecast?latitude=' + lat + '&longitude=' + lon + '&current=temperature_2m,weather_code&timezone=auto';
         const aqiUrl = 'https://air-quality-api.open-meteo.com/v1/air-quality?latitude=' + lat + '&longitude=' + lon + '&current=us_aqi&timezone=auto';
+        const geoUrl = 'https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=' + lat + '&longitude=' + lon + '&localityLanguage=id';
 
-        const [wRes, aRes] = await Promise.all([
+        const [wRes, aRes, gRes] = await Promise.allSettled([
           fetch(weatherUrl),
-          fetch(aqiUrl)
+          fetch(aqiUrl),
+          fetch(geoUrl)
         ]);
 
-        if (wRes.ok && aRes.ok) {
-          const wJson = await wRes.json();
-          const aJson = await aRes.json();
+        let cityName = '';
+        if (gRes.status === 'fulfilled' && gRes.value && gRes.value.ok) {
+          try {
+            const gJson = await gRes.value.json();
+            const raw = gJson.city || gJson.locality || gJson.principalSubdivision || '';
+            cityName = raw.replace(/^(Kota|Kabupaten)\s+/i, '').trim();
+          } catch (e) {}
+        }
+
+        if (wRes.status === 'fulfilled' && wRes.value && wRes.value.ok && aRes.status === 'fulfilled' && aRes.value && aRes.value.ok) {
+          const wJson = await wRes.value.json();
+          const aJson = await aRes.value.json();
+
+          if (!cityName && wJson.timezone) {
+            const tzParts = wJson.timezone.split('/');
+            if (tzParts.length > 1) {
+              cityName = tzParts[tzParts.length - 1].replace(/_/g, ' ');
+            }
+          }
+
+          if (!cityName) {
+            try {
+              const localTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+              const tzParts = localTz.split('/');
+              if (tzParts.length > 1) {
+                cityName = tzParts[tzParts.length - 1].replace(/_/g, ' ');
+              }
+            } catch (e) {}
+          }
+
+          if (!cityName) cityName = state.weatherCity || 'Jakarta';
+          state.weatherCity = cityName;
+          saveStateToLocal();
 
           if (wJson && wJson.current && aJson && aJson.current) {
-            updateWeatherAqiUI(wJson.current, aJson.current.us_aqi);
+            updateWeatherAqiUI(wJson.current, aJson.current.us_aqi, cityName);
           }
         }
       } catch (err) {}
     }
 
-    function updateWeatherAqiUI(weather, aqiVal) {
+    function updateWeatherAqiUI(weather, aqiVal, cityName) {
       const tempElem = document.getElementById('weatherTempDisplay');
       const descElem = document.getElementById('weatherDescDisplay');
       const iconElem = document.getElementById('weatherIcon');
       const aqiBadge = document.getElementById('weatherAqiBadge');
       const aqiStatus = document.getElementById('weatherAqiStatus');
+      const cityElem = document.getElementById('weatherCityDisplay');
       const widget = document.getElementById('weatherAqiWidget');
+
+      const currentCity = cityName || state.weatherCity || 'Jakarta';
+      if (cityElem) {
+        cityElem.textContent = currentCity;
+        cityElem.title = 'Lokasi: ' + currentCity;
+      }
 
       if (tempElem) tempElem.textContent = Math.round(weather.temperature_2m) + '°C';
       const info = getWeatherInfo(weather.weather_code);
@@ -2270,12 +2312,16 @@
         if (aqiStatus) aqiStatus.textContent = aqi.status;
       }
       if (widget) {
-        widget.setAttribute('title', 'Cuaca: ' + info.desc + ' ' + Math.round(weather.temperature_2m) + '°C, AQI: ' + aqiVal);
+        widget.setAttribute('title', currentCity + ' • Cuaca: ' + info.desc + ' ' + Math.round(weather.temperature_2m) + '°C, AQI: ' + aqiVal);
       }
       lucide.createIcons();
     }
 
     function initLocationWeather() {
+      const cityElem = document.getElementById('weatherCityDisplay');
+      if (cityElem && state.weatherCity) {
+        cityElem.textContent = state.weatherCity;
+      }
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           pos => {
@@ -2306,7 +2352,7 @@
     function applyQueueActualClockVisibility() {
       const container = document.getElementById('queueActualClockContainer');
       const clockBox = document.getElementById('queueActualClockBox');
-      const weatherWidget = document.getElementById('weatherAqiWidget');
+      const weatherWidget = document.getElementById('queueWeatherBox') || document.getElementById('weatherAqiWidget');
       const divider = document.getElementById('queueActualDivider');
       const btnClock = document.getElementById('btn-toggle-actual-queue');
       const btnWeather = document.getElementById('btn-toggle-weather-queue');
@@ -2392,18 +2438,19 @@
       if (badge) {
         badge.textContent = Math.round(scale * 100) + '%';
       }
-      const clockDisplay = document.getElementById('queueActualClockDisplay');
-      if (clockDisplay) {
-        clockDisplay.style.fontSize = (1.75 * scale) + 'rem';
+      const group = document.getElementById('queueActualClockGroup');
+      if (group) {
+        group.style.transform = scale === 1 ? '' : 'scale(' + scale + ')';
+        group.style.transformOrigin = 'center center';
       }
+      const clockDisplay = document.getElementById('queueActualClockDisplay');
+      if (clockDisplay) clockDisplay.style.fontSize = '';
+      const clockBox = document.getElementById('queueActualClockBox');
+      if (clockBox) clockBox.style.fontSize = '';
       const widget = document.getElementById('weatherAqiWidget');
       if (widget) {
+        widget.style.fontSize = '';
         widget.style.transform = '';
-        widget.style.fontSize = (0.85 * scale) + 'rem';
-      }
-      const clockBox = document.getElementById('queueActualClockBox');
-      if (clockBox) {
-        clockBox.style.fontSize = (0.75 * scale) + 'rem';
       }
     }
 
@@ -3930,6 +3977,7 @@
           queueItems: state.queue.items,
           queueShowActualClock: state.queueShowActualClock,
           queueShowWeather: state.queueShowWeather,
+          weatherCity: state.weatherCity,
           queueActualClockScale: state.queueActualClockScale,
           customPresets: state.customPresets,
           worldClocks: state.worldClocks
@@ -3974,6 +4022,11 @@
         }
         if (saved.queueShowWeather !== undefined) {
           state.queueShowWeather = saved.queueShowWeather;
+        }
+        if (saved.weatherCity !== undefined) {
+          state.weatherCity = saved.weatherCity;
+          const cityElem = document.getElementById('weatherCityDisplay');
+          if (cityElem && state.weatherCity) cityElem.textContent = state.weatherCity;
         }
         if (saved.queueActualClockScale !== undefined) {
           state.queueActualClockScale = saved.queueActualClockScale;
