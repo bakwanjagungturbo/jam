@@ -444,7 +444,7 @@
           <div id="queueActualDivider" class="w-[1px] bg-slate-700/60 hidden sm:block self-stretch my-0.5"></div>
 
           <div id="queueWeatherBox" class="flex flex-col items-center text-center px-1">
-            <span id="weatherCityDisplay" class="text-xs font-semibold text-slate-400 tracking-wider uppercase leading-none mb-1.5 text-center">Memuat...</span>
+            <span id="weatherCityDisplay" class="text-xs font-semibold text-slate-400 tracking-wider uppercase leading-none mb-1.5 text-center cursor-pointer hover:text-indigo-400 transition" onclick="requestGpsLocation()" oncontextmenu="event.preventDefault(); promptManualCity();" title="Klik untuk perbarui GPS, Klik kanan set kota manual">Memuat...</span>
             <div id="weatherAqiWidget" class="flex items-center gap-3 sm:gap-3.5">
               <div class="flex items-center gap-2 sm:gap-2.5">
                 <i id="weatherIcon" data-lucide="sun" class="w-6 h-6 sm:w-7 sm:h-7 text-amber-400 shrink-0"></i>
@@ -520,6 +520,10 @@
 
         <button onclick="toggleQueueWeather()" id="btn-toggle-weather-queue" data-tooltip="Cuaca & AQI: Tampil" title="Tampilkan / Sembunyikan Cuaca & AQI" class="p-2 rounded-xl bg-indigo-600 text-white border border-indigo-500 transition flex items-center justify-center">
           <i data-lucide="cloud-sun" class="w-4 h-4"></i>
+        </button>
+
+        <button onclick="requestGpsLocation()" oncontextmenu="event.preventDefault(); promptManualCity();" id="btn-refresh-gps-queue" data-tooltip="Perbarui Lokasi GPS (Klik Kanan: Set Kota Manual)" title="Perbarui Lokasi GPS (Klik) / Set Kota Manual (Klik Kanan)" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 transition flex items-center justify-center">
+          <i data-lucide="locate-fixed" id="icon-refresh-gps" class="w-4 h-4"></i>
         </button>
 
         <div class="flex items-center bg-slate-800 border border-slate-700 rounded-xl p-0.5" title="Ukuran Jam Saat Ini & Cuaca">
@@ -1442,6 +1446,8 @@
       queueShowActualClock: true,
       queueShowWeather: true,
       weatherCity: '',
+      weatherLat: null,
+      weatherLon: null,
       queueActualClockScale: 1.0,
       queueTitleScale: 1.0,
       chimeSoundType: 'westminster',
@@ -2835,6 +2841,8 @@
 
           if (!cityName) cityName = state.weatherCity || 'Jakarta';
           state.weatherCity = cityName;
+          state.weatherLat = lat;
+          state.weatherLon = lon;
           saveStateToLocal();
 
           if (wJson && wJson.current && aJson && aJson.current) {
@@ -2884,7 +2892,9 @@
       if (cityElem && state.weatherCity) {
         cityElem.textContent = state.weatherCity;
       }
-      if (navigator.geolocation) {
+      if (state.weatherLat && state.weatherLon) {
+        fetchWeatherAndAqi(state.weatherLat, state.weatherLon);
+      } else if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           pos => {
             fetchWeatherAndAqi(pos.coords.latitude, pos.coords.longitude);
@@ -2896,6 +2906,77 @@
         );
       } else {
         fetchWeatherAndAqi(-6.2088, 106.8456);
+      }
+    }
+
+    function requestGpsLocation() {
+      const icon = document.getElementById('icon-refresh-gps');
+      if (icon) icon.classList.add('animate-spin');
+      showToast("📍 Mendeteksi lokasi GPS terkini...");
+
+      if (!navigator.geolocation) {
+        if (icon) icon.classList.remove('animate-spin');
+        promptManualCity("Peramban Anda tidak mendukung sensor geolokasi GPS.");
+        return;
+      }
+
+      navigator.geolocation.getCurrentPosition(
+        async pos => {
+          const lat = pos.coords.latitude;
+          const lon = pos.coords.longitude;
+          state.weatherLat = lat;
+          state.weatherLon = lon;
+          saveStateToLocal();
+          await fetchWeatherAndAqi(lat, lon);
+          if (icon) icon.classList.remove('animate-spin');
+          showToast("📍 Lokasi GPS diperbarui: " + (state.weatherCity || "Terkini"));
+        },
+        err => {
+          if (icon) icon.classList.remove('animate-spin');
+          let reason = "Akses GPS tidak tersedia.";
+          if (err.code === 1) reason = "Izin lokasi GPS belum diizinkan atau diblokir di browser.";
+          else if (err.code === 2) reason = "Posisi GPS saat ini tidak dapat ditentukan.";
+          else if (err.code === 3) reason = "Permintaan deteksi GPS melebihi batas waktu (timeout).";
+          promptManualCity(reason);
+        },
+        { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+      );
+    }
+
+    function promptManualCity(reasonMsg) {
+      const prefix = reasonMsg ? reasonMsg + "\n\n" : "";
+      const current = state.weatherCity || 'Jakarta';
+      const input = prompt(prefix + "Ketik nama kota atau kabupaten untuk mengatur lokasi cuaca secara manual (contoh: Surabaya, Bandung, Medan, Yogyakarta):", current);
+      if (input !== null && input.trim() !== '') {
+        searchAndSetManualLocation(input.trim());
+      }
+    }
+
+    async function searchAndSetManualLocation(cityName) {
+      const icon = document.getElementById('icon-refresh-gps');
+      if (icon) icon.classList.add('animate-spin');
+      showToast("📍 Mencari koordinat kota: " + cityName + "...");
+      try {
+        const url = 'https://geocoding-api.open-meteo.com/v1/search?name=' + encodeURIComponent(cityName) + '&count=1&language=id&format=json';
+        const res = await fetch(url);
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.results && data.results.length > 0) {
+            const loc = data.results[0];
+            state.weatherLat = loc.latitude;
+            state.weatherLon = loc.longitude;
+            state.weatherCity = loc.name;
+            saveStateToLocal();
+            await fetchWeatherAndAqi(loc.latitude, loc.longitude);
+            showToast("📍 Lokasi berhasil diatur ke: " + loc.name);
+            return;
+          }
+        }
+        showToast("❌ Kota tidak ditemukan. Silakan coba kata kunci lain.");
+      } catch (e) {
+        showToast("❌ Gagal mencari lokasi kota.");
+      } finally {
+        if (icon) icon.classList.remove('animate-spin');
       }
     }
 
@@ -4597,6 +4678,8 @@
           queueShowActualClock: state.queueShowActualClock,
           queueShowWeather: state.queueShowWeather,
           weatherCity: state.weatherCity,
+          weatherLat: state.weatherLat,
+          weatherLon: state.weatherLon,
           queueActualClockScale: state.queueActualClockScale,
           queueTitleScale: state.queueTitleScale,
           customPresets: state.customPresets,
@@ -4654,6 +4737,8 @@
           const cityElem = document.getElementById('weatherCityDisplay');
           if (cityElem && state.weatherCity) cityElem.textContent = state.weatherCity;
         }
+        if (saved.weatherLat !== undefined) state.weatherLat = saved.weatherLat;
+        if (saved.weatherLon !== undefined) state.weatherLon = saved.weatherLon;
         if (saved.queueActualClockScale !== undefined) {
           state.queueActualClockScale = saved.queueActualClockScale;
         }
