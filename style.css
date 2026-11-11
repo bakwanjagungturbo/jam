@@ -384,3 +384,34 @@ body.is-fullscreen .queue-clock-center-wrapper {
 .session-transition-active {
   animation: sessionTransition 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
+
+#interactiveLocationMap {
+  background-color: #0f172a !important;
+}
+.map-dark-filter .leaflet-tile-pane {
+  filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
+}
+#interactiveLocationMap .leaflet-control-zoom {
+  border: 1px solid #334155 !important;
+  border-radius: 10px !important;
+  overflow: hidden !important;
+}
+#interactiveLocationMap .leaflet-control-zoom a {
+  background-color: rgba(15, 23, 42, 0.9) !important;
+  color: #f1f5f9 !important;
+  border-bottom: 1px solid #334155 !important;
+}
+#interactiveLocationMap .leaflet-control-zoom a:hover {
+  background-color: #334155 !important;
+  color: #ffffff !important;
+}
+#interactiveLocationMap .leaflet-control-attribution {
+  background-color: rgba(15, 23, 42, 0.8) !important;
+  color: #94a3b8 !important;
+  font-size: 10px !important;
+  border-top-left-radius: 8px !important;
+  padding: 2px 6px !important;
+}
+#interactiveLocationMap .leaflet-control-attribution a {
+  color: #818cf8 !important;
+}
