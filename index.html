@@ -404,12 +404,12 @@
           <span class="time-digit-block" id="q-h2">0</span>
           <span class="time-colon-sep">:</span>
         </span>
-        <span class="time-digit-group">
+        <span class="time-digit-group" id="q-m-grp">
           <span class="time-digit-block" id="q-m1">2</span>
           <span class="time-digit-block" id="q-m2">0</span>
         </span>
-        <span class="time-colon-sep">:</span>
-        <span class="time-digit-group">
+        <span class="time-colon-sep" id="q-colon-sep">:</span>
+        <span class="time-digit-group" id="q-s-grp">
           <span class="time-digit-block" id="q-s1">0</span>
           <span class="time-digit-block" id="q-s2">0</span>
         </span>
@@ -418,6 +418,7 @@
           <span class="time-digit-block" id="q-ms1">0</span>
           <span class="time-digit-block" id="q-ms2">0</span>
         </span>
+        <span id="q-empty-err" class="hidden text-rose-500 drop-shadow-[0_0_25px_rgba(244,63,94,0.7)] font-black tracking-wider select-none">err</span>
       </div>
 
       <div class="text-sm text-slate-400 flex items-center gap-2 mb-2 font-medium">
@@ -575,6 +576,9 @@
             </button>
             <button onclick="document.getElementById('queueImportFileInput').click()" class="p-2 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded-xl text-xs font-semibold flex items-center justify-center transition border border-slate-700" data-tooltip="Impor Antrean (.json)" title="Impor Antrean dari File JSON">
               <i data-lucide="upload" class="w-4 h-4"></i>
+            </button>
+            <button onclick="clearAllQueueItems()" class="p-2 bg-slate-800 hover:bg-rose-950/50 text-slate-400 hover:text-rose-400 rounded-xl text-xs font-semibold flex items-center justify-center transition border border-slate-700" data-tooltip="Kosongkan Antrean" title="Kosongkan Seluruh Antrean">
+              <i data-lucide="trash" class="w-4 h-4"></i>
             </button>
             <input type="file" id="queueImportFileInput" accept=".json" class="hidden" onchange="handleImportQueueJSON(event)">
             <select id="queuePresetSelect" onchange="applyQueuePreset(this.value)" class="bg-slate-800 border border-slate-700 text-xs rounded-xl px-2.5 py-1.5 text-slate-300 focus:outline-none focus:border-indigo-500">
@@ -1347,10 +1351,20 @@
             </div>
 
             <div class="border-t border-slate-800 pt-3 space-y-2">
-              <label class="flex items-center gap-2 cursor-pointer select-none">
-                <input type="checkbox" id="settingTTSEnabled" class="rounded bg-slate-800 border-slate-700 text-indigo-600 focus:ring-0">
-                <span class="font-medium text-slate-200">Pengumuman Suara Otomatis (TTS Bahasa Indonesia)</span>
-              </label>
+              <div class="space-y-1.5 bg-slate-900/60 border border-slate-700/60 p-2.5 rounded-2xl">
+                <label class="flex items-center gap-2 cursor-pointer select-none">
+                  <input type="checkbox" id="settingTTSEnabled" class="rounded bg-slate-800 border-slate-700 text-indigo-600 focus:ring-0">
+                  <span class="font-medium text-slate-200">Pengumuman Suara Otomatis (TTS Bahasa Indonesia)</span>
+                </label>
+                <div class="flex items-center gap-2 pl-6 pt-1">
+                  <select id="settingTTSVoiceSelect" onchange="changeTTSVoice(this.value)" class="flex-1 bg-slate-800 border border-slate-700 rounded-xl px-2.5 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-indigo-500">
+                    <option value="">Otomatis (Paling Cocok - Bahasa Indonesia)</option>
+                  </select>
+                  <button type="button" onclick="previewTTSVoice()" class="px-2.5 py-1.5 bg-indigo-600/80 hover:bg-indigo-600 text-white rounded-xl text-xs font-semibold flex items-center gap-1.5 transition shrink-0" title="Tes Suara Pengumuman">
+                    <i data-lucide="volume-2" class="w-3.5 h-3.5"></i> Tes Suara
+                  </button>
+                </div>
+              </div>
 
               <label class="flex items-center gap-2 cursor-pointer select-none">
                 <input type="checkbox" id="settingQueueShowEstimatedEndTime" checked class="rounded bg-slate-800 border-slate-700 text-indigo-600 focus:ring-0">
@@ -1540,6 +1554,7 @@
       chimeSoundType: 'westminster',
       queueEndSoundType: 'triumph',
       ttsEnabled: false,
+      ttsVoiceURI: '',
       queueShowEstimatedEndTime: true,
       sessionTransitionAnim: true,
       accentColor: 'indigo',
@@ -1707,17 +1722,133 @@
       } catch (err) {}
     }
 
+    function isIndonesianVoice(v) {
+      if (!v) return false;
+      const lang = (v.lang || '').toLowerCase().replace(/_/g, '-');
+      const name = (v.name || '').toLowerCase();
+      if (lang === 'id' || lang === 'id-id' || lang === 'in-id' || lang === 'ind' || lang.startsWith('id-') || lang.startsWith('in-id')) return true;
+      if (name.includes('indonesia') || name.includes('bahasa indonesia')) return true;
+      return false;
+    }
+
+    function getBestIndonesianVoice() {
+      if (!('speechSynthesis' in window)) return null;
+      const voices = window.speechSynthesis.getVoices() || [];
+      if (voices.length === 0) return null;
+
+      if (state.ttsVoiceURI) {
+        const custom = voices.find(v => v.voiceURI === state.ttsVoiceURI);
+        if (custom) return custom;
+      }
+
+      const idDirect = voices.find(v => {
+        const lang = (v.lang || '').toLowerCase().replace(/_/g, '-');
+        return lang === 'id-id' || lang === 'in-id' || lang === 'id';
+      });
+      if (idDirect) return idDirect;
+
+      const idByName = voices.find(v => isIndonesianVoice(v));
+      if (idByName) return idByName;
+
+      return null;
+    }
+
+    function populateTTSVoiceDropdown() {
+      const sel = document.getElementById('settingTTSVoiceSelect');
+      if (!sel || !('speechSynthesis' in window)) return;
+
+      const voices = window.speechSynthesis.getVoices() || [];
+      const current = state.ttsVoiceURI || '';
+
+      let html = '<option value="">Otomatis (Paling Cocok - Bahasa Indonesia)</option>';
+
+      const idVoices = [];
+      const otherVoices = [];
+
+      voices.forEach(v => {
+        if (isIndonesianVoice(v)) {
+          idVoices.push(v);
+        } else {
+          otherVoices.push(v);
+        }
+      });
+
+      if (idVoices.length > 0) {
+        html += '<optgroup label="Suara Bahasa Indonesia (Rekomendasi)">';
+        idVoices.forEach(v => {
+          const selected = (v.voiceURI === current) ? ' selected' : '';
+          html += '<option value="' + v.voiceURI + '"' + selected + '>⭐ ' + v.name + ' (' + v.lang + ')</option>';
+        });
+        html += '</optgroup>';
+      }
+
+      if (otherVoices.length > 0) {
+        html += '<optgroup label="Suara Lainnya">';
+        otherVoices.forEach(v => {
+          const selected = (v.voiceURI === current) ? ' selected' : '';
+          html += '<option value="' + v.voiceURI + '"' + selected + '>' + v.name + ' (' + v.lang + ')</option>';
+        });
+        html += '</optgroup>';
+      }
+
+      sel.innerHTML = html;
+      if (current) sel.value = current;
+    }
+
+    function changeTTSVoice(voiceUri) {
+      state.ttsVoiceURI = voiceUri;
+      saveStateToLocal();
+      if (voiceUri) {
+        const voices = window.speechSynthesis.getVoices() || [];
+        const v = voices.find(it => it.voiceURI === voiceUri);
+        showToast('Suara TTS dipilih: ' + (v ? v.name : voiceUri));
+      } else {
+        showToast('Suara TTS diatur otomatis (Bahasa Indonesia)');
+      }
+    }
+
+    function previewTTSVoice() {
+      if (!('speechSynthesis' in window)) {
+        showToast('Peramban Anda tidak mendukung Web Speech API.');
+        return;
+      }
+      try {
+        window.speechSynthesis.cancel();
+        if (window.speechSynthesis.paused) {
+          window.speechSynthesis.resume();
+        }
+        const utter = new SpeechSynthesisUtterance('Pengumuman suara bahasa Indonesia siap digunakan.');
+        utter.rate = 1.0;
+        utter.pitch = 1.0;
+        utter.lang = 'id-ID';
+
+        const bestVoice = getBestIndonesianVoice();
+        if (bestVoice) {
+          utter.voice = bestVoice;
+        }
+
+        window.speechSynthesis.speak(utter);
+        showToast('Memutar sampel pengumuman suara...');
+      } catch (e) {}
+    }
+
     function announceVoice(text) {
       if (!state.ttsEnabled || !('speechSynthesis' in window)) return;
       try {
         window.speechSynthesis.cancel();
+        if (window.speechSynthesis.paused) {
+          window.speechSynthesis.resume();
+        }
         const utter = new SpeechSynthesisUtterance(text);
         utter.rate = 1.0;
         utter.pitch = 1.0;
-        const voices = window.speechSynthesis.getVoices();
-        const idVoice = voices.find(v => v.lang && (v.lang.toLowerCase().includes('id') || v.lang.toLowerCase().includes('in')));
-        if (idVoice) utter.voice = idVoice;
-        else utter.lang = 'id-ID';
+        utter.lang = 'id-ID';
+
+        const bestVoice = getBestIndonesianVoice();
+        if (bestVoice) {
+          utter.voice = bestVoice;
+        }
+
         window.speechSynthesis.speak(utter);
       } catch (err) {}
     }
@@ -1747,6 +1878,8 @@
       }
       const chk = document.getElementById('settingTTSEnabled');
       if (chk) chk.checked = !!state.ttsEnabled;
+      const sel = document.getElementById('settingTTSVoiceSelect');
+      if (sel && state.ttsVoiceURI) sel.value = state.ttsVoiceURI;
       lucide.createIcons();
     }
 
@@ -2757,6 +2890,38 @@
 
     function updateQueueDisplay() {
       const q = state.queue;
+      const errElem = document.getElementById('q-empty-err');
+      const hGrp = document.getElementById('q-h-grp');
+      const mGrp = document.getElementById('q-m-grp');
+      const sGrp = document.getElementById('q-s-grp');
+      const colonSep = document.getElementById('q-colon-sep');
+      const msGrp = document.getElementById('q-ms-grp');
+      const currentTitleElem = document.getElementById('queueCurrentTitle');
+      const stepBadgeElem = document.getElementById('queueStepBadge');
+      const nextTitleElem = document.getElementById('queueNextTitle');
+
+      if (!q.items || q.items.length === 0) {
+        if (errElem) errElem.classList.remove('hidden');
+        if (hGrp) hGrp.classList.add('hidden');
+        if (mGrp) mGrp.classList.add('hidden');
+        if (sGrp) sGrp.classList.add('hidden');
+        if (colonSep) colonSep.classList.add('hidden');
+        if (msGrp) msGrp.classList.add('hidden');
+
+        if (currentTitleElem) currentTitleElem.textContent = 'Antrean Kosong';
+        if (stepBadgeElem) stepBadgeElem.textContent = '0 Sesi';
+        if (nextTitleElem) nextTitleElem.textContent = '-';
+
+        clearExamDangerState();
+        updateQueueEstimatedEndTimeUI();
+        return;
+      }
+
+      if (errElem) errElem.classList.add('hidden');
+      if (mGrp) mGrp.classList.remove('hidden');
+      if (sGrp) sGrp.classList.remove('hidden');
+      if (colonSep) colonSep.classList.remove('hidden');
+
       const totalSec = Math.max(0, q.remainingSeconds);
       const h = Math.floor(totalSec / 3600);
       const m = Math.floor((totalSec % 3600) / 60);
@@ -2775,38 +2940,41 @@
       document.getElementById('q-ms1').textContent = msStr[0];
       document.getElementById('q-ms2').textContent = msStr[1];
 
-      const hGrp = document.getElementById('q-h-grp');
-      if (h > 0) {
-        document.getElementById('q-h1').textContent = hStr[0];
-        document.getElementById('q-h2').textContent = hStr[1];
-        hGrp.classList.remove('hidden');
-      } else {
-        hGrp.classList.add('hidden');
+      if (hGrp) {
+        if (h > 0) {
+          document.getElementById('q-h1').textContent = hStr[0];
+          document.getElementById('q-h2').textContent = hStr[1];
+          hGrp.classList.remove('hidden');
+        } else {
+          hGrp.classList.add('hidden');
+        }
       }
 
-      const msGrp = document.getElementById('q-ms-grp');
-      if (state.showMs.queue) {
-        msGrp.classList.remove('hidden');
-      } else {
-        msGrp.classList.add('hidden');
+      if (msGrp) {
+        if (state.showMs.queue) {
+          msGrp.classList.remove('hidden');
+        } else {
+          msGrp.classList.add('hidden');
+        }
       }
 
       const currentItem = q.items[q.currentIndex] || { title: "Selesai", hours: 0, minutes: 0, seconds: 0 };
       if (q.isWaitingScheduled) {
-        document.getElementById('queueCurrentTitle').textContent = '⏳ Menunggu Jadwal: ' + currentItem.title;
-        document.getElementById('queueStepBadge').textContent = 'Mulai Jam ' + (currentItem.startTime || '--:--') + ' • Sesi ' + (q.currentIndex + 1) + '/' + q.items.length;
+        if (currentTitleElem) currentTitleElem.textContent = '⏳ Menunggu Jadwal: ' + currentItem.title;
+        if (stepBadgeElem) stepBadgeElem.textContent = 'Mulai Jam ' + (currentItem.startTime || '--:--') + ' • Sesi ' + (q.currentIndex + 1) + '/' + q.items.length;
       } else {
-        document.getElementById('queueCurrentTitle').textContent = currentItem.title;
-        document.getElementById('queueStepBadge').textContent = 'Sesi ' + (q.currentIndex + 1) + ' dari ' + q.items.length;
+        if (currentTitleElem) currentTitleElem.textContent = currentItem.title;
+        if (stepBadgeElem) stepBadgeElem.textContent = 'Sesi ' + (q.currentIndex + 1) + ' dari ' + q.items.length;
       }
 
-      const nextItem = q.items[q.currentIndex + 1];
-      const nextTitleElem = document.getElementById('queueNextTitle');
-      if (nextItem) {
-        const nextDurTxt = formatSessionDuration(nextItem.hours || 0, nextItem.minutes || 0, nextItem.seconds || 0);
-        nextTitleElem.textContent = nextItem.title + ' (' + nextDurTxt + ')';
-      } else {
-        nextTitleElem.textContent = 'Akhir Antrean';
+      if (nextTitleElem) {
+        const nextItem = q.items[q.currentIndex + 1];
+        if (nextItem) {
+          const nextDurTxt = formatSessionDuration(nextItem.hours || 0, nextItem.minutes || 0, nextItem.seconds || 0);
+          nextTitleElem.textContent = nextItem.title + ' (' + nextDurTxt + ')';
+        } else {
+          nextTitleElem.textContent = 'Akhir Antrean';
+        }
       }
 
       const activeRules = getActiveQueueFlashRules();
@@ -2819,6 +2987,14 @@
       const q = state.queue;
       const listElem = document.getElementById('queueListContainer');
       if (!listElem) return;
+      if (!q.items || q.items.length === 0) {
+        listElem.innerHTML = '<div class="p-6 text-center text-slate-500 border border-dashed border-slate-800 rounded-2xl flex flex-col items-center justify-center gap-2">' +
+          '<i data-lucide="inbox" class="w-8 h-8 text-slate-600"></i>' +
+          '<span>Antrean kosong. Tambahkan sesi baru di bawah atau pilih template preset.</span>' +
+        '</div>';
+        lucide.createIcons();
+        return;
+      }
       listElem.innerHTML = q.items.map((it, idx) => {
         const isActive = idx === q.currentIndex;
         const isDone = idx < q.currentIndex;
@@ -3656,6 +3832,10 @@
 
     function toggleQueueTimer() {
       const q = state.queue;
+      if (!q.items || q.items.length === 0) {
+        showToast("Antrean kosong, tambahkan sesi terlebih dahulu");
+        return;
+      }
       const btn = document.getElementById('queueToggleBtn');
       const playTxt = document.getElementById('queuePlayTxt');
 
@@ -3702,7 +3882,21 @@
       q.isWaitingScheduled = false;
       q.targetStartTimestamp = null;
       q.currentIndex = 0;
-      const initialItem = q.items[0] || { hours: 0, minutes: 10, seconds: 0 };
+      if (!q.items || q.items.length === 0) {
+        q.remainingSeconds = 0;
+        q.remainingMs = 0;
+        const btn = document.getElementById('queueToggleBtn');
+        if (btn) {
+          btn.classList.replace('bg-amber-600', 'bg-indigo-600');
+          btn.setAttribute('data-tooltip', "Mulai Antrean (Space)");
+          btn.setAttribute('title', "Mulai Antrean (Space)");
+        }
+        const qIcon = document.getElementById('queuePlayIcon');
+        if (qIcon) qIcon.setAttribute('data-lucide', 'play');
+        renderQueueUI();
+        return;
+      }
+      const initialItem = q.items[0];
       q.remainingSeconds = getItemTotalSeconds(initialItem);
       q.remainingMs = 0;
       const rules = getActiveQueueFlashRules();
@@ -3724,6 +3918,7 @@
     function nextQueueStep() {
       clearExamDangerState();
       const q = state.queue;
+      if (!q.items || q.items.length === 0) return;
       if (q.currentIndex < q.items.length - 1) {
         q.currentIndex++;
         q.isWaitingScheduled = false;
@@ -3797,6 +3992,11 @@
         flashMode: 'inherit',
         customFlashRules: []
       });
+      if (state.queue.items.length === 1) {
+        state.queue.currentIndex = 0;
+        state.queue.remainingSeconds = getItemTotalSeconds(state.queue.items[0]);
+        state.queue.remainingMs = 0;
+      }
       titleInput.value = '';
       hInput.value = '0';
       mInput.value = '0';
@@ -3828,16 +4028,62 @@
     }
 
     function removeQueueItem(index) {
-      if (state.queue.items.length <= 1) {
-        showToast("Minimal harus tersisa 1 sesi");
-        return;
-      }
+      if (!state.queue.items || index < 0 || index >= state.queue.items.length) return;
       state.queue.items.splice(index, 1);
-      if (state.queue.currentIndex >= state.queue.items.length) {
-        state.queue.currentIndex = state.queue.items.length - 1;
+      if (state.queue.items.length === 0) {
+        clearInterval(state.queue.timerId);
+        state.queue.isRunning = false;
+        state.queue.isWaitingScheduled = false;
+        state.queue.targetStartTimestamp = null;
+        state.queue.currentIndex = 0;
+        state.queue.remainingSeconds = 0;
+        state.queue.remainingMs = 0;
+        const btn = document.getElementById('queueToggleBtn');
+        if (btn) {
+          btn.classList.replace('bg-amber-600', 'bg-indigo-600');
+          btn.setAttribute('data-tooltip', "Mulai Antrean (Space)");
+          btn.setAttribute('title', "Mulai Antrean (Space)");
+        }
+        const qIcon = document.getElementById('queuePlayIcon');
+        if (qIcon) qIcon.setAttribute('data-lucide', 'play');
+        showToast("Sesi antrean dihapus (antrean kosong)");
+      } else {
+        if (state.queue.currentIndex >= state.queue.items.length) {
+          state.queue.currentIndex = state.queue.items.length - 1;
+        }
+        const curItem = state.queue.items[state.queue.currentIndex];
+        state.queue.remainingSeconds = getItemTotalSeconds(curItem);
+        state.queue.remainingMs = 0;
+        showToast("Sesi antrean dihapus");
       }
       renderQueueUI();
       saveStateToLocal();
+    }
+
+    function clearAllQueueItems() {
+      if (!state.queue.items || state.queue.items.length === 0) {
+        showToast("Antrean sudah kosong");
+        return;
+      }
+      clearInterval(state.queue.timerId);
+      state.queue.isRunning = false;
+      state.queue.isWaitingScheduled = false;
+      state.queue.targetStartTimestamp = null;
+      state.queue.items = [];
+      state.queue.currentIndex = 0;
+      state.queue.remainingSeconds = 0;
+      state.queue.remainingMs = 0;
+      const btn = document.getElementById('queueToggleBtn');
+      if (btn) {
+        btn.classList.replace('bg-amber-600', 'bg-indigo-600');
+        btn.setAttribute('data-tooltip', "Mulai Antrean (Space)");
+        btn.setAttribute('title', "Mulai Antrean (Space)");
+      }
+      const qIcon = document.getElementById('queuePlayIcon');
+      if (qIcon) qIcon.setAttribute('data-lucide', 'play');
+      renderQueueUI();
+      saveStateToLocal();
+      showToast("Seluruh antrean telah dikosongkan");
     }
     
     let draggedQueueIndex = null;
@@ -4948,6 +5194,8 @@
       if (id === 'flashRulesModal') {
         renderFlashRulesUI();
         document.getElementById('modalWarningMasterToggle').checked = state.warningEnabled;
+      } else if (id === 'settingsModal') {
+        populateTTSVoiceDropdown();
       }
       document.getElementById(id).classList.remove('hidden');
     }
@@ -5032,6 +5280,9 @@
       if (queueEndSel) state.queueEndSoundType = queueEndSel.value;
       const ttsChk = document.getElementById('settingTTSEnabled');
       if (ttsChk) state.ttsEnabled = ttsChk.checked;
+      const voiceSel = document.getElementById('settingTTSVoiceSelect');
+      if (voiceSel) state.ttsVoiceURI = voiceSel.value;
+      updateTTSUI();
       const endChk = document.getElementById('settingQueueShowEstimatedEndTime');
       if (endChk) state.queueShowEstimatedEndTime = endChk.checked;
       const transChk = document.getElementById('settingSessionTransitionAnim');
@@ -5105,6 +5356,7 @@
           chimeSoundType: state.chimeSoundType,
           queueEndSoundType: state.queueEndSoundType,
           ttsEnabled: state.ttsEnabled,
+          ttsVoiceURI: state.ttsVoiceURI,
           queueShowEstimatedEndTime: state.queueShowEstimatedEndTime,
           sessionTransitionAnim: state.sessionTransitionAnim,
           accentColor: state.accentColor,
@@ -5164,15 +5416,21 @@
         if (saved.queueTitleScale !== undefined) {
           state.queueTitleScale = saved.queueTitleScale;
         }
-        if (saved.queueItems && saved.queueItems.length > 0) {
+        if (Array.isArray(saved.queueItems)) {
           state.queue.items = saved.queueItems.map(it => ({
             title: it.title || "Sesi",
             hours: it.hours || 0,
             minutes: it.minutes !== undefined ? it.minutes : 20,
             seconds: it.seconds || 0,
+            startTime: it.startTime || '',
             flashMode: it.flashMode || 'inherit',
             customFlashRules: Array.isArray(it.customFlashRules) ? it.customFlashRules : []
           }));
+          if (state.queue.items.length === 0) {
+            state.queue.remainingSeconds = 0;
+            state.queue.remainingMs = 0;
+            state.queue.currentIndex = 0;
+          }
         }
         if (saved.worldClocks && saved.worldClocks.length > 0) state.worldClocks = saved.worldClocks;
 
@@ -5204,6 +5462,7 @@
         if (saved.chimeSoundType !== undefined) state.chimeSoundType = saved.chimeSoundType;
         if (saved.queueEndSoundType !== undefined) state.queueEndSoundType = saved.queueEndSoundType;
         if (saved.ttsEnabled !== undefined) state.ttsEnabled = saved.ttsEnabled;
+        if (saved.ttsVoiceURI !== undefined) state.ttsVoiceURI = saved.ttsVoiceURI;
         if (saved.queueShowEstimatedEndTime !== undefined) state.queueShowEstimatedEndTime = saved.queueShowEstimatedEndTime;
         if (saved.sessionTransitionAnim !== undefined) state.sessionTransitionAnim = saved.sessionTransitionAnim;
         if (saved.accentColor !== undefined) state.accentColor = saved.accentColor;
@@ -5266,6 +5525,12 @@
       updatePresetDropdown();
       applyQueueActualClockVisibility();
       initLocationWeather();
+      populateTTSVoiceDropdown();
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.onvoiceschanged = function() {
+          populateTTSVoiceDropdown();
+        };
+      }
       lucide.createIcons();
     };
   </script>

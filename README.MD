@@ -63,6 +63,8 @@ Dibuat dengan HTML5, Tailwind CSS, dan Vanilla JavaScript murni tanpa ketergantu
    - **Drag & Drop Reordering**: Geser urutan sesi dengan mudah menggunakan handle grip atau tombol panah atas/bawah.
    - **Duplikasi Sesi & Preset Kustom**: Gandakan sesi dengan satu klik dan simpan susunan antrean lengkap sebagai template preset kustom yang dapat digunakan kembali kapan saja.
    - **Kustomisasi Flash per Sesi**: Sesi dapat memilih menggunakan aturan Flash Global atau aturan Flash Kustom tersendiri.
+   - **Dukungan Antrean 0 Sesi & Indikator Error (err)**: Batas minimal antrean kini dapat mencapai 0 sesi (dapat menghapus seluruh sesi atau mengosongkan antrean). Saat antrean kosong, jam utama proyektor otomatis menampilkan teks err merah menyala dan kontrol antrean diamankan secara otomatis.
+   - **Pengumuman Suara (TTS) Bahasa Indonesia Presisi & Voice Selector**: Logika deteksi suara TTS diperbarui secara ketat mengunci lokalisasi bahasa Indonesia (id-ID), mencegah tertukar dengan suara bahasa Inggris India (en-IN) atau bahasa asing lainnya. Menu Pengaturan kini dilengkapi dropdown pemilihan suara TTS dan tombol Tes Suara untuk pratinjau langsung.
 
 8. **Redesign Tombol Berbasis Ikon Seragam & Floating Tooltip**
    - Seluruh tombol kontrol di semua mode (Jam Utama, Stopwatch, Timer, Queue, Jam Dunia) didesain ulang menjadi tombol ikon modern yang ringkas dan seragam.
